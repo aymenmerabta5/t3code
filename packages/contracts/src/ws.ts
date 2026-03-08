@@ -20,6 +20,7 @@ import {
   GitRunStackedActionInput,
   GitStatusInput,
 } from "./git";
+import { ServerLogoutAccountInput } from "./server";
 import {
   TerminalClearInput,
   TerminalCloseInput,
@@ -67,6 +68,7 @@ export const WS_METHODS = {
   // Server meta
   serverGetConfig: "server.getConfig",
   serverUpsertKeybinding: "server.upsertKeybinding",
+  serverLogoutAccount: "server.logoutAccount",
 } as const;
 
 // ── Push Event Channels ──────────────────────────────────────────────
@@ -129,6 +131,7 @@ const WebSocketRequestBody = Schema.Union([
   // Server meta
   tagRequestBody(WS_METHODS.serverGetConfig, Schema.Struct({})),
   tagRequestBody(WS_METHODS.serverUpsertKeybinding, KeybindingRule),
+  tagRequestBody(WS_METHODS.serverLogoutAccount, ServerLogoutAccountInput),
 ]);
 
 export const WebSocketRequest = Schema.Struct({

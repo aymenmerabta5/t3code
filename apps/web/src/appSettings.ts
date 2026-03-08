@@ -264,6 +264,18 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
+const SPARK_MODEL_SLUG = "gpt-5.3-codex-spark";
+
+export function filterModelOptionsForPlan(
+  options: AppModelOption[],
+  plan: { isPro: boolean | undefined },
+): AppModelOption[] {
+  if (plan.isPro !== true) {
+    return options.filter((o) => o.slug !== SPARK_MODEL_SLUG);
+  }
+  return options;
+}
+
 export function useAppSettings() {
   const settings = useSyncExternalStore(
     subscribe,

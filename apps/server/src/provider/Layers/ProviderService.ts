@@ -475,6 +475,18 @@ const makeProviderService = (options?: ProviderServiceLiveOptions) =>
         });
       });
 
+    const readAccountSnapshot: ProviderServiceShape["readAccountSnapshot"] = (provider) =>
+      Effect.gen(function* () {
+        const adapter = yield* registry.getByProvider(provider);
+        return yield* adapter.readAccountSnapshot();
+      });
+
+    const logoutAccount: ProviderServiceShape["logoutAccount"] = (provider) =>
+      Effect.gen(function* () {
+        const adapter = yield* registry.getByProvider(provider);
+        yield* adapter.logoutAccount();
+      });
+
     const runStopAll = () =>
       Effect.gen(function* () {
         const threadIds = yield* directory.listThreadIds();
@@ -517,6 +529,8 @@ const makeProviderService = (options?: ProviderServiceLiveOptions) =>
       listSessions,
       getCapabilities,
       rollbackConversation,
+      readAccountSnapshot,
+      logoutAccount,
       streamEvents: Stream.fromPubSub(runtimeEventPubSub),
     } satisfies ProviderServiceShape;
   });

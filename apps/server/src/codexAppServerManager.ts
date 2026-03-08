@@ -23,10 +23,22 @@ import { normalizeModelSlug } from "@t3tools/shared/model";
 import { Effect, ServiceMap } from "effect";
 
 import {
+  createUnknownCodexAccountSnapshot,
+  planLabelFromSnapshot,
+  readCodexAccountSnapshot,
+  type CodexAccountSnapshot,
+} from "./codexAccount";
+import {
   formatCodexCliUpgradeMessage,
   isCodexCliVersionSupported,
   parseCodexCliVersion,
 } from "./provider/codexCliVersion";
+
+export {
+  planLabelFromSnapshot,
+  readCodexAccountSnapshot,
+  type CodexAccountSnapshot,
+} from "./codexAccount";
 
 type PendingRequestKey = string;
 
@@ -96,23 +108,6 @@ interface JsonRpcNotification {
   params?: unknown;
 }
 
-type CodexPlanType =
-  | "free"
-  | "go"
-  | "plus"
-  | "pro"
-  | "team"
-  | "business"
-  | "enterprise"
-  | "edu"
-  | "unknown";
-
-interface CodexAccountSnapshot {
-  readonly type: "apiKey" | "chatgpt" | "unknown";
-  readonly planType: CodexPlanType | null;
-  readonly sparkEnabled: boolean;
-}
-
 export interface CodexAppServerSendTurnInput {
   readonly threadId: ThreadId;
   readonly input?: string;
@@ -163,47 +158,6 @@ const RECOVERABLE_THREAD_RESUME_ERROR_SNIPPETS = [
 ];
 const CODEX_DEFAULT_MODEL = "gpt-5.3-codex";
 const CODEX_SPARK_MODEL = "gpt-5.3-codex-spark";
-const CODEX_SPARK_DISABLED_PLAN_TYPES = new Set<CodexPlanType>(["free", "go", "plus"]);
-
-function asObject(value: unknown): Record<string, unknown> | undefined {
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-  return value as Record<string, unknown>;
-}
-
-function asString(value: unknown): string | undefined {
-  return typeof value === "string" ? value : undefined;
-}
-
-export function readCodexAccountSnapshot(response: unknown): CodexAccountSnapshot {
-  const record = asObject(response);
-  const account = asObject(record?.account) ?? record;
-  const accountType = asString(account?.type);
-
-  if (accountType === "apiKey") {
-    return {
-      type: "apiKey",
-      planType: null,
-      sparkEnabled: true,
-    };
-  }
-
-  if (accountType === "chatgpt") {
-    const planType = (account?.planType as CodexPlanType | null) ?? "unknown";
-    return {
-      type: "chatgpt",
-      planType,
-      sparkEnabled: !CODEX_SPARK_DISABLED_PLAN_TYPES.has(planType),
-    };
-  }
-
-  return {
-    type: "unknown",
-    planType: null,
-    sparkEnabled: true,
-  };
-}
 
 export const CODEX_PLAN_MODE_DEVELOPER_INSTRUCTIONS = `<collaboration_mode># Plan Mode (Conversational)
 
@@ -521,68 +475,83 @@ export class CodexAppServerManager extends EventEmitter<CodexAppServerManagerEve
     this.runPromise = services ? Effect.runPromiseWith(services) : Effect.runPromise;
   }
 
+  async readAccountSnapshot(input: {
+    readonly cwd?: string;
+    readonly providerOptions?: ProviderSessionStartInput["providerOptions"];
+  } = {}): Promise<CodexAccountSnapshot> {
+    const temporaryThreadId = ThreadId.makeUnsafe(`codex-account-${randomUUID()}`);
+    const { context } = await this.startAppServerContext({
+      threadId: temporaryThreadId,
+      runtimeMode: "full-access",
+      registerSession: false,
+      emitLifecycle: false,
+      ...(input.cwd !== undefined ? { cwd: input.cwd } : {}),
+      ...(input.providerOptions !== undefined ? { providerOptions: input.providerOptions } : {}),
+    });
+
+    try {
+      const { snapshot } = await this.readAccountSnapshotFromContext(context);
+      return snapshot;
+    } finally {
+      this.disposeContext(context, { emitClosedEvent: false, removeSession: false });
+    }
+  }
+
+  async logout(input: {
+    readonly cwd?: string;
+    readonly providerOptions?: ProviderSessionStartInput["providerOptions"];
+  } = {}): Promise<void> {
+    const resolvedCwd = input.cwd ?? process.cwd();
+    const codexOptions = readCodexProviderOptions(input);
+    const codexBinaryPath = codexOptions.binaryPath ?? "codex";
+    const codexHomePath = codexOptions.homePath;
+
+    this.assertSupportedCodexCliVersion({
+      binaryPath: codexBinaryPath,
+      cwd: resolvedCwd,
+      ...(codexHomePath ? { homePath: codexHomePath } : {}),
+    });
+
+    const result = spawnSync(codexBinaryPath, ["logout"], {
+      cwd: resolvedCwd,
+      env: {
+        ...process.env,
+        ...(codexHomePath ? { CODEX_HOME: codexHomePath } : {}),
+      },
+      encoding: "utf8",
+      shell: process.platform === "win32",
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: CODEX_VERSION_CHECK_TIMEOUT_MS,
+      maxBuffer: 1024 * 1024,
+    });
+
+    if (result.error) {
+      throw new Error(`Failed to execute Codex logout: ${result.error.message}`);
+    }
+    if (result.status !== 0) {
+      const detail =
+        result.stderr?.trim() || result.stdout?.trim() || `Command exited with code ${result.status}.`;
+      throw new Error(`Codex logout failed. ${detail}`);
+    }
+  }
+
   async startSession(input: CodexAppServerStartSessionInput): Promise<ProviderSession> {
     const threadId = input.threadId;
-    const now = new Date().toISOString();
     let context: CodexSessionContext | undefined;
 
     try {
-      const resolvedCwd = input.cwd ?? process.cwd();
-
-      const session: ProviderSession = {
-        provider: "codex",
-        status: "connecting",
-        runtimeMode: input.runtimeMode,
-        model: normalizeCodexModelSlug(input.model),
-        cwd: resolvedCwd,
+      const started = await this.startAppServerContext({
         threadId,
-        createdAt: now,
-        updatedAt: now,
-      };
-
-      const codexOptions = readCodexProviderOptions(input);
-      const codexBinaryPath = codexOptions.binaryPath ?? "codex";
-      const codexHomePath = codexOptions.homePath;
-      this.assertSupportedCodexCliVersion({
-        binaryPath: codexBinaryPath,
-        cwd: resolvedCwd,
-        ...(codexHomePath ? { homePath: codexHomePath } : {}),
+        runtimeMode: input.runtimeMode,
+        registerSession: true,
+        emitLifecycle: true,
+        ...(input.cwd !== undefined ? { cwd: input.cwd } : {}),
+        ...(input.model !== undefined ? { model: input.model } : {}),
+        ...(input.providerOptions !== undefined ? { providerOptions: input.providerOptions } : {}),
       });
-      const child = spawn(codexBinaryPath, ["app-server"], {
-        cwd: resolvedCwd,
-        env: {
-          ...process.env,
-          ...(codexHomePath ? { CODEX_HOME: codexHomePath } : {}),
-        },
-        stdio: ["pipe", "pipe", "pipe"],
-        shell: process.platform === "win32",
-      });
-      const output = readline.createInterface({ input: child.stdout });
+      context = started.context;
+      const resolvedCwd = started.resolvedCwd;
 
-      context = {
-        session,
-        account: {
-          type: "unknown",
-          planType: null,
-          sparkEnabled: true,
-        },
-        child,
-        output,
-        pending: new Map(),
-        pendingApprovals: new Map(),
-        pendingUserInputs: new Map(),
-        nextRequestId: 1,
-        stopping: false,
-      };
-
-      this.sessions.set(threadId, context);
-      this.attachProcessListeners(context);
-
-      this.emitLifecycleEvent(context, "session/connecting", "Starting codex app-server");
-
-      await this.sendRequest(context, "initialize", buildCodexInitializeParams());
-
-      this.writeMessage(context, { method: "initialized" });
       try {
         const modelListResponse = await this.sendRequest(context, "model/list", {});
         console.log("codex model/list response", modelListResponse);
@@ -590,13 +559,21 @@ export class CodexAppServerManager extends EventEmitter<CodexAppServerManagerEve
         console.log("codex model/list failed", error);
       }
       try {
-        const accountReadResponse = await this.sendRequest(context, "account/read", {});
+        const { response: accountReadResponse } = await this.readAccountSnapshotFromContext(context);
         console.log("codex account/read response", accountReadResponse);
-        context.account = readCodexAccountSnapshot(accountReadResponse);
         console.log("codex subscription status", {
           type: context.account.type,
           planType: context.account.planType,
           sparkEnabled: context.account.sparkEnabled,
+        });
+        this.emitEvent({
+          id: EventId.makeUnsafe(randomUUID()),
+          kind: "notification",
+          provider: "codex",
+          threadId,
+          createdAt: new Date().toISOString(),
+          method: "account/updated",
+          payload: accountReadResponse,
         });
       } catch (error) {
         console.log("codex account/read failed", error);
@@ -976,7 +953,110 @@ export class CodexAppServerManager extends EventEmitter<CodexAppServerManagerEve
     if (!context) {
       return;
     }
+    this.disposeContext(context, { emitClosedEvent: true, removeSession: true });
+  }
 
+  listSessions(): ProviderSession[] {
+    return Array.from(this.sessions.values(), ({ session }) => ({
+      ...session,
+    }));
+  }
+
+  hasSession(threadId: ThreadId): boolean {
+    return this.sessions.has(threadId);
+  }
+
+  stopAll(): void {
+    for (const threadId of this.sessions.keys()) {
+      this.stopSession(threadId);
+    }
+  }
+
+  private async startAppServerContext(input: {
+    readonly threadId: ThreadId;
+    readonly cwd?: string;
+    readonly model?: string;
+    readonly providerOptions?: ProviderSessionStartInput["providerOptions"];
+    readonly runtimeMode: RuntimeMode;
+    readonly registerSession: boolean;
+    readonly emitLifecycle: boolean;
+  }): Promise<{ context: CodexSessionContext; resolvedCwd: string }> {
+    const resolvedCwd = input.cwd ?? process.cwd();
+    const now = new Date().toISOString();
+    const session: ProviderSession = {
+      provider: "codex",
+      status: "connecting",
+      runtimeMode: input.runtimeMode,
+      model: normalizeCodexModelSlug(input.model),
+      cwd: resolvedCwd,
+      threadId: input.threadId,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const codexOptions = readCodexProviderOptions(input);
+    const codexBinaryPath = codexOptions.binaryPath ?? "codex";
+    const codexHomePath = codexOptions.homePath;
+    this.assertSupportedCodexCliVersion({
+      binaryPath: codexBinaryPath,
+      cwd: resolvedCwd,
+      ...(codexHomePath ? { homePath: codexHomePath } : {}),
+    });
+    const child = spawn(codexBinaryPath, ["app-server"], {
+      cwd: resolvedCwd,
+      env: {
+        ...process.env,
+        ...(codexHomePath ? { CODEX_HOME: codexHomePath } : {}),
+      },
+      stdio: ["pipe", "pipe", "pipe"],
+      shell: process.platform === "win32",
+    });
+    const output = readline.createInterface({ input: child.stdout });
+
+    const context: CodexSessionContext = {
+      session,
+      account: createUnknownCodexAccountSnapshot(),
+      child,
+      output,
+      pending: new Map(),
+      pendingApprovals: new Map(),
+      pendingUserInputs: new Map(),
+      nextRequestId: 1,
+      stopping: false,
+    };
+
+    if (input.registerSession) {
+      this.sessions.set(input.threadId, context);
+    }
+    this.attachProcessListeners(context);
+
+    if (input.emitLifecycle) {
+      this.emitLifecycleEvent(context, "session/connecting", "Starting codex app-server");
+    }
+
+    await this.sendRequest(context, "initialize", buildCodexInitializeParams());
+    this.writeMessage(context, { method: "initialized" });
+
+    return { context, resolvedCwd };
+  }
+
+  private async readAccountSnapshotFromContext(context: CodexSessionContext): Promise<{
+    response: unknown;
+    snapshot: CodexAccountSnapshot;
+  }> {
+    const response = await this.sendRequest(context, "account/read", {});
+    const snapshot = readCodexAccountSnapshot(response);
+    context.account = snapshot;
+    return { response, snapshot };
+  }
+
+  private disposeContext(
+    context: CodexSessionContext,
+    options: {
+      readonly emitClosedEvent: boolean;
+      readonly removeSession: boolean;
+    },
+  ): void {
     context.stopping = true;
 
     for (const pending of context.pending.values()) {
@@ -997,23 +1077,12 @@ export class CodexAppServerManager extends EventEmitter<CodexAppServerManagerEve
       status: "closed",
       activeTurnId: undefined,
     });
-    this.emitLifecycleEvent(context, "session/closed", "Session stopped");
-    this.sessions.delete(threadId);
-  }
 
-  listSessions(): ProviderSession[] {
-    return Array.from(this.sessions.values(), ({ session }) => ({
-      ...session,
-    }));
-  }
-
-  hasSession(threadId: ThreadId): boolean {
-    return this.sessions.has(threadId);
-  }
-
-  stopAll(): void {
-    for (const threadId of this.sessions.keys()) {
-      this.stopSession(threadId);
+    if (options.emitClosedEvent) {
+      this.emitLifecycleEvent(context, "session/closed", "Session stopped");
+    }
+    if (options.removeSession) {
+      this.sessions.delete(context.session.threadId);
     }
   }
 
@@ -1507,7 +1576,9 @@ function normalizeProviderThreadId(value: string | undefined): string | undefine
   return brandIfNonEmpty(value, (normalized) => normalized);
 }
 
-function readCodexProviderOptions(input: CodexAppServerStartSessionInput): {
+function readCodexProviderOptions(input: {
+  readonly providerOptions?: ProviderSessionStartInput["providerOptions"];
+}): {
   readonly binaryPath?: string;
   readonly homePath?: string;
 } {

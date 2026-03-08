@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  filterModelOptionsForPlan,
   getAppModelOptions,
   getSlashModelOptions,
   normalizeCustomModelSlugs,
@@ -46,6 +47,22 @@ describe("getAppModelOptions", () => {
       name: "custom/selected-model",
       isCustom: true,
     });
+  });
+});
+
+describe("filterModelOptionsForPlan", () => {
+  it("hides spark for unsupported business plans", () => {
+    const options = filterModelOptionsForPlan(getAppModelOptions("codex", []), { isPro: false });
+
+    expect(options.some((option) => option.slug === "gpt-5.3-codex-spark")).toBe(false);
+  });
+
+  it("hides spark until account capability is known", () => {
+    const options = filterModelOptionsForPlan(getAppModelOptions("codex", []), {
+      isPro: undefined,
+    });
+
+    expect(options.some((option) => option.slug === "gpt-5.3-codex-spark")).toBe(false);
   });
 });
 

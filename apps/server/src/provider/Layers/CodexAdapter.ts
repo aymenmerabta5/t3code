@@ -1450,6 +1450,30 @@ const makeCodexAdapter = (options?: CodexAdapterLiveOptions) =>
         manager.stopAll();
       });
 
+    const readAccountSnapshot: CodexAdapterShape["readAccountSnapshot"] = () =>
+      Effect.tryPromise({
+        try: () => manager.readAccountSnapshot(),
+        catch: (cause) =>
+          new ProviderAdapterProcessError({
+            provider: PROVIDER,
+            threadId: "codex-account",
+            detail: toMessage(cause, "Failed to read Codex account snapshot."),
+            cause,
+          }),
+      });
+
+    const logoutAccount: CodexAdapterShape["logoutAccount"] = () =>
+      Effect.tryPromise({
+        try: () => manager.logout(),
+        catch: (cause) =>
+          new ProviderAdapterProcessError({
+            provider: PROVIDER,
+            threadId: "codex-account",
+            detail: toMessage(cause, "Failed to logout Codex account."),
+            cause,
+          }),
+      });
+
     const runtimeEventQueue = yield* Queue.unbounded<ProviderRuntimeEvent>();
 
     yield* Effect.acquireRelease(
@@ -1506,6 +1530,8 @@ const makeCodexAdapter = (options?: CodexAdapterLiveOptions) =>
       listSessions,
       hasSession,
       stopAll,
+      readAccountSnapshot,
+      logoutAccount,
       streamEvents: Stream.fromQueue(runtimeEventQueue),
     } satisfies CodexAdapterShape;
   });

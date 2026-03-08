@@ -365,6 +365,18 @@ describe("wsNativeApi", () => {
     });
   });
 
+  it("routes server logout requests through the websocket transport", async () => {
+    requestMock.mockResolvedValue(undefined);
+    const { createWsNativeApi } = await import("./wsNativeApi");
+
+    const api = createWsNativeApi();
+    await api.server.logoutAccount({ provider: "codex" });
+
+    expect(requestMock).toHaveBeenCalledWith(WS_METHODS.serverLogoutAccount, {
+      provider: "codex",
+    });
+  });
+
   it("forwards context menu metadata to desktop bridge", async () => {
     const showContextMenu = vi.fn().mockResolvedValue("delete");
     Object.defineProperty(getWindowForTest(), "desktopBridge", {

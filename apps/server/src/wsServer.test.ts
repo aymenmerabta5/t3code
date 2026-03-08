@@ -761,6 +761,190 @@ describe("WebSocket Server", () => {
     expectAvailableEditors((response.result as { availableEditors: unknown }).availableEditors);
   });
 
+  it("bootstraps the codex account snapshot into server.getConfig", async () => {
+    const runtimeEventPubSub = Effect.runSync(PubSub.unbounded<ProviderRuntimeEvent>());
+    const unsupported = () => Effect.die(new Error("Unsupported provider call in test")) as never;
+    const readAccountSnapshot = vi.fn(() =>
+      Effect.succeed({
+        type: "chatgpt" as const,
+        planType: "business" as const,
+        sparkEnabled: false,
+      }),
+    );
+    const providerService: ProviderServiceShape = {
+      startSession: () => unsupported(),
+      sendTurn: () => unsupported(),
+      interruptTurn: () => unsupported(),
+      respondToRequest: () => unsupported(),
+      respondToUserInput: () => unsupported(),
+      stopSession: () => unsupported(),
+      listSessions: () => Effect.succeed([]),
+      getCapabilities: () => Effect.succeed({ sessionModelSwitch: "in-session" }),
+      rollbackConversation: () => unsupported(),
+      readAccountSnapshot,
+      logoutAccount: () => unsupported(),
+      streamEvents: Stream.fromPubSub(runtimeEventPubSub),
+    };
+
+    server = await createTestServer({
+      cwd: "/my/workspace",
+      providerLayer: Layer.succeed(ProviderService, providerService),
+    });
+    const addr = server.address();
+    const port = typeof addr === "object" && addr !== null ? addr.port : 0;
+
+    const ws = await connectWs(port);
+    connections.push(ws);
+    await waitForMessage(ws);
+
+    const response = await sendRequest(ws, WS_METHODS.serverGetConfig);
+    expect(response.error).toBeUndefined();
+    expect(response.result).toEqual({
+      cwd: "/my/workspace",
+      keybindingsConfigPath: expect.any(String),
+      keybindings: DEFAULT_RESOLVED_KEYBINDINGS,
+      issues: [],
+      providers: [
+        expect.objectContaining({
+          provider: "codex",
+          isPro: false,
+          planLabel: "Business",
+          accountType: "chatgpt",
+        }),
+      ],
+      availableEditors: expect.any(Array),
+    });
+    expect(readAccountSnapshot).toHaveBeenCalledTimes(1);
+  });
+
+  it("pushes updated provider account data when codex account events arrive", async () => {
+    const runtimeEventPubSub = Effect.runSync(PubSub.unbounded<ProviderRuntimeEvent>());
+    const emitRuntimeEvent = (event: ProviderRuntimeEvent) => {
+      Effect.runSync(PubSub.publish(runtimeEventPubSub, event));
+    };
+    const unsupported = () => Effect.die(new Error("Unsupported provider call in test")) as never;
+    const providerService: ProviderServiceShape = {
+      startSession: () => unsupported(),
+      sendTurn: () => unsupported(),
+      interruptTurn: () => unsupported(),
+      respondToRequest: () => unsupported(),
+      respondToUserInput: () => unsupported(),
+      stopSession: () => unsupported(),
+      listSessions: () => Effect.succeed([]),
+      getCapabilities: () => Effect.succeed({ sessionModelSwitch: "in-session" }),
+      rollbackConversation: () => unsupported(),
+      readAccountSnapshot: () =>
+        Effect.succeed({
+          type: "chatgpt" as const,
+          planType: "business" as const,
+          sparkEnabled: false,
+        }),
+      logoutAccount: () => unsupported(),
+      streamEvents: Stream.fromPubSub(runtimeEventPubSub),
+    };
+
+    server = await createTestServer({
+      cwd: "/my/workspace",
+      providerLayer: Layer.succeed(ProviderService, providerService),
+    });
+    const addr = server.address();
+    const port = typeof addr === "object" && addr !== null ? addr.port : 0;
+
+    const ws = await connectWs(port);
+    connections.push(ws);
+    await waitForMessage(ws);
+
+    emitRuntimeEvent({
+      eventId: asEventId("evt-account-updated"),
+      provider: "codex",
+      threadId: asThreadId("thread-account-updated"),
+      createdAt: "2026-03-08T10:00:00.000Z",
+      type: "account.updated",
+      payload: {
+        account: {
+          type: "chatgpt",
+          planType: "pro",
+        },
+      },
+    });
+
+    const push = await waitForPush(
+      ws,
+      WS_CHANNELS.serverConfigUpdated,
+      (message) =>
+        Array.isArray((message.data as { providers?: unknown[] }).providers) &&
+        (message.data as { providers: Array<{ planLabel?: string }> }).providers[0]?.planLabel ===
+          "Pro",
+    );
+
+    expect(push.data).toEqual({
+      issues: [],
+      providers: [
+        expect.objectContaining({
+          provider: "codex",
+          isPro: true,
+          planLabel: "Pro",
+          accountType: "chatgpt",
+        }),
+      ],
+    });
+  });
+
+  it("logs out the codex account and clears the cached provider snapshot", async () => {
+    const runtimeEventPubSub = Effect.runSync(PubSub.unbounded<ProviderRuntimeEvent>());
+    const unsupported = () => Effect.die(new Error("Unsupported provider call in test")) as never;
+    const logoutAccount = vi.fn(() => Effect.void);
+    const providerService: ProviderServiceShape = {
+      startSession: () => unsupported(),
+      sendTurn: () => unsupported(),
+      interruptTurn: () => unsupported(),
+      respondToRequest: () => unsupported(),
+      respondToUserInput: () => unsupported(),
+      stopSession: () => unsupported(),
+      listSessions: () => Effect.succeed([]),
+      getCapabilities: () => Effect.succeed({ sessionModelSwitch: "in-session" }),
+      rollbackConversation: () => unsupported(),
+      readAccountSnapshot: () =>
+        Effect.succeed({
+          type: "chatgpt" as const,
+          planType: "business" as const,
+          sparkEnabled: false,
+        }),
+      logoutAccount,
+      streamEvents: Stream.fromPubSub(runtimeEventPubSub),
+    };
+
+    server = await createTestServer({
+      cwd: "/my/workspace",
+      providerLayer: Layer.succeed(ProviderService, providerService),
+    });
+    const addr = server.address();
+    const port = typeof addr === "object" && addr !== null ? addr.port : 0;
+
+    const ws = await connectWs(port);
+    connections.push(ws);
+    await waitForMessage(ws);
+
+    const response = await sendRequest(ws, WS_METHODS.serverLogoutAccount, {
+      provider: "codex",
+    });
+    expect(response.error).toBeUndefined();
+    expect(logoutAccount).toHaveBeenCalledWith("codex");
+
+    const push = await waitForPush(ws, WS_CHANNELS.serverConfigUpdated);
+    expect(push.data).toEqual({
+      issues: [],
+      providers: [
+        expect.objectContaining({
+          provider: "codex",
+          isPro: false,
+          planLabel: undefined,
+          accountType: undefined,
+        }),
+      ],
+    });
+  });
+
   it("bootstraps default keybindings file when missing", async () => {
     const stateDir = makeTempDir("t3code-state-bootstrap-keybindings-");
     const keybindingsPath = path.join(stateDir, "keybindings.json");
@@ -1172,6 +1356,8 @@ describe("WebSocket Server", () => {
       listSessions: () => Effect.succeed([]),
       getCapabilities: () => Effect.succeed({ sessionModelSwitch: "in-session" }),
       rollbackConversation: () => unsupported(),
+      readAccountSnapshot: () => unsupported(),
+      logoutAccount: () => unsupported(),
       streamEvents: Stream.fromPubSub(runtimeEventPubSub),
     };
     const providerLayer = Layer.succeed(ProviderService, providerService);

@@ -91,6 +91,8 @@ function createProviderServiceHarness(
     listSessions,
     getCapabilities: () => Effect.succeed({ sessionModelSwitch: "in-session" }),
     rollbackConversation,
+    readAccountSnapshot: () => unsupported(),
+    logoutAccount: () => unsupported(),
     streamEvents: Stream.fromPubSub(runtimeEventPubSub),
   };
 

@@ -172,6 +172,16 @@ function makeFakeCodexAdapter(provider: ProviderKind = "codex") {
       }),
   );
 
+  const readAccountSnapshot = vi.fn(() =>
+    Effect.succeed({
+      type: "chatgpt" as const,
+      planType: "business" as const,
+      sparkEnabled: false,
+    }),
+  );
+
+  const logoutAccount = vi.fn(() => Effect.void);
+
   const adapter: ProviderAdapterShape<ProviderAdapterError> = {
     provider,
     capabilities: {
@@ -188,6 +198,8 @@ function makeFakeCodexAdapter(provider: ProviderKind = "codex") {
     readThread,
     rollbackThread,
     stopAll,
+    readAccountSnapshot,
+    logoutAccount,
     streamEvents: Stream.fromPubSub(runtimeEventPubSub),
   };
 
@@ -209,6 +221,8 @@ function makeFakeCodexAdapter(provider: ProviderKind = "codex") {
     readThread,
     rollbackThread,
     stopAll,
+    readAccountSnapshot,
+    logoutAccount,
   };
 }
 

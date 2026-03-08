@@ -56,6 +56,11 @@ import { ProviderService } from "./provider/Services/ProviderService";
 import { ProviderHealth } from "./provider/Services/ProviderHealth";
 import { CheckpointDiffQuery } from "./checkpointing/Services/CheckpointDiffQuery";
 import { clamp } from "effect/Number";
+import {
+  planLabelFromSnapshot,
+  type CodexAccountSnapshot,
+  readCodexAccountSnapshot,
+} from "./codexAccount";
 import { Open, resolveAvailableEditors } from "./open";
 import { ServerConfig } from "./config";
 import { GitCore } from "./git/Services/GitCore.ts";
@@ -269,6 +274,8 @@ export const createServer = Effect.fn(function* (): Effect.fn.Return<
   );
 
   const providerStatuses = yield* providerHealth.getStatuses;
+  const providerService = yield* ProviderService;
+  const accountSnapshotRef = yield* Ref.make<CodexAccountSnapshot | undefined>(undefined);
 
   const clients = yield* Ref.make(new Set<WebSocket>());
   const logger = createLogger("ws");
@@ -625,14 +632,81 @@ export const createServer = Effect.fn(function* (): Effect.fn.Return<
     }),
   ).pipe(Effect.forkIn(subscriptionsScope));
 
-  yield* Stream.runForEach(keybindingsManager.changes, (event) =>
-    broadcastPush({
+  const mergeAccountIntoStatuses = (snapshot: CodexAccountSnapshot | undefined) =>
+    providerStatuses.map((status) => {
+      if (status.provider === "codex") {
+        return Object.assign({}, status, {
+          // Historical field name kept for compatibility; the UI uses it as Spark availability.
+          isPro: snapshot?.sparkEnabled ?? false,
+          planLabel: snapshot ? planLabelFromSnapshot(snapshot) : undefined,
+          accountType: snapshot?.type,
+        });
+      }
+      return status;
+    });
+
+  const broadcastServerConfigUpdated = Effect.fnUntraced(function* (
+    snapshot: CodexAccountSnapshot | undefined,
+  ) {
+    const keybindingsConfig = yield* keybindingsManager.loadConfigState;
+    yield* broadcastPush({
       type: "push",
       channel: WS_CHANNELS.serverConfigUpdated,
       data: {
-        issues: event.issues,
-        providers: providerStatuses,
+        issues: keybindingsConfig.issues,
+        providers: mergeAccountIntoStatuses(snapshot),
       },
+    });
+  });
+
+  const ensureAccountSnapshot = Effect.fnUntraced(function* () {
+    const cachedSnapshot = yield* Ref.get(accountSnapshotRef);
+    if (cachedSnapshot) {
+      return cachedSnapshot;
+    }
+
+    const snapshotExit = yield* Effect.exit(providerService.readAccountSnapshot("codex"));
+    if (snapshotExit._tag === "Failure") {
+      yield* Effect.logDebug("failed to bootstrap codex account snapshot", {
+        cause: Cause.pretty(snapshotExit.cause),
+      });
+      return undefined;
+    }
+
+    yield* Ref.set(accountSnapshotRef, snapshotExit.value);
+    return snapshotExit.value;
+  });
+
+  yield* ensureAccountSnapshot();
+
+  yield* Stream.runForEach(keybindingsManager.changes, (event) =>
+    Effect.gen(function* () {
+      const snapshot = yield* Ref.get(accountSnapshotRef);
+      yield* broadcastPush({
+        type: "push",
+        channel: WS_CHANNELS.serverConfigUpdated,
+        data: {
+          issues: event.issues,
+          providers: mergeAccountIntoStatuses(snapshot),
+        },
+      });
+    }),
+  ).pipe(Effect.forkIn(subscriptionsScope));
+
+  yield* Stream.runForEach(providerService.streamEvents, (event) =>
+    Effect.gen(function* () {
+      if (event.type !== "account.updated") return;
+      const nextSnapshot = readCodexAccountSnapshot(
+        (event as { payload?: unknown }).payload ?? {},
+      );
+      const prevSnapshot = yield* Ref.get(accountSnapshotRef);
+      yield* Ref.set(accountSnapshotRef, nextSnapshot);
+      const changed =
+        prevSnapshot?.type !== nextSnapshot.type ||
+        prevSnapshot?.planType !== nextSnapshot.planType ||
+        prevSnapshot?.sparkEnabled !== nextSnapshot.sparkEnabled;
+      if (!changed) return;
+      yield* broadcastServerConfigUpdated(nextSnapshot);
     }),
   ).pipe(Effect.forkIn(subscriptionsScope));
 
@@ -876,21 +950,31 @@ export const createServer = Effect.fn(function* (): Effect.fn.Return<
         return yield* terminalManager.close(body);
       }
 
-      case WS_METHODS.serverGetConfig:
+      case WS_METHODS.serverGetConfig: {
         const keybindingsConfig = yield* keybindingsManager.loadConfigState;
+        const snapshot = yield* ensureAccountSnapshot();
         return {
           cwd,
           keybindingsConfigPath,
           keybindings: keybindingsConfig.keybindings,
           issues: keybindingsConfig.issues,
-          providers: providerStatuses,
+          providers: mergeAccountIntoStatuses(snapshot),
           availableEditors,
         };
+      }
 
       case WS_METHODS.serverUpsertKeybinding: {
         const body = stripRequestTag(request.body);
         const keybindingsConfig = yield* keybindingsManager.upsertKeybindingRule(body);
         return { keybindings: keybindingsConfig, issues: [] };
+      }
+
+      case WS_METHODS.serverLogoutAccount: {
+        const body = stripRequestTag(request.body);
+        yield* providerService.logoutAccount(body.provider);
+        yield* Ref.set(accountSnapshotRef, undefined);
+        yield* broadcastServerConfigUpdated(undefined);
+        return undefined;
       }
 
       default: {

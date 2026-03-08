@@ -472,6 +472,16 @@ export const makeTestProviderAdapterHarness = (options?: MakeTestProviderAdapter
       sessions.clear();
     });
 
+  const readAccountSnapshot: ProviderAdapterShape<ProviderAdapterError>["readAccountSnapshot"] = () =>
+    Effect.succeed({
+      type: "chatgpt",
+      planType: "business",
+      sparkEnabled: false,
+    });
+
+  const logoutAccount: ProviderAdapterShape<ProviderAdapterError>["logoutAccount"] = () =>
+    Effect.void;
+
   const adapter: ProviderAdapterShape<ProviderAdapterError> = {
     provider,
     capabilities: {
@@ -488,6 +498,8 @@ export const makeTestProviderAdapterHarness = (options?: MakeTestProviderAdapter
     readThread,
     rollbackThread,
     stopAll,
+    readAccountSnapshot,
+    logoutAccount,
     streamEvents: Stream.fromQueue(runtimeEvents),
   };
 

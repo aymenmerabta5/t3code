@@ -59,6 +59,7 @@ import {
   SidebarTrigger,
 } from "./ui/sidebar";
 import { formatWorktreePathForDisplay, getOrphanedWorktreePathForThread } from "../worktreeCleanup";
+import { AccountStatusWidget } from "./AccountStatusWidget";
 import { isNonEmpty as isNonEmptyString } from "effect/String";
 
 const EMPTY_KEYBINDINGS: ResolvedKeybindingsConfig = [];
@@ -1350,6 +1351,10 @@ export default function Sidebar() {
             + Add project
           </button>
         )}
+
+        <div className="mt-2">
+          <AccountStatusWidget />
+        </div>
       </SidebarFooter>
     </>
   );

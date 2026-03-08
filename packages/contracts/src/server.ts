@@ -33,6 +33,9 @@ export const ServerProviderAuthStatus = Schema.Literals([
 ]);
 export type ServerProviderAuthStatus = typeof ServerProviderAuthStatus.Type;
 
+export const ServerProviderAccountType = Schema.Literals(["apiKey", "chatgpt", "unknown"]);
+export type ServerProviderAccountType = typeof ServerProviderAccountType.Type;
+
 export const ServerProviderStatus = Schema.Struct({
   provider: ProviderKind,
   status: ServerProviderStatusState,
@@ -40,6 +43,10 @@ export const ServerProviderStatus = Schema.Struct({
   authStatus: ServerProviderAuthStatus,
   checkedAt: IsoDateTime,
   message: Schema.optional(TrimmedNonEmptyString),
+  // Historical field name kept for compatibility; this currently means Spark availability.
+  isPro: Schema.optional(Schema.Boolean),
+  planLabel: Schema.optional(TrimmedNonEmptyString),
+  accountType: Schema.optional(ServerProviderAccountType),
 });
 export type ServerProviderStatus = typeof ServerProviderStatus.Type;
 
@@ -57,6 +64,11 @@ export type ServerConfig = typeof ServerConfig.Type;
 
 export const ServerUpsertKeybindingInput = KeybindingRule;
 export type ServerUpsertKeybindingInput = typeof ServerUpsertKeybindingInput.Type;
+
+export const ServerLogoutAccountInput = Schema.Struct({
+  provider: ProviderKind,
+});
+export type ServerLogoutAccountInput = typeof ServerLogoutAccountInput.Type;
 
 export const ServerUpsertKeybindingResult = Schema.Struct({
   keybindings: ResolvedKeybindingsConfig,

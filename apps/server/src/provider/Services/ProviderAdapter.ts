@@ -23,6 +23,8 @@ import type {
 import type { Effect } from "effect";
 import type { Stream } from "effect";
 
+import type { CodexAccountSnapshot } from "../../codexAccount";
+
 export type ProviderSessionModelSwitchMode = "in-session" | "restart-session" | "unsupported";
 
 export interface ProviderAdapterCapabilities {
@@ -123,6 +125,16 @@ export interface ProviderAdapterShape<TError> {
    * Stop all sessions owned by this adapter.
    */
   readonly stopAll: () => Effect.Effect<void, TError>;
+
+  /**
+   * Read the provider account snapshot without starting a durable thread session.
+   */
+  readonly readAccountSnapshot: () => Effect.Effect<CodexAccountSnapshot, TError>;
+
+  /**
+   * Remove stored provider account credentials.
+   */
+  readonly logoutAccount: () => Effect.Effect<void, TError>;
 
   /**
    * Canonical runtime event stream emitted by this adapter.

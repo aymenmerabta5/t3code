@@ -188,6 +188,8 @@ describe("ProviderCommandReactor", () => {
           sessionModelSwitch: provider === "codex" ? "in-session" : "in-session",
         }),
       rollbackConversation: () => unsupported(),
+      readAccountSnapshot: () => unsupported(),
+      logoutAccount: () => unsupported(),
       streamEvents: Stream.fromPubSub(runtimeEventPubSub),
     };
 

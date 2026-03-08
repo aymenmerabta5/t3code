@@ -199,6 +199,7 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { newCommandId, newMessageId, newThreadId } from "~/lib/utils";
 import { readNativeApi } from "~/nativeApi";
 import {
+  filterModelOptionsForPlan,
   getAppModelOptions,
   resolveAppModelSelection,
   resolveAppServiceTier,
@@ -831,9 +832,12 @@ export default function ChatView({ threadId }: ChatViewProps) {
     return Object.keys(codexOptions).length > 0 ? { codex: codexOptions } : undefined;
   }, [selectedCodexFastModeEnabled, selectedEffort, selectedProvider, supportsReasoningEffort]);
   const selectedModelForPicker = selectedModel;
+  const codexProviderIsPro = useQuery(serverConfigQueryOptions()).data?.providers?.find(
+    (s) => s.provider === "codex",
+  )?.isPro;
   const modelOptionsByProvider = useMemo(
-    () => getCustomModelOptionsByProvider(settings),
-    [settings],
+    () => getCustomModelOptionsByProvider(settings, { isPro: codexProviderIsPro }),
+    [settings, codexProviderIsPro],
   );
   const selectedModelForPickerWithCustomFallback = useMemo(() => {
     const currentOptions = modelOptionsByProvider[selectedProvider];
@@ -5295,11 +5299,12 @@ const COMING_SOON_PROVIDER_OPTIONS = [
   { id: "gemini", label: "Gemini", icon: Gemini },
 ] as const;
 
-function getCustomModelOptionsByProvider(settings: {
-  customCodexModels: readonly string[];
-}): Record<ProviderKind, ReadonlyArray<{ slug: string; name: string }>> {
+function getCustomModelOptionsByProvider(
+  settings: { customCodexModels: readonly string[] },
+  plan: { isPro: boolean | undefined },
+): Record<ProviderKind, ReadonlyArray<{ slug: string; name: string }>> {
   return {
-    codex: getAppModelOptions("codex", settings.customCodexModels),
+    codex: filterModelOptionsForPlan(getAppModelOptions("codex", settings.customCodexModels), plan),
   };
 }
 

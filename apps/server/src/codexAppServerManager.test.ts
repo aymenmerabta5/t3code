@@ -220,6 +220,20 @@ describe("readCodexAccountSnapshot", () => {
     });
   });
 
+  it("disables spark for chatgpt business accounts", () => {
+    expect(
+      readCodexAccountSnapshot({
+        type: "chatgpt",
+        email: "business@example.com",
+        planType: "business",
+      }),
+    ).toEqual({
+      type: "chatgpt",
+      planType: "business",
+      sparkEnabled: false,
+    });
+  });
+
   it("keeps spark enabled for chatgpt pro accounts", () => {
     expect(
       readCodexAccountSnapshot({
@@ -231,6 +245,20 @@ describe("readCodexAccountSnapshot", () => {
       type: "chatgpt",
       planType: "pro",
       sparkEnabled: true,
+    });
+  });
+
+  it("maps legacy team plans to business", () => {
+    expect(
+      readCodexAccountSnapshot({
+        type: "chatgpt",
+        email: "team@example.com",
+        planType: "team",
+      }),
+    ).toEqual({
+      type: "chatgpt",
+      planType: "business",
+      sparkEnabled: false,
     });
   });
 

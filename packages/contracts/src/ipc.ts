@@ -30,7 +30,11 @@ import type {
   TerminalSessionSnapshot,
   TerminalWriteInput,
 } from "./terminal";
-import type { ServerUpsertKeybindingInput, ServerUpsertKeybindingResult } from "./server";
+import type {
+  ServerLogoutAccountInput,
+  ServerUpsertKeybindingInput,
+  ServerUpsertKeybindingResult,
+} from "./server";
 import type {
   ClientOrchestrationCommand,
   OrchestrationGetFullThreadDiffInput,
@@ -137,6 +141,7 @@ export interface NativeApi {
   server: {
     getConfig: () => Promise<ServerConfig>;
     upsertKeybinding: (input: ServerUpsertKeybindingInput) => Promise<ServerUpsertKeybindingResult>;
+    logoutAccount: (input: ServerLogoutAccountInput) => Promise<void>;
   };
   orchestration: {
     getSnapshot: () => Promise<OrchestrationReadModel>;

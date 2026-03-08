@@ -27,6 +27,7 @@ import type {
 import { ServiceMap } from "effect";
 import type { Effect, Stream } from "effect";
 
+import type { CodexAccountSnapshot } from "../../codexAccount";
 import type { ProviderServiceError } from "../Errors.ts";
 import type { ProviderAdapterCapabilities } from "./ProviderAdapter.ts";
 
@@ -98,6 +99,18 @@ export interface ProviderServiceShape {
     readonly threadId: ThreadId;
     readonly numTurns: number;
   }) => Effect.Effect<void, ProviderServiceError>;
+
+  /**
+   * Read the provider account snapshot without starting a durable thread session.
+   */
+  readonly readAccountSnapshot: (
+    provider: ProviderKind,
+  ) => Effect.Effect<CodexAccountSnapshot, ProviderServiceError>;
+
+  /**
+   * Remove stored credentials for a provider account.
+   */
+  readonly logoutAccount: (provider: ProviderKind) => Effect.Effect<void, ProviderServiceError>;
 
   /**
    * Canonical provider runtime event stream.
