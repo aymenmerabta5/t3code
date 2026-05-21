@@ -1,4 +1,4 @@
-import * as Effect from "effect/Effect";
+﻿import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { FetchHttpClient, HttpRouter, HttpServer } from "effect/unstable/http";
 
@@ -88,8 +88,8 @@ import {
   orchestrationDispatchRouteLayer,
   orchestrationSnapshotRouteLayer,
 } from "./orchestration/http.ts";
-import * as NetService from "@t3tools/shared/Net";
-import { disableTailscaleServe, ensureTailscaleServe } from "@t3tools/tailscale";
+import * as NetService from "@ghostforge/shared/Net";
+import { disableTailscaleServe, ensureTailscaleServe } from "@ghostforge/tailscale";
 
 const PtyAdapterLive = Layer.unwrap(
   Effect.gen(function* () {
@@ -152,7 +152,7 @@ const ProviderSessionDirectoryLayerLive = ProviderSessionDirectoryLive.pipe(
   Layer.provide(ProviderSessionRuntimeRepositoryLive),
 );
 
-// `ProviderAdapterRegistryLive` is now a facade that resolves kind → adapter
+// `ProviderAdapterRegistryLive` is now a facade that resolves kind â†’ adapter
 // by looking up the default `ProviderInstance` per driver in the instance
 // registry. Adapter construction itself moved inside each driver's
 // `create()`; `ProviderEventLoggersLive` owns the shared native/canonical
@@ -252,7 +252,7 @@ const RuntimeCoreDependenciesLive = ReactorLayerLive.pipe(
   Layer.provideMerge(PersistenceLayerLive),
   Layer.provideMerge(KeybindingsLive),
   Layer.provideMerge(ProviderRegistryLive),
-  // The instance registry is the new routing keystone — text generation,
+  // The instance registry is the new routing keystone â€” text generation,
   // adapter lookup, and runtime ingestion all resolve `ProviderInstanceId`
   // through this layer. Built-in drivers come from `BUILT_IN_DRIVERS`;
   // `providerInstances` hydration merges `settings.providers.<kind>`

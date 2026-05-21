@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";
+﻿import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -23,7 +23,7 @@ const configuredHostedAppUrl = (() => {
   }
   return undefined;
 })();
-const sourcemapEnv = process.env.T3CODE_WEB_SOURCEMAP?.trim().toLowerCase();
+const sourcemapEnv = process.env.GHOSTFORGE_WEB_SOURCEMAP?.trim().toLowerCase();
 
 const buildSourcemap =
   sourcemapEnv === "0" || sourcemapEnv === "false"
@@ -113,7 +113,7 @@ export default defineConfig({
     hmr: {
       // Explicit config so Vite's HMR WebSocket connects reliably
       // inside Electron's BrowserWindow. Vite 8 uses console.debug for
-      // connection logs — enable "Verbose" in DevTools to see them.
+      // connection logs â€” enable "Verbose" in DevTools to see them.
       protocol: "ws",
       host,
     },

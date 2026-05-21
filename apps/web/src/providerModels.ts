@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_BY_PROVIDER,
   defaultInstanceIdForDriver,
@@ -7,8 +7,8 @@ import {
   type ProviderInstanceId,
   type ServerProvider,
   type ServerProviderModel,
-} from "@t3tools/contracts";
-import { createModelCapabilities, normalizeModelSlug } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelCapabilities, normalizeModelSlug } from "@ghostforge/shared/model";
 
 const EMPTY_CAPABILITIES: ModelCapabilities = createModelCapabilities({
   optionDescriptors: [],

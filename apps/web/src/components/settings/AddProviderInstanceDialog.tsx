@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { CheckIcon } from "lucide-react";
 import { Radio as RadioPrimitive } from "@base-ui/react/radio";
@@ -7,7 +7,7 @@ import {
   ProviderInstanceId,
   ProviderDriverKind,
   type ProviderInstanceConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { useSettings, useUpdateSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
@@ -41,10 +41,10 @@ const PROVIDER_ACCENT_SWATCHES = [
 
 /**
  * Normalize a user-provided label into a slug suffix for the instance id.
- * The full id is formed by prefixing the driver slug — e.g. label "Work" on
+ * The full id is formed by prefixing the driver slug â€” e.g. label "Work" on
  * driver "codex" becomes `codex_work`. Output is trimmed to 48 chars so the
  * final composed id stays under the 64-char slug cap enforced by
- * `ProviderInstanceId` in `@t3tools/contracts`.
+ * `ProviderInstanceId` in `@ghostforge/contracts`.
  */
 function slugifyLabel(value: string): string {
   return value
@@ -242,7 +242,7 @@ export function AddProviderInstanceDialog({ open, onOpenChange }: AddProviderIns
           <DialogHeader className="border-b border-border/70 bg-background">
             <DialogTitle>Add provider instance</DialogTitle>
             <DialogDescription>
-              Configure an additional provider instance — for example, a second Codex install
+              Configure an additional provider instance â€” for example, a second Codex install
               pointed at a different workspace.
             </DialogDescription>
             <div className="grid grid-cols-3 gap-2">

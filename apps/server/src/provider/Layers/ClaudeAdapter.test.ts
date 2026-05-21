@@ -1,4 +1,4 @@
-// @effect-diagnostics nodeBuiltinImport:off
+﻿// @effect-diagnostics nodeBuiltinImport:off
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -20,8 +20,8 @@ import {
   type RuntimeMode,
   ThreadId,
   ProviderInstanceId,
-} from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 import { assert, describe, it } from "@effect/vitest";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -1413,7 +1413,7 @@ describe("ClaudeAdapterLive", () => {
 
   it.effect("stopSession does not throw into the SDK prompt consumer", () => {
     // The SDK consumes user messages via `for await (... of prompt)`.
-    // Stopping a session must end that loop cleanly — not throw an error.
+    // Stopping a session must end that loop cleanly â€” not throw an error.
     //
     // FakeClaudeQuery.close() masks this by resolving pending iterators
     // before the shutdown propagates. Override it to match real SDK behavior
@@ -3353,14 +3353,14 @@ describe("ClaudeAdapterLive", () => {
         readonly question: string;
       }>;
 
-      // Claude CLI 2.1.119 — key-agnostic Object.entries iteration. Any key
+      // Claude CLI 2.1.119 â€” key-agnostic Object.entries iteration. Any key
       // works here, but it must at least round-trip into a non-empty string.
       const v119Rendered = Object.entries(sdkAnswers)
         .map(([key, value]) => `"${key}"="${String(value)}"`)
         .join(", ");
       assert.equal(v119Rendered, '"Which framework?"="React"');
 
-      // Claude CLI 2.1.121 — lookup by full question text. This is the path
+      // Claude CLI 2.1.121 â€” lookup by full question text. This is the path
       // that regressed in #2388 when the answers were keyed by `header`.
       const v121Rendered = sdkQuestions
         .map(({ question }) => {

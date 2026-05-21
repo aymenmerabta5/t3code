@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Toast } from "@base-ui/react/toast";
 import {
@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { useParams } from "@tanstack/react-router";
-import { type ScopedThreadRef, type ThreadId } from "@t3tools/contracts";
+import { type ScopedThreadRef, type ThreadId } from "@ghostforge/contracts";
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -53,7 +53,7 @@ export type ThreadToastData = {
     | "link"
     | "outline"
     | "secondary";
-  /** Optional extra body shown after toggling “Show details” (e.g. a list of pending RPCs). */
+  /** Optional extra body shown after toggling â€œShow detailsâ€ (e.g. a list of pending RPCs). */
   expandableContent?: ReactNode;
   expandableLabels?: { expand?: string; collapse?: string };
   /** When set with `expandableContent`, the summary + label act as one text disclosure (no separate chevron row). */
@@ -94,7 +94,7 @@ function errorDescriptionClampClass(type: unknown, description: unknown): string
   return "line-clamp-4";
 }
 
-/** Dismiss-only: circular control overlapping the card corner (iOS notification–style). */
+/** Dismiss-only: circular control overlapping the card corner (iOS notificationâ€“style). */
 const toastCornerDismissClass = "absolute z-20 -top-1.5 -right-1.5";
 const toastCornerOrbClass = cn(
   "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/60 bg-popover/92 text-muted-foreground shadow-sm outline-none backdrop-blur-sm",
@@ -568,7 +568,7 @@ function Toasts({ position = "top-right" }: { position: ToastPosition }) {
                   ? "not-data-expanded:[--toast-calc-height:var(--toast-frontmost-height)] data-expanded:[--toast-calc-height:max(var(--toast-frontmost-height,var(--toast-height)),var(--toast-height))]"
                   : "[--toast-calc-height:max(var(--toast-frontmost-height,var(--toast-height)),var(--toast-height))]",
                 "[--toast-gap:--spacing(3)] [--toast-peek:--spacing(3)] [--toast-scale:calc(max(0,1-(var(--toast-index)*.1)))] [--toast-shrink:calc(1-var(--toast-scale))]",
-                // Root height: never `min-h-(--toast-height)` — Base UI measures height by briefly forcing
+                // Root height: never `min-h-(--toast-height)` â€” Base UI measures height by briefly forcing
                 // `height: auto` on this node; an old `min-height` from `--toast-height` blocks shrinking,
                 // so `recalculateHeight` keeps the inflated value after an expandable closes.
                 // Behind + collapsed: fixed peek. Otherwise natural height (expand/collapse, hover stack).

@@ -1,4 +1,4 @@
-import {
+﻿import {
   type KeybindingCommand,
   type KeybindingShortcut,
   type KeybindingWhenNode,
@@ -7,7 +7,7 @@ import {
   THREAD_JUMP_KEYBINDING_COMMANDS,
   type ModelPickerJumpKeybindingCommand,
   type ThreadJumpKeybindingCommand,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { isMacPlatform } from "./lib/utils";
 
 export interface ShortcutEventLike {
@@ -53,7 +53,7 @@ const EVENT_CODE_KEY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   Digit0: ["0"],
   Digit1: ["1"],
   Digit2: ["2"],
-  Digit3: ["3"],
+  Digighostforge: ["3"],
   Digit4: ["4"],
   Digit5: ["5"],
   Digit6: ["6"],

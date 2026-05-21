@@ -1,4 +1,4 @@
-import { FitAddon } from "@xterm/addon-fit";
+﻿import { FitAddon } from "@xterm/addon-fit";
 import { Plus, SquareSplitHorizontal, TerminalSquare, Trash2, XIcon } from "lucide-react";
 import {
   type ResolvedKeybindingsConfig,
@@ -6,7 +6,7 @@ import {
   type TerminalEvent,
   type TerminalSessionSnapshot,
   type ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { Terminal, type ITheme } from "@xterm/xterm";
 import {
   type PointerEvent as ReactPointerEvent,
@@ -1298,7 +1298,7 @@ export default function ThreadTerminalDrawer({
                               }`}
                             >
                               {showGroupHeaders && (
-                                <span className="text-[10px] text-muted-foreground/80">└</span>
+                                <span className="text-[10px] text-muted-foreground/80">â””</span>
                               )}
                               <button
                                 type="button"

@@ -1,4 +1,4 @@
-import * as Schema from "effect/Schema";
+﻿import * as Schema from "effect/Schema";
 import * as Record from "effect/Record";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -43,7 +43,7 @@ export const removeLocalStorageItem = (key: string) => {
   isomorphicLocalStorage.removeItem(key);
 };
 
-const LOCAL_STORAGE_CHANGE_EVENT = "t3code:local_storage_change";
+const LOCAL_STORAGE_CHANGE_EVENT = "ghostforge:local_storage_change";
 
 interface LocalStorageChangeDetail {
   key: string;

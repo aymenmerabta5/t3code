@@ -1,8 +1,8 @@
-import { assert, it, afterEach, describe, expect, vi } from "@effect/vitest";
+﻿import { assert, it, afterEach, describe, expect, vi } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { ChildProcessSpawner } from "effect/unstable/process";
-import { VcsProcessExitError } from "@t3tools/contracts";
+import { VcsProcessExitError } from "@ghostforge/contracts";
 
 import * as VcsProcess from "../vcs/VcsProcess.ts";
 import * as GitHubCli from "./GitHubCli.ts";
@@ -220,7 +220,7 @@ describe("GitHubCli.layer", () => {
       mockRun.mockReturnValueOnce(
         Effect.succeed(
           processOutput(
-            "✓ Created repository octocat/codething-mvp on github.com\nhttps://github.com/octocat/codething-mvp\n",
+            "âœ“ Created repository octocat/codething-mvp on github.com\nhttps://github.com/octocat/codething-mvp\n",
           ),
         ),
       );

@@ -1,6 +1,6 @@
 import * as Crypto from "node:crypto";
 
-import type { DesktopSshEnvironmentTarget, DesktopUpdateChannel } from "@t3tools/contracts";
+import type { DesktopSshEnvironmentTarget, DesktopUpdateChannel } from "@ghostforge/contracts";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -332,7 +332,7 @@ export function resolveRemoteT3CliPackageSpec(input: {
 }): string {
   const appVersion = input.appVersion.trim();
   if (!input.isDevelopment && PUBLISHABLE_T3_VERSION_PATTERN.test(appVersion)) {
-    return `t3@${appVersion}`;
+    return `ghostforge@${appVersion}`;
   }
 
   if (input.isDevelopment) {

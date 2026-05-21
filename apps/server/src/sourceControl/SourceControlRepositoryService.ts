@@ -1,4 +1,4 @@
-import * as NodeOS from "node:os";
+﻿import * as NodeOS from "node:os";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -17,7 +17,7 @@ import {
   type SourceControlRepositoryCloneUrls,
   type SourceControlRepositoryInfo,
   type SourceControlRepositoryLookupInput,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { ServerConfig } from "../config.ts";
 import * as GitVcsDriver from "../vcs/GitVcsDriver.ts";
@@ -39,7 +39,7 @@ export interface SourceControlRepositoryServiceShape {
 export class SourceControlRepositoryService extends Context.Service<
   SourceControlRepositoryService,
   SourceControlRepositoryServiceShape
->()("t3/source-control/SourceControlRepositoryService") {}
+>()("ghostforge/source-control/SourceControlRepositoryService") {}
 
 function detailFromUnknown(cause: unknown): string {
   if (typeof cause === "object" && cause !== null) {

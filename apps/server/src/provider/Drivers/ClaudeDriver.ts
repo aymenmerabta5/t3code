@@ -1,5 +1,5 @@
-/**
- * ClaudeDriver — `ProviderDriver` for the Claude Agent SDK runtime.
+﻿/**
+ * ClaudeDriver â€” `ProviderDriver` for the Claude Agent SDK runtime.
  *
  * Mirrors `CodexDriver`: a plain value whose `create()` returns one
  * `ProviderInstance` bundling `snapshot` / `adapter` / `textGeneration`
@@ -12,7 +12,7 @@
  *
  * @module provider/Drivers/ClaudeDriver
  */
-import { ClaudeSettings, ProviderDriverKind, type ServerProvider } from "@t3tools/contracts";
+import { ClaudeSettings, ProviderDriverKind, type ServerProvider } from "@ghostforge/contracts";
 import * as Cache from "effect/Cache";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";

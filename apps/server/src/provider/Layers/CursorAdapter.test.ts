@@ -1,4 +1,4 @@
-// @effect-diagnostics nodeBuiltinImport:off
+﻿// @effect-diagnostics nodeBuiltinImport:off
 import * as path from "node:path";
 import * as os from "node:os";
 import { chmod, mkdtemp, readFile, writeFile } from "node:fs/promises";
@@ -13,7 +13,7 @@ import * as Fiber from "effect/Fiber";
 import * as Layer from "effect/Layer";
 import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
-import { createModelSelection } from "@t3tools/shared/model";
+import { createModelSelection } from "@ghostforge/shared/model";
 
 import {
   ApprovalRequestId,
@@ -22,7 +22,7 @@ import {
   type ProviderRuntimeEvent,
   ThreadId,
   ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { ServerConfig } from "../../config.ts";
 import { ServerSettingsService } from "../../serverSettings.ts";
@@ -114,7 +114,7 @@ async function waitForFileContent(filePath: string, attempts = 40) {
 // Tests mutate `ServerSettingsService` mid-flight (e.g. setting
 // `providers.cursor.binaryPath` to a mock ACP wrapper). The adapter
 // captures `cursorSettings` once at construction, so without a resolver
-// the mutation is invisible — sessions would spawn the constructor's
+// the mutation is invisible â€” sessions would spawn the constructor's
 // (empty) binary path. Wiring `resolveSettings` through
 // `ServerSettingsService.getSettings` makes each session read the latest
 // snapshot, matching the old "always read live" behavior that these
@@ -141,7 +141,7 @@ const cursorAdapterTestLayer = it.layer(
     Layer.provideMerge(ServerSettingsService.layerTest()),
     Layer.provideMerge(
       ServerConfig.layerTest(process.cwd(), {
-        prefix: "t3code-cursor-adapter-test-",
+        prefix: "ghostforge-cursor-adapter-test-",
       }),
     ),
     Layer.provideMerge(NodeServices.layer),
@@ -616,7 +616,7 @@ cursorAdapterTestLayer("CursorAdapterLive", (it) => {
             Layer.provideMerge(ServerSettingsService.layerTest()),
             Layer.provideMerge(
               ServerConfig.layerTest(process.cwd(), {
-                prefix: "t3code-cursor-adapter-test-",
+                prefix: "ghostforge-cursor-adapter-test-",
               }),
             ),
             Layer.provideMerge(NodeServices.layer),
@@ -1147,7 +1147,7 @@ cursorAdapterTestLayer("CursorAdapterLive", (it) => {
       });
 
       const argvRuns = yield* Effect.promise(() => readArgvLog(argvLogPath));
-      assert.lengthOf(argvRuns, 1, "session should not restart — only one spawn");
+      assert.lengthOf(argvRuns, 1, "session should not restart â€” only one spawn");
       assert.deepStrictEqual(argvRuns[0], ["acp"]);
 
       const requests = yield* Effect.promise(() => readJsonLines(requestLogPath));
@@ -1233,7 +1233,7 @@ cursorAdapterTestLayer("CursorAdapterLive", (it) => {
       const customInstanceId = ProviderInstanceId.make("cursor_secondary");
       // Custom-instance cases can't share the suite-level `CursorAdapter`
       // layer because that one binds `instanceId: "cursor"`. We build a
-      // fresh layer graph — including a fresh `ServerSettingsService` — so
+      // fresh layer graph â€” including a fresh `ServerSettingsService` â€” so
       // mid-test `updateSettings` calls target the same service instance the
       // adapter's `resolveSettings` reads from, and so the outer
       // `yield* ServerSettingsService` sees the same snapshot as well.
@@ -1251,7 +1251,7 @@ cursorAdapterTestLayer("CursorAdapterLive", (it) => {
         Layer.provideMerge(ServerSettingsService.layerTest()),
         Layer.provideMerge(
           ServerConfig.layerTest(process.cwd(), {
-            prefix: "t3code-cursor-adapter-custom-instance-",
+            prefix: "ghostforge-cursor-adapter-custom-instance-",
           }),
         ),
         Layer.provideMerge(NodeServices.layer),

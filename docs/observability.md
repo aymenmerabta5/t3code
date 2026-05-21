@@ -1,6 +1,6 @@
 # Observability
 
-T3 Code has one server-side observability model:
+GhostForge has one server-side observability model:
 
 - pretty logs go to stdout for humans
 - completed spans go to a local NDJSON trace file
@@ -22,7 +22,7 @@ If you want a log message to show up in the trace file, emit it inside an active
 
 ### Traces
 
-Completed spans are written as NDJSON records to `serverTracePath` (by default, `~/.t3/userdata/logs/server.trace.ndjson`).
+Completed spans are written as NDJSON records to `serverTracePath` (by default, `~/.ghostforge/userdata/logs/server.trace.ndjson`).
 
 Important fields in each record:
 
@@ -65,7 +65,7 @@ You do not need any extra env vars. Just run the app normally and inspect `serve
 Examples:
 
 ```bash
-npx t3
+npx ghostforge
 ```
 
 ```bash
@@ -101,7 +101,7 @@ Default Grafana login:
 ```bash
 export T3CODE_OTLP_TRACES_URL=http://localhost:4318/v1/traces
 export T3CODE_OTLP_METRICS_URL=http://localhost:4318/v1/metrics
-export T3CODE_OTLP_SERVICE_NAME=t3-local
+export T3CODE_OTLP_SERVICE_NAME=ghostforge-local
 ```
 
 Optional:
@@ -116,7 +116,7 @@ export T3CODE_TRACE_TIMING_ENABLED=true
 CLI:
 
 ```bash
-npx t3
+npx ghostforge
 ```
 
 Monorepo web/server dev:
@@ -140,8 +140,8 @@ macOS app bundle example:
 ```bash
 T3CODE_OTLP_TRACES_URL=http://localhost:4318/v1/traces \
 T3CODE_OTLP_METRICS_URL=http://localhost:4318/v1/metrics \
-T3CODE_OTLP_SERVICE_NAME=t3-desktop \
-"/Applications/T3 Code.app/Contents/MacOS/T3 Code"
+T3CODE_OTLP_SERVICE_NAME=ghostforge-desktop \
+"/Applications/GhostForge.app/Contents/MacOS/GhostForge"
 ```
 
 Direct binary example:
@@ -149,7 +149,7 @@ Direct binary example:
 ```bash
 T3CODE_OTLP_TRACES_URL=http://localhost:4318/v1/traces \
 T3CODE_OTLP_METRICS_URL=http://localhost:4318/v1/metrics \
-T3CODE_OTLP_SERVICE_NAME=t3-desktop \
+T3CODE_OTLP_SERVICE_NAME=ghostforge-desktop \
 ./path/to/your/desktop-app-binary
 ```
 
@@ -272,7 +272,7 @@ Recommended flow in Grafana:
 
 Good first searches:
 
-- service name such as `t3-local`, `t3-dev`, or `t3-desktop`
+- service name such as `ghostforge-local`, `ghostforge-dev`, or `ghostforge-desktop`
 - span names like `sql.execute`, `git.runCommand`, `provider.sendTurn`
 - orchestration spans with attributes like `orchestration.command_type`
 
@@ -284,20 +284,20 @@ Traces are best for one request. Metrics are best for trends.
 
 Good metric families to watch:
 
-- `t3_rpc_request_duration`
-- `t3_orchestration_command_duration`
-- `t3_orchestration_command_ack_duration`
-- `t3_provider_turn_duration`
-- `t3_git_command_duration`
-- `t3_db_query_duration`
+- `ghostforge_rpc_request_duration`
+- `ghostforge_orchestration_command_duration`
+- `ghostforge_orchestration_command_ack_duration`
+- `ghostforge_provider_turn_duration`
+- `ghostforge_git_command_duration`
+- `ghostforge_db_query_duration`
 
 Counters tell you volume and failure rate:
 
-- `t3_rpc_requests_total`
-- `t3_orchestration_commands_total`
-- `t3_provider_turns_total`
-- `t3_git_commands_total`
-- `t3_db_queries_total`
+- `ghostforge_rpc_requests_total`
+- `ghostforge_orchestration_commands_total`
+- `ghostforge_provider_turns_total`
+- `ghostforge_git_commands_total`
+- `ghostforge_db_queries_total`
 
 Use metrics when the question is:
 
@@ -313,7 +313,7 @@ Use traces when the question is:
 
 ### What The New Ack Metric Means
 
-`t3_orchestration_command_ack_duration` measures:
+`ghostforge_orchestration_command_ack_duration` measures:
 
 - start: command dispatch enters the orchestration engine
 - end: the first committed domain event for that command is published by the server
@@ -344,7 +344,7 @@ If you need those later, add client-side instrumentation or a dedicated server f
 
 ### "Did this command take too long to acknowledge?"
 
-1. Check `t3_orchestration_command_ack_duration` by `commandType`.
+1. Check `ghostforge_orchestration_command_ack_duration` by `commandType`.
 2. If it is high, inspect the corresponding orchestration trace.
 3. Look at child spans for projection, sqlite, provider, or git work.
 
@@ -494,7 +494,7 @@ OTLP export:
 - `T3CODE_OTLP_TRACES_URL`: OTLP trace endpoint
 - `T3CODE_OTLP_METRICS_URL`: OTLP metric endpoint
 - `T3CODE_OTLP_EXPORT_INTERVAL_MS`: export interval, default `10000`
-- `T3CODE_OTLP_SERVICE_NAME`: service name, default `t3-server`
+- `T3CODE_OTLP_SERVICE_NAME`: service name, default `ghostforge-server`
 
 If the OTLP URLs are unset, local tracing still works and metrics stay in-process only.
 

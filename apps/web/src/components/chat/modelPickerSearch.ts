@@ -1,7 +1,7 @@
-import { normalizeSearchQuery, scoreQueryMatch } from "@t3tools/shared/searchRanking";
+﻿import { normalizeSearchQuery, scoreQueryMatch } from "@ghostforge/shared/searchRanking";
 
 type ModelPickerSearchableModel = {
-  /** Driver kind — indexed so "codex" still matches a Codex Personal instance. */
+  /** Driver kind â€” indexed so "codex" still matches a Codex Personal instance. */
   driverKind: string;
   /**
    * Instance display name (e.g. "Codex Personal"). Indexed as a search

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TerminalManager - Terminal session orchestration service interface.
  *
  * Owns terminal lifecycle operations, output fanout, and session state
@@ -21,7 +21,7 @@ import {
   TerminalSessionLookupError,
   TerminalSessionStatus,
   TerminalWriteInput,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import type { PtyProcess } from "./PTY.ts";
 import * as Effect from "effect/Effect";
 import * as Context from "effect/Context";
@@ -124,5 +124,5 @@ export interface TerminalManagerShape {
  * TerminalManager - Service tag for terminal session orchestration.
  */
 export class TerminalManager extends Context.Service<TerminalManager, TerminalManagerShape>()(
-  "t3/terminal/Services/Manager/TerminalManager",
+  "ghostforge/terminal/Services/Manager/TerminalManager",
 ) {}

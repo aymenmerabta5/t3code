@@ -1,6 +1,6 @@
-import { describe, it, assert } from "@effect/vitest";
-import { ProviderDriverKind, ProviderInstanceId, type ServerProvider } from "@t3tools/contracts";
-import { createModelCapabilities } from "@t3tools/shared/model";
+﻿import { describe, it, assert } from "@effect/vitest";
+import { ProviderDriverKind, ProviderInstanceId, type ServerProvider } from "@ghostforge/contracts";
+import { createModelCapabilities } from "@ghostforge/shared/model";
 import * as Deferred from "effect/Deferred";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";

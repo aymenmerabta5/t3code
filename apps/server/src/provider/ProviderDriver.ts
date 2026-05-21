@@ -1,8 +1,8 @@
-/**
- * ProviderDriver / ProviderInstance — driver SPI as plain values.
+﻿/**
+ * ProviderDriver / ProviderInstance â€” driver SPI as plain values.
  *
  * `ProviderDriver` is a record, not a Context.Service. The thing it produces
- * (`ProviderInstance`) is also a record — three captured closures
+ * (`ProviderInstance`) is also a record â€” three captured closures
  * (`snapshot`, `adapter`, `textGeneration`), an id, and a driver kind. There
  * are intentionally no per-driver Context tags because tags are
  * singleton-per-runtime and we need many instances of the same driver.
@@ -16,7 +16,7 @@
  *     so drivers never deal with raw `unknown`.
  *   - `env` flows through Effect's R channel. Each driver declares the
  *     subset of infrastructure services it needs (FileSystem,
- *     ChildProcessSpawner, …) on its `create` return type; the registry
+ *     ChildProcessSpawner, â€¦) on its `create` return type; the registry
  *     layer's R is the union of those, and the runtime layer satisfies it.
  *
  * @module provider/ProviderDriver
@@ -25,7 +25,7 @@ import type {
   ProviderDriverKind,
   ProviderInstanceEnvironment,
   ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import type * as Effect from "effect/Effect";
 import type * as Schema from "effect/Schema";
 import type * as Scope from "effect/Scope";
@@ -38,7 +38,7 @@ import type { ServerProviderShape } from "./Services/ServerProvider.ts";
 /**
  * Static metadata advertised by a driver. Used for default presentation
  * and (later) settings UI. Doesn't need to be Effect-typed because nothing
- * about it is dynamic — drivers are registered at startup.
+ * about it is dynamic â€” drivers are registered at startup.
  */
 export interface ProviderDriverMetadata {
   /** Human-readable name for the driver itself (e.g. "Codex"). */
@@ -46,7 +46,7 @@ export interface ProviderDriverMetadata {
   /**
    * Whether the driver may be instantiated more than once concurrently.
    * Defaults to `true`. Set to `false` for drivers that wrap a global
-   * resource (e.g. a single desktop app socket) — the registry then
+   * resource (e.g. a single desktop app socket) â€” the registry then
    * rejects multi-instance configurations with a clear error.
    */
   readonly supportsMultipleInstances?: boolean;
@@ -56,7 +56,7 @@ export interface ProviderDriverMetadata {
  * One materialized provider instance. Held by the registry, looked up by
  * `instanceId`, torn down by closing the scope it was created in.
  *
- * The three "shape" fields are captured closures owned by this instance —
+ * The three "shape" fields are captured closures owned by this instance â€”
  * stopping one instance cannot affect another, and starting a second
  * instance of the same driver does not reach into the first instance's
  * state.
@@ -91,7 +91,7 @@ export function defaultProviderContinuationIdentity(input: {
 /**
  * Inputs the registry passes to a driver's `create` function.
  *
- * `config` is the typed payload — already decoded by the registry through
+ * `config` is the typed payload â€” already decoded by the registry through
  * `driver.configSchema`. Drivers never decode their own raw envelope.
  */
 export interface ProviderDriverCreateInput<Config> {
@@ -104,15 +104,15 @@ export interface ProviderDriverCreateInput<Config> {
 }
 
 /**
- * Driver SPI — registered as a plain value, not a Layer.
+ * Driver SPI â€” registered as a plain value, not a Layer.
  *
  * `Config` is whatever the driver decoded from
  * `ProviderInstanceConfig.config`. `R` is the union of infrastructure
  * services the driver depends on; the registry layer aggregates `R` across
  * all registered drivers and the runtime supplies them.
  *
- * `create` is responsible for *all* per-instance state — process handles,
- * pubsub topics, refs, file watchers — and must release them when its
+ * `create` is responsible for *all* per-instance state â€” process handles,
+ * pubsub topics, refs, file watchers â€” and must release them when its
  * scope closes. Two calls to `create` with different `instanceId` /
  * `config` MUST yield instances with no shared mutable state.
  */
@@ -126,12 +126,12 @@ export interface ProviderDriver<Config, R = never> {
    * unavailable shadow snapshot.
    *
    * The `Encoded` parameter is intentionally left as `unknown` (not
-   * `Config`) so schemas with `withDecodingDefault` / transformations — where
-   * the encoded shape differs from the decoded shape — satisfy the SPI
+   * `Config`) so schemas with `withDecodingDefault` / transformations â€” where
+   * the encoded shape differs from the decoded shape â€” satisfy the SPI
    * without casts. The registry only ever decodes `unknown` envelopes here,
    * so the precise encoded type is irrelevant at this boundary.
    *
-   * Using `Codec` rather than `Schema` pins `DecodingServices = never` — if
+   * Using `Codec` rather than `Schema` pins `DecodingServices = never` â€” if
    * we used `Schema<Config>`, the erased `any` in `AnyProviderDriver` would
    * widen `DecodingServices` to `unknown` and poison the R channel of every
    * caller of `decodeUnknownEffect`.
@@ -141,14 +141,14 @@ export interface ProviderDriver<Config, R = never> {
    * Default config payload used when the legacy
    * `ServerSettings.providers.<kind>` entry is empty or when the driver
    * is auto-bootstrapped without user configuration. Returning a typed
-   * default keeps the migration path simple — no special-casing needed
+   * default keeps the migration path simple â€” no special-casing needed
    * to construct a "blank" instance.
    */
   readonly defaultConfig: () => Config;
   /**
    * Materialize one instance. The returned effect runs in a scope owned
    * by the registry; closing that scope releases every resource the
-   * driver opened. Failures become unavailable shadow snapshots — the
+   * driver opened. Failures become unavailable shadow snapshots â€” the
    * driver MUST NOT throw defects.
    */
   readonly create: (

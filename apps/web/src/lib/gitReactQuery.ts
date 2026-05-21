@@ -1,10 +1,10 @@
-import {
+﻿import {
   type EnvironmentId,
   type GitActionProgressEvent,
   type GitStackedAction,
   type SourceControlPublishRepositoryInput,
   type ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   infiniteQueryOptions,
   mutationOptions,

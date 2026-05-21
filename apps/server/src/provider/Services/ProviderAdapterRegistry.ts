@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProviderAdapterRegistry - Lookup boundary for provider adapter implementations.
  *
  * Maps a `ProviderInstanceId` (the new per-instance routing key) or a
@@ -9,7 +9,7 @@
  *
  * During the driver/instance migration this tag exposes both flavours:
  *
- *   - `getByInstance` / `listInstances` — new per-instance routing. Callers
+ *   - `getByInstance` / `listInstances` â€” new per-instance routing. Callers
  *     that already know an `instanceId` (threads, sessions, events)
  *     should prefer these.
  *     (`defaultInstanceIdForDriver(kind) === kind`), matching the pre-Slice-D
@@ -19,7 +19,7 @@
  *
  * @module ProviderAdapterRegistry
  */
-import type { ProviderDriverKind, ProviderInstanceId } from "@t3tools/contracts";
+import type { ProviderDriverKind, ProviderInstanceId } from "@ghostforge/contracts";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 import type * as PubSub from "effect/PubSub";
@@ -47,7 +47,7 @@ export interface ProviderAdapterRegistryShape {
    * Resolve the adapter for a specific instance id. Returns
    * `ProviderUnsupportedError` if no such instance is currently registered
    * (which covers "never configured" *and* "configured but the driver is
-   * unavailable in this build" — both surface the same failure to callers
+   * unavailable in this build" â€” both surface the same failure to callers
    * that expect a working adapter).
    */
   readonly getByInstance: (
@@ -59,7 +59,7 @@ export interface ProviderAdapterRegistryShape {
   ) => Effect.Effect<ProviderInstanceRoutingInfo, ProviderUnsupportedError>;
 
   /**
-   * List all live instance ids. Excludes unavailable/shadow instances —
+   * List all live instance ids. Excludes unavailable/shadow instances â€”
    * callers of this method want something they can pass to `getByInstance`.
    */
   readonly listInstances: () => Effect.Effect<ReadonlyArray<ProviderInstanceId>>;
@@ -77,8 +77,8 @@ export interface ProviderAdapterRegistryShape {
    * Change notification stream mirroring `ProviderInstanceRegistry.streamChanges`.
    * Emits one `void` tick whenever the set of live instances changes
    * (instance added, removed, or rebuilt after a settings edit). Consumers
-   * that fan out `adapter.streamEvents` per instance — e.g. `ProviderService`'s
-   * runtime event bus — re-pull `listInstances` on each tick and fork new
+   * that fan out `adapter.streamEvents` per instance â€” e.g. `ProviderService`'s
+   * runtime event bus â€” re-pull `listInstances` on each tick and fork new
    * subscriptions for instances they haven't seen yet.
    */
   readonly streamChanges: Stream.Stream<void>;
@@ -97,4 +97,4 @@ export interface ProviderAdapterRegistryShape {
 export class ProviderAdapterRegistry extends Context.Service<
   ProviderAdapterRegistry,
   ProviderAdapterRegistryShape
->()("t3/provider/Services/ProviderAdapterRegistry") {}
+>()("ghostforge/provider/Services/ProviderAdapterRegistry") {}

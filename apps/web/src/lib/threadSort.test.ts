@@ -1,11 +1,11 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   DEFAULT_RUNTIME_MODE,
   EnvironmentId,
   ProjectId,
   ProviderInstanceId,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import type { Thread } from "../types";
 import { getLatestThreadForProject, sortThreads } from "./threadSort";
 

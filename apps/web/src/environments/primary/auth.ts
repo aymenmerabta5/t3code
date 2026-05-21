@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   AuthBootstrapInput,
   AuthBootstrapResult,
   AuthClientMetadata,
@@ -8,7 +8,7 @@ import type {
   AuthRevokePairingLinkInput,
   AuthSessionId,
   AuthSessionState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import {
   getPairingTokenFromUrl,

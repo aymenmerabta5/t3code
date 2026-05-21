@@ -1,4 +1,4 @@
-import type { ContextMenuItem } from "@t3tools/contracts";
+﻿import type { ContextMenuItem } from "@ghostforge/contracts";
 
 function clampMenuPosition(menu: HTMLDivElement, preferredLeft: number, preferredTop: number) {
   const rect = menu.getBoundingClientRect();
@@ -87,7 +87,7 @@ export function showContextMenuFallback<T extends string>(
         if (hasChildren) {
           const chevron = document.createElement("span");
           chevron.className = "shrink-0 text-muted-foreground/70";
-          chevron.textContent = "›";
+          chevron.textContent = "â€º";
           button.appendChild(chevron);
         }
 

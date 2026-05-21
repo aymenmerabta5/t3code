@@ -1,6 +1,6 @@
-import { DiffsHighlighter, getSharedHighlighter, SupportedLanguages } from "@pierre/diffs";
+﻿import { DiffsHighlighter, getSharedHighlighter, SupportedLanguages } from "@pierre/diffs";
 import { CheckIcon, CopyIcon } from "lucide-react";
-import type { ServerProviderSkill } from "@t3tools/contracts";
+import type { ServerProviderSkill } from "@ghostforge/contracts";
 import React, {
   Children,
   Suspense,
@@ -136,10 +136,10 @@ function getHighlighterPromise(language: string): Promise<DiffsHighlighter> {
   }).catch((err) => {
     highlighterPromiseCache.delete(language);
     if (language === "text") {
-      // "text" itself failed — Shiki cannot initialize at all, surface the error
+      // "text" itself failed â€” Shiki cannot initialize at all, surface the error
       throw err;
     }
-    // Language not supported by Shiki — fall back to "text"
+    // Language not supported by Shiki â€” fall back to "text"
     return getHighlighterPromise("text");
   });
   highlighterPromiseCache.set(language, promise);

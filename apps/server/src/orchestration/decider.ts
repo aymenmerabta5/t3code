@@ -1,8 +1,8 @@
-import type {
+﻿import type {
   OrchestrationCommand,
   OrchestrationEvent,
   OrchestrationReadModel,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
 

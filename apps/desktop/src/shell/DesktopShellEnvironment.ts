@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -26,7 +26,7 @@ export interface DesktopShellEnvironmentShape {
 export class DesktopShellEnvironment extends Context.Service<
   DesktopShellEnvironment,
   DesktopShellEnvironmentShape
->()("t3/desktop/ShellEnvironment") {}
+>()("ghostforge/desktop/ShellEnvironment") {}
 
 const LOGIN_SHELL_ENV_NAMES = [
   "PATH",
@@ -125,8 +125,8 @@ const knownWindowsCliDirs = (env: NodeJS.ProcessEnv): ReadonlyArray<string> => [
   ),
 ];
 
-const startMarker = (name: string) => `__T3CODE_ENV_${name}_START__`;
-const endMarker = (name: string) => `__T3CODE_ENV_${name}_END__`;
+const startMarker = (name: string) => `__GHOSTFORGE_ENV_${name}_START__`;
+const endMarker = (name: string) => `__GHOSTFORGE_ENV_${name}_END__`;
 
 const capturePosixEnvironmentCommand = (names: ReadonlyArray<string>) =>
   names

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProviderServiceLive - Cross-provider orchestration layer.
  *
  * Routes validated transport/API calls to provider adapters through
@@ -23,7 +23,7 @@ import {
   type ProviderDriverKind,
   type ProviderRuntimeEvent,
   type ProviderSession,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
@@ -203,7 +203,7 @@ const makeProviderService = Effect.fn("makeProviderService")(function* (
   const analytics = yield* Effect.service(AnalyticsService);
   const eventLoggers = yield* ProviderEventLoggers;
   // Options-provided logger wins (test overrides); otherwise we take whatever
-  // the `ProviderEventLoggers` tag exposes — `undefined` means "no canonical
+  // the `ProviderEventLoggers` tag exposes â€” `undefined` means "no canonical
   // log writer is attached", which downstream code already handles as a
   // no-op.
   const canonicalEventLogger = options?.canonicalEventLogger ?? eventLoggers.canonical;
@@ -288,7 +288,7 @@ const makeProviderService = Effect.fn("makeProviderService")(function* (
   // of live subscriptions (so `reconcileInstanceSubscriptions` can diff and
   // fork only the *new* or *rebuilt* ones) and serves as the dynamic adapter
   // list consumed by `stopStaleSessionsForThread`, `listSessions`, and
-  // `runStopAll` — replacing the pre-Slice-D startup snapshot so hot-added
+  // `runStopAll` â€” replacing the pre-Slice-D startup snapshot so hot-added
   // instances become visible to those call sites as soon as settings edits
   // land.
   const subscribedAdapters = yield* Ref.make(
@@ -299,7 +299,7 @@ const makeProviderService = Effect.fn("makeProviderService")(function* (
     Effect.map((map) => Array.from(map.entries())),
   );
 
-  // Rebuild the map of id → adapter from the registry and fork a new event
+  // Rebuild the map of id â†’ adapter from the registry and fork a new event
   // subscription for every instance that is either brand new or whose adapter
   // identity changed (indicating the underlying `ProviderInstance` was torn
   // down and rebuilt by `ProviderInstanceRegistry.reconcile`). Orphaned
@@ -538,7 +538,7 @@ const makeProviderService = Effect.fn("makeProviderService")(function* (
         if (!instanceInfo.enabled) {
           return yield* toValidationError(
             "ProviderService.startSession",
-            `Provider instance '${resolvedInstanceId}' is disabled in T3 Code settings.`,
+            `Provider instance '${resolvedInstanceId}' is disabled in GhostForge settings.`,
           );
         }
         const persistedBinding = Option.getOrUndefined(yield* directory.getBinding(threadId));

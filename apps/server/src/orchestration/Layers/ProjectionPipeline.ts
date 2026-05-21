@@ -1,9 +1,9 @@
-import {
+﻿import {
   ApprovalRequestId,
   type ChatAttachment,
   type OrchestrationEvent,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
@@ -1315,7 +1315,7 @@ const makeOrchestrationProjectionPipeline = Effect.fn("makeOrchestrationProjecti
           // Only approval-requested activities should create pending-approval
           // rows.  Other activity kinds that happen to carry a requestId
           // (e.g. user-input.requested / user-input.resolved) must not
-          // pollute this projection — they have their own accounting via
+          // pollute this projection â€” they have their own accounting via
           // derivePendingUserInputCountFromActivities.
           if (event.payload.activity.kind !== "approval.requested") {
             return;

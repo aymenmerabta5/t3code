@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+﻿import { QueryClient } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("../environmentApi", () => ({
@@ -11,7 +11,7 @@ vi.mock("../wsRpcClient", () => ({
 }));
 
 import type { InfiniteData } from "@tanstack/react-query";
-import { EnvironmentId, type VcsListRefsResult } from "@t3tools/contracts";
+import { EnvironmentId, type VcsListRefsResult } from "@ghostforge/contracts";
 
 import {
   gitBranchSearchInfiniteQueryOptions,

@@ -1,9 +1,9 @@
-import {
+﻿import {
   type EnvironmentId,
   type MessageId,
   type ServerProviderSkill,
   type TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   createContext,
   memo,
@@ -57,7 +57,7 @@ import {
 } from "~/lib/terminalContext";
 import { cn } from "~/lib/utils";
 import { useUiStateStore } from "~/uiStateStore";
-import { type TimestampFormat } from "@t3tools/contracts/settings";
+import { type TimestampFormat } from "@ghostforge/contracts/settings";
 import { formatTimestamp } from "../../timestampFormat";
 
 import {
@@ -69,9 +69,9 @@ import { SkillInlineText } from "./SkillInlineText";
 import { formatWorkspaceRelativePath } from "../../filePathDisplay";
 
 // ---------------------------------------------------------------------------
-// Context — shared state consumed by every row component via Context.
+// Context â€” shared state consumed by every row component via Context.
 // Propagates through LegendList's memo boundaries for shared callbacks and
-// non-row-scoped state. `nowIso` is intentionally excluded — self-ticking
+// non-row-scoped state. `nowIso` is intentionally excluded â€” self-ticking
 // components (WorkingTimer, LiveElapsed) handle it.
 // ---------------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ interface MessagesTimelineProps {
 }
 
 // ---------------------------------------------------------------------------
-// MessagesTimeline — list owner
+// MessagesTimeline â€” list owner
 // ---------------------------------------------------------------------------
 
 export const MessagesTimeline = memo(function MessagesTimeline({
@@ -242,7 +242,7 @@ export const MessagesTimeline = memo(function MessagesTimeline({
     [isRevertingCheckpoint, isWorking],
   );
 
-  // Stable renderItem — no closure deps. Row components read shared state
+  // Stable renderItem â€” no closure deps. Row components read shared state
   // from TimelineRowCtx, which propagates through LegendList's memo.
   const renderItem = useCallback(
     ({ item }: { item: MessagesTimelineRow }) => (
@@ -291,7 +291,7 @@ function keyExtractor(item: MessagesTimelineRow) {
 }
 
 // ---------------------------------------------------------------------------
-// TimelineRowContent — the actual row component
+// TimelineRowContent â€” the actual row component
 // ---------------------------------------------------------------------------
 
 type TimelineEntry = ReturnType<typeof deriveTimelineEntries>[number];
@@ -456,7 +456,7 @@ function AssistantCompletionDivider({ completionSummary }: { completionSummary: 
     <div className="my-3 flex items-center gap-3">
       <span className="h-px flex-1 bg-border" />
       <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80">
-        {completionSummary ? `Response • ${completionSummary}` : "Response"}
+        {completionSummary ? `Response â€¢ ${completionSummary}` : "Response"}
       </span>
       <span className="h-px flex-1 bg-border" />
     </div>
@@ -529,7 +529,7 @@ function WorkingTimelineRow({ row }: { row: Extract<TimelineRow, { kind: "workin
 }
 
 // ---------------------------------------------------------------------------
-// Self-ticking labels — update their own text nodes so elapsed-time display
+// Self-ticking labels â€” update their own text nodes so elapsed-time display
 // does not create a React commit every second while a response is streaming.
 // ---------------------------------------------------------------------------
 
@@ -587,12 +587,12 @@ function LiveMessageMeta({
 }
 
 // ---------------------------------------------------------------------------
-// Extracted row sections — own their state / store subscriptions so changes
+// Extracted row sections â€” own their state / store subscriptions so changes
 // re-render only the affected row, not the entire list.
 // ---------------------------------------------------------------------------
 
 /** Owns its own expand/collapse state so toggling re-renders only this row.
- *  State resets on unmount which is fine — work groups start collapsed. */
+ *  State resets on unmount which is fine â€” work groups start collapsed. */
 const WorkGroupSection = memo(function WorkGroupSection({
   groupedEntries,
 }: {
@@ -642,7 +642,7 @@ const WorkGroupSection = memo(function WorkGroupSection({
 });
 
 /** Subscribes directly to the UI state store for expand/collapse state,
- *  so toggling re-renders only this component — not the entire list. */
+ *  so toggling re-renders only this component â€” not the entire list. */
 const AssistantChangedFilesSection = memo(function AssistantChangedFilesSection({
   turnSummary,
   routeThreadKey,
@@ -698,7 +698,7 @@ function AssistantChangedFilesSectionInner({
           <span>Changed files ({changedFileCountLabel})</span>
           {hasNonZeroStat(summaryStat) && (
             <>
-              <span className="mx-1">•</span>
+              <span className="mx-1">â€¢</span>
               <DiffStatLabel additions={summaryStat.additions} deletions={summaryStat.deletions} />
             </>
           )}
@@ -931,7 +931,7 @@ const UserMessageBody = memo(function UserMessageBody(props: {
 });
 
 // ---------------------------------------------------------------------------
-// Structural sharing — reuse old row references when data hasn't changed
+// Structural sharing â€” reuse old row references when data hasn't changed
 // so LegendList (and React) can skip re-rendering unchanged items.
 // ---------------------------------------------------------------------------
 
@@ -996,7 +996,7 @@ function formatMessageMeta(
   timestampFormat: TimestampFormat,
 ): string {
   if (!duration) return formatTimestamp(createdAt, timestampFormat);
-  return `${formatTimestamp(createdAt, timestampFormat)} • ${duration}`;
+  return `${formatTimestamp(createdAt, timestampFormat)} â€¢ ${duration}`;
 }
 
 function workToneIcon(tone: TimelineWorkEntry["tone"]): {

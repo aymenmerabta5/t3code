@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Unified settings hook.
  *
  * Abstracts the split between server-authoritative settings (persisted in
@@ -10,17 +10,17 @@
  * store.
  */
 import { useCallback, useMemo, useSyncExternalStore } from "react";
-import { ServerSettings, type ServerSettingsPatch } from "@t3tools/contracts";
+import { ServerSettings, type ServerSettingsPatch } from "@ghostforge/contracts";
 import {
   type ClientSettingsPatch,
   type ClientSettings,
   DEFAULT_CLIENT_SETTINGS,
   DEFAULT_UNIFIED_SETTINGS,
   UnifiedSettings,
-} from "@t3tools/contracts/settings";
+} from "@ghostforge/contracts/settings";
 import { ensureLocalApi } from "~/localApi";
 import * as Struct from "effect/Struct";
-import { applyServerSettingsPatch } from "@t3tools/shared/serverSettings";
+import { applyServerSettingsPatch } from "@ghostforge/shared/serverSettings";
 import { applySettingsUpdated, getServerConfig, useServerSettings } from "~/rpc/serverState";
 
 const CLIENT_SETTINGS_PERSISTENCE_ERROR_SCOPE = "[CLIENT_SETTINGS]";
@@ -120,7 +120,7 @@ function persistClientSettings(settings: ClientSettings): void {
     });
 }
 
-// ── Key sets for routing patches ─────────────────────────────────────
+// â”€â”€ Key sets for routing patches â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const SERVER_SETTINGS_KEYS = new Set<string>(Struct.keys(ServerSettings.fields));
 
@@ -143,7 +143,7 @@ function splitPatch(patch: Partial<UnifiedSettings>): {
   };
 }
 
-// ── Hooks ────────────────────────────────────────────────────────────
+// â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Read merged settings. Selector narrows the subscription so components
@@ -201,7 +201,7 @@ export function useUpdateSettings() {
       if (currentServerConfig) {
         applySettingsUpdated(applyServerSettingsPatch(currentServerConfig.settings, serverPatch));
       }
-      // Fire-and-forget RPC — push will reconcile on success
+      // Fire-and-forget RPC â€” push will reconcile on success
       void ensureLocalApi().server.updateSettings(serverPatch);
     }
 

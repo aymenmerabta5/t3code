@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChevronDownIcon,
   ChevronsLeftRightEllipsisIcon,
   PlusIcon,
@@ -16,7 +16,7 @@ import {
   type DesktopSshEnvironmentTarget,
   type DesktopServerExposureState,
   type EnvironmentId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 
 import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
@@ -316,7 +316,7 @@ function formatDesktopSshConnectionError(error: unknown): string {
   return withoutTaggedErrorPrefix.trim() || fallback;
 }
 
-/** Direct row in the card – same pattern as the Provider / ACP-agent list rows. */
+/** Direct row in the card â€“ same pattern as the Provider / ACP-agent list rows. */
 const ITEM_ROW_CLASSNAME = "border-t border-border/60 px-4 py-4 first:border-t-0 sm:px-5";
 const ENDPOINT_ROW_CLASSNAME = "border-t border-border/60 px-4 py-2.5 first:border-t-0 sm:px-5";
 
@@ -745,7 +745,7 @@ const PairingLinkListRow = memo(function PairingLinkListRow({
                       size={88}
                       level="M"
                       marginSize={2}
-                      title="Pairing link — scan to open on another device"
+                      title="Pairing link â€” scan to open on another device"
                     />
                   </PopoverPopup>
                 </>
@@ -840,7 +840,7 @@ const PairingLinkListRow = memo(function PairingLinkListRow({
                       size={132}
                       level="M"
                       marginSize={2}
-                      title="Pairing link — scan to open on another device"
+                      title="Pairing link â€” scan to open on another device"
                     />
                   </div>
                 ) : null}
@@ -863,7 +863,7 @@ const PairingLinkListRow = memo(function PairingLinkListRow({
             disabled={revokingPairingLinkId === pairingLink.id}
             onClick={() => void onRevoke(pairingLink.id)}
           >
-            {revokingPairingLinkId === pairingLink.id ? "Revoking…" : "Revoke"}
+            {revokingPairingLinkId === pairingLink.id ? "Revokingâ€¦" : "Revoke"}
           </Button>
         </div>
       </div>
@@ -937,7 +937,7 @@ const ConnectedClientListRow = memo(function ConnectedClientListRow({
               disabled={revokingClientSessionId === clientSession.sessionId}
               onClick={() => void onRevokeSession(clientSession.sessionId)}
             >
-              {revokingClientSessionId === clientSession.sessionId ? "Revoking…" : "Revoke"}
+              {revokingClientSessionId === clientSession.sessionId ? "Revokingâ€¦" : "Revoke"}
             </Button>
           ) : null}
         </div>
@@ -991,7 +991,7 @@ const AuthorizedClientsHeaderAction = memo(function AuthorizedClientsHeaderActio
         }
         onClick={() => void onRevokeOtherClients()}
       >
-        {isRevokingOtherClients ? "Revoking…" : "Revoke others"}
+        {isRevokingOtherClients ? "Revokingâ€¦" : "Revoke others"}
       </Button>
       <Dialog
         open={dialogOpen}
@@ -1041,7 +1041,7 @@ const AuthorizedClientsHeaderAction = memo(function AuthorizedClientsHeaderActio
               Cancel
             </Button>
             <Button disabled={isCreatingPairingLink} onClick={() => void handleCreatePairingLink()}>
-              {isCreatingPairingLink ? "Creating…" : "Create link"}
+              {isCreatingPairingLink ? "Creatingâ€¦" : "Create link"}
             </Button>
           </DialogFooter>
         </DialogPopup>
@@ -1173,7 +1173,7 @@ const AdvertisedEndpointListRow = memo(function AdvertisedEndpointListRow({
               onClick={() => onSetupTailscaleServe(endpoint)}
               disabled={isUpdatingTailscaleServe}
             >
-              {isUpdatingTailscaleServe ? "Restarting…" : "Setup"}
+              {isUpdatingTailscaleServe ? "Restartingâ€¦" : "Setup"}
             </Button>
           ) : null}
           {canDisableTailscaleServe ? (
@@ -1183,7 +1183,7 @@ const AdvertisedEndpointListRow = memo(function AdvertisedEndpointListRow({
               onClick={() => onDisableTailscaleServe(endpoint)}
               disabled={isUpdatingTailscaleServe}
             >
-              {isUpdatingTailscaleServe ? "Restarting…" : "Disable"}
+              {isUpdatingTailscaleServe ? "Restartingâ€¦" : "Disable"}
             </Button>
           ) : null}
           {!needsTailscaleSetup && !isDefault ? (
@@ -1333,10 +1333,10 @@ function SavedBackendListRow({
           >
             {isConnected
               ? isDisconnecting
-                ? "Disconnecting…"
+                ? "Disconnectingâ€¦"
                 : "Disconnect"
               : isConnecting
-                ? "Connecting…"
+                ? "Connectingâ€¦"
                 : "Connect"}
           </Button>
           <Button
@@ -1345,7 +1345,7 @@ function SavedBackendListRow({
             disabled={removingEnvironmentId === environmentId}
             onClick={() => void onRemove(environmentId)}
           >
-            {removingEnvironmentId === environmentId ? "Removing…" : "Remove"}
+            {removingEnvironmentId === environmentId ? "Removingâ€¦" : "Remove"}
           </Button>
         </div>
       </div>
@@ -1366,7 +1366,7 @@ const DesktopSshHostRow = memo(function DesktopSshHostRow({
 }: DesktopSshHostRowProps) {
   const address = formatDesktopSshTarget(target);
   const showAddress = address !== target.alias;
-  const buttonLabel = connectingHostAlias === target.alias ? "Adding…" : "Add environment";
+  const buttonLabel = connectingHostAlias === target.alias ? "Addingâ€¦" : "Add environment";
 
   return (
     <div className="border-t border-border/60 px-4 py-3 first:border-t-0 sm:px-5">
@@ -2200,7 +2200,7 @@ export function ConnectionsSettings() {
         onClick={() => void handleAddSavedBackend()}
       >
         <PlusIcon className="size-3.5" />
-        {isAddingSavedBackend ? "Adding…" : "Add environment"}
+        {isAddingSavedBackend ? "Addingâ€¦" : "Add environment"}
       </Button>
     </div>
   );
@@ -2254,7 +2254,7 @@ export function ConnectionsSettings() {
           onClick={() => void handleAddSavedBackend()}
         >
           <PlusIcon className="size-3.5" />
-          {isAddingSavedBackend ? "Adding…" : "Add environment"}
+          {isAddingSavedBackend ? "Addingâ€¦" : "Add environment"}
         </Button>
       </div>
       <div className="overflow-hidden rounded-lg border border-border/60">
@@ -2399,7 +2399,7 @@ export function ConnectionsSettings() {
         ) : desktopServerExposureState ? (
           "Limited to this machine."
         ) : (
-          "Loading…"
+          "Loadingâ€¦"
         )
       }
       status={
@@ -2502,8 +2502,8 @@ export function ConnectionsSettings() {
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   {pendingDesktopServerExposureMode === "network-accessible"
-                    ? "T3 Code will restart to expose this environment over the network."
-                    : "T3 Code will restart and limit this environment back to this machine."}
+                    ? "GhostForge will restart to expose this environment over the network."
+                    : "GhostForge will restart and limit this environment back to this machine."}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -2525,7 +2525,7 @@ export function ConnectionsSettings() {
                   {isUpdatingDesktopServerExposure ? (
                     <>
                       <Spinner className="size-3.5" />
-                      Restarting…
+                      Restartingâ€¦
                     </>
                   ) : pendingDesktopServerExposureMode === "network-accessible" ? (
                     "Restart and enable"
@@ -2547,7 +2547,7 @@ export function ConnectionsSettings() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Disable Tailscale HTTPS?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  T3 Code will restart the local backend without Tailscale Serve.
+                  GhostForge will restart the local backend without Tailscale Serve.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -2565,7 +2565,7 @@ export function ConnectionsSettings() {
                   {isUpdatingTailscaleServe ? (
                     <>
                       <Spinner className="size-3.5" />
-                      Restarting…
+                      Restartingâ€¦
                     </>
                   ) : (
                     "Restart and disable"
@@ -2585,7 +2585,7 @@ export function ConnectionsSettings() {
               <DialogHeader>
                 <DialogTitle>Set up Tailscale HTTPS?</DialogTitle>
                 <DialogDescription>
-                  T3 Code will restart the local backend with Tailscale Serve enabled and ask
+                  GhostForge will restart the local backend with Tailscale Serve enabled and ask
                   Tailscale to proxy HTTPS traffic to this backend.
                 </DialogDescription>
               </DialogHeader>
@@ -2631,7 +2631,7 @@ export function ConnectionsSettings() {
                   {isUpdatingTailscaleServe ? (
                     <>
                       <Spinner className="size-3.5" />
-                      Restarting…
+                      Restartingâ€¦
                     </>
                   ) : (
                     "Enable"

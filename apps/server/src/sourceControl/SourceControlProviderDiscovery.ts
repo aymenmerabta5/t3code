@@ -1,8 +1,8 @@
-import type {
+﻿import type {
   SourceControlProviderAuth,
   SourceControlProviderDiscoveryItem,
   SourceControlProviderKind,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
 

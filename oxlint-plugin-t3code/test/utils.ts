@@ -82,7 +82,7 @@ export const createOxlintRuleHarness = (ruleName: string): RuleHarness => {
   const run: RuleHarness["run"] = Effect.fnUntraced(function* (source: string) {
     const fs = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
-    const fixtureDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3code-oxlint-" });
+    const fixtureDir = yield* fs.makeTempDirectoryScoped({ prefix: "ghostforge-oxlint-" });
     const configPath = path.join(fixtureDir, ".oxlintrc.json");
     const sourcePath = path.join(fixtureDir, "fixture.ts");
     const repoRoot = path.join(import.meta.dirname, "..", "..");
@@ -92,7 +92,7 @@ export const createOxlintRuleHarness = (ruleName: string): RuleHarness => {
     yield* fs.writeFileString(
       configPath,
       yield* encodeOxlintConfig({
-        jsPlugins: [{ name: "t3code", specifier: pluginPath }],
+        jsPlugins: [{ name: "ghostforge", specifier: pluginPath }],
         rules: { [ruleName]: "error" },
       }),
     );

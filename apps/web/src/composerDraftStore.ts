@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_BY_PROVIDER,
   defaultInstanceIdForDriver,
@@ -14,7 +14,7 @@ import {
   type ScopedProjectRef,
   type ScopedThreadRef,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   parseScopedProjectKey,
   parseScopedThreadKey,
@@ -22,11 +22,11 @@ import {
   scopeProjectRef,
   scopedThreadKey,
   scopeThreadRef,
-} from "@t3tools/client-runtime";
+} from "@ghostforge/client-runtime";
 import * as Schema from "effect/Schema";
 import * as Equal from "effect/Equal";
 import { DeepMutable } from "effect/Types";
-import { createModelSelection, normalizeModelSlug } from "@t3tools/shared/model";
+import { createModelSelection, normalizeModelSlug } from "@ghostforge/shared/model";
 import { useMemo } from "react";
 import { getLocalStorageItem } from "./hooks/useLocalStorage";
 import { resolveAppModelSelection, resolveAppModelSelectionForInstance } from "./modelSelection";
@@ -41,11 +41,11 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { useShallow } from "zustand/react/shallow";
 import { createDebouncedStorage, createMemoryStorage } from "./lib/storage";
 import { getDefaultServerModel } from "./providerModels";
-import { UnifiedSettings } from "@t3tools/contracts/settings";
+import { UnifiedSettings } from "@ghostforge/contracts/settings";
 const isRuntimeMode = Schema.is(RuntimeMode);
 const isProviderDriverKind = Schema.is(ProviderDriverKind);
 
-export const COMPOSER_DRAFT_STORAGE_KEY = "t3code:composer-drafts:v1";
+export const COMPOSER_DRAFT_STORAGE_KEY = "ghostforge:composer-drafts:v1";
 const COMPOSER_DRAFT_STORAGE_VERSION = 6;
 const DraftThreadEnvModeSchema = Schema.Literals(["local", "worktree"]);
 export type DraftThreadEnvMode = typeof DraftThreadEnvModeSchema.Type;
@@ -104,7 +104,7 @@ const PersistedComposerThreadDraftState = Schema.Struct({
   //
   // The record's value schema is NOT wrapped in `Schema.optionalKey`:
   // that helper is only meaningful on property signatures with a known
-  // key set, and `Schema.Record(<branded string>, …)` produces an index
+  // key set, and `Schema.Record(<branded string>, â€¦)` produces an index
   // signature at runtime (Schema rejects the combination). Absence of
   // an entry already encodes "no selection for this instance".
   modelSelectionByProvider: Schema.optionalKey(Schema.Record(ProviderInstanceId, ModelSelection)),
@@ -581,7 +581,7 @@ function normalizeProviderDriverKind(value: unknown): ProviderDriverKind | null 
 
 /**
  * Match the `ProviderInstanceId` slug pattern (letter followed by
- * letters/digits/`-`/`_`, 1..64 chars). Permissive validator — the schema
+ * letters/digits/`-`/`_`, 1..64 chars). Permissive validator â€” the schema
  * layer owns authoritative validation; this is used inline to gate typed
  * writes to the draft's instance-keyed maps without pulling the full
  * Effect Schema runtime into the hot path.
@@ -692,7 +692,7 @@ function normalizeProviderModelOptions(
 // because default instance ids used the same slug as the driver kind.
 //
 // Selections whose instance id doesn't match the slug pattern collapse to
-// `null` — caller is responsible for deciding whether that's a dropped
+// `null` â€” caller is responsible for deciding whether that's a dropped
 // write or a routed error.
 function normalizeModelSelection(
   value: unknown,
@@ -750,7 +750,7 @@ type NormalizedModelSelection = Omit<ModelSelection, "instanceId"> & {
   readonly instanceId: ProviderInstanceId;
 };
 
-// ── Legacy sync helpers (used only during migration from v2 storage) ──
+// â”€â”€ Legacy sync helpers (used only during migration from v2 storage) â”€â”€
 //
 // These operate against the legacy kind-keyed `modelOptions` map. The
 // normalized selection now carries an open `ProviderInstanceId`; legacy
@@ -805,7 +805,7 @@ function legacyReplaceProviderModelOptions(
   return Object.keys(merged).length > 0 ? merged : null;
 }
 
-// ── New helpers for the consolidated representation ────────────────────
+// â”€â”€ New helpers for the consolidated representation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function legacyToModelSelectionByProvider(
   modelSelection: NormalizedModelSelection | null,
@@ -2370,10 +2370,10 @@ const composerDraftStore = create<ComposerDraftStoreState>()(
             if (normalized) {
               const current = nextMap[normalized.instanceId];
               if (normalized.options !== undefined) {
-                // Explicit options provided → use them
+                // Explicit options provided â†’ use them
                 nextMap[normalized.instanceId] = normalized as ModelSelection;
               } else {
-                // No options in selection → preserve existing options, update provider+model
+                // No options in selection â†’ preserve existing options, update provider+model
                 nextMap[normalized.instanceId] = createModelSelection(
                   normalized.instanceId,
                   normalized.model,
@@ -2955,7 +2955,7 @@ export function useEffectiveComposerModelState(input: {
   selectedProvider: ProviderDriverKind;
   /**
    * When supplied, the draft's saved selection for this instance takes
-   * precedence over the driver-kind bucket — so a custom `codex_personal`
+   * precedence over the driver-kind bucket â€” so a custom `codex_personal`
    * instance reads its own model, not the default Codex's.
    */
   selectedInstanceId?: ProviderInstanceId | null | undefined;

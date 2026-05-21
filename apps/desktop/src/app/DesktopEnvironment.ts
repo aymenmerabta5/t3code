@@ -1,9 +1,9 @@
-import type {
+﻿import type {
   DesktopAppBranding,
   DesktopAppStageLabel,
   DesktopRuntimeArch,
   DesktopRuntimeInfo,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Config from "effect/Config";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -78,9 +78,9 @@ export interface DesktopEnvironmentShape {
 export class DesktopEnvironment extends Context.Service<
   DesktopEnvironment,
   DesktopEnvironmentShape
->()("t3/desktop/Environment") {}
+>()("ghostforge/desktop/Environment") {}
 
-const APP_BASE_NAME = "T3 Code";
+const APP_BASE_NAME = "GhostForge";
 
 function resolveDesktopAppStageLabel(input: {
   readonly isDevelopment: boolean;
@@ -151,7 +151,9 @@ const makeDesktopEnvironment = Effect.fn("desktop.environment.make")(function* (
       : input.platform === "darwin"
         ? path.join(homeDirectory, "Library", "Application Support")
         : Option.getOrElse(config.xdgConfigHome, () => path.join(homeDirectory, ".config"));
-  const baseDir = Option.getOrElse(config.t3Home, () => path.join(homeDirectory, ".t3"));
+  const baseDir = Option.getOrElse(config.ghostforgeHome, () =>
+    path.join(homeDirectory, ".ghostforge"),
+  );
   const rootDir = path.resolve(input.dirname, "../../..");
   const appRoot = input.isPackaged ? input.appPath : rootDir;
   const branding = resolveDesktopAppBranding({
@@ -160,8 +162,8 @@ const makeDesktopEnvironment = Effect.fn("desktop.environment.make")(function* (
   });
   const displayName = branding.displayName;
   const stateDir = path.join(baseDir, isDevelopment ? "dev" : "userdata");
-  const userDataDirName = isDevelopment ? "t3code-dev" : "t3code";
-  const legacyUserDataDirName = isDevelopment ? "T3 Code (Dev)" : "T3 Code (Alpha)";
+  const userDataDirName = isDevelopment ? "ghostforge-dev" : "ghostforge";
+  const legacyUserDataDirName = isDevelopment ? "GhostForge (Dev)" : "GhostForge (Alpha)";
   const resourcesPath = input.resourcesPath;
 
   return DesktopEnvironment.of({
@@ -199,9 +201,9 @@ const makeDesktopEnvironment = Effect.fn("desktop.environment.make")(function* (
     otlpExportIntervalMs: config.otlpExportIntervalMs,
     branding,
     displayName,
-    appUserModelId: isDevelopment ? "com.t3tools.t3code.dev" : "com.t3tools.t3code",
-    linuxDesktopEntryName: isDevelopment ? "t3code-dev.desktop" : "t3code.desktop",
-    linuxWmClass: isDevelopment ? "t3code-dev" : "t3code",
+    appUserModelId: isDevelopment ? "com.ghostforge.app.dev" : "com.ghostforge.app",
+    linuxDesktopEntryName: isDevelopment ? "ghostforge-dev.desktop" : "ghostforge.desktop",
+    linuxWmClass: isDevelopment ? "ghostforge-dev" : "ghostforge",
     userDataDirName,
     legacyUserDataDirName,
     defaultDesktopSettings: resolveDefaultDesktopSettings(input.appVersion),

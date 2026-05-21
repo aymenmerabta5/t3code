@@ -1,4 +1,4 @@
-import * as Option from "effect/Option";
+﻿import * as Option from "effect/Option";
 import * as Arr from "effect/Array";
 import {
   ApprovalRequestId,
@@ -11,7 +11,7 @@ import {
   type UserInputQuestion,
   type ThreadId,
   type TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import type {
   ChatMessage,
@@ -36,6 +36,12 @@ export const PROVIDER_OPTIONS: Array<{
   {
     value: ProviderDriverKind.make("opencode"),
     label: "OpenCode",
+    available: true,
+    pickerSidebarBadge: "new",
+  },
+  {
+    value: ProviderDriverKind.make("ghostcode"),
+    label: "GhostCode",
     available: true,
     pickerSidebarBadge: "new",
   },
@@ -908,7 +914,7 @@ function truncateInlinePreview(value: string, maxLength = 84): string {
   if (value.length <= maxLength) {
     return value;
   }
-  return `${value.slice(0, maxLength - 1).trimEnd()}…`;
+  return `${value.slice(0, maxLength - 1).trimEnd()}â€¦`;
 }
 
 function normalizePreviewForComparison(value: string | null | undefined): string | null {

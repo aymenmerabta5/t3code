@@ -1,4 +1,4 @@
-import type { ServerProvider, ServerProviderVersionAdvisory } from "@t3tools/contracts";
+﻿import type { ServerProvider, ServerProviderVersionAdvisory } from "@ghostforge/contracts";
 
 /**
  * Visual treatment for each server-reported provider status. Centralized so
@@ -25,7 +25,7 @@ export type ProviderStatusKey = keyof typeof PROVIDER_STATUS_STYLES;
  * Derive the headline + detail copy shown under a provider's name in the
  * settings page. Prefers `provider.message` for server-supplied detail and
  * falls back to generic phrasing when the server has not yet reported any
- * state — which happens before the first probe or when an instance names a
+ * state â€” which happens before the first probe or when an instance names a
  * driver this build does not ship.
  */
 export function getProviderSummary(provider: ServerProvider | undefined) {
@@ -39,7 +39,8 @@ export function getProviderSummary(provider: ServerProvider | undefined) {
     return {
       headline: "Disabled",
       detail:
-        provider.message ?? "This provider is installed but disabled for new sessions in T3 Code.",
+        provider.message ??
+        "This provider is installed but disabled for new sessions in GhostForge.",
     };
   }
   if (!provider.installed) {

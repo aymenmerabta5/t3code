@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   ApprovalRequestId,
   EnvironmentId,
   ModelSelection,
@@ -11,14 +11,14 @@ import type {
   ServerProvider,
   ThreadId,
   TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   ProviderDriverKind,
   ProviderInstanceId,
   PROVIDER_SEND_TURN_MAX_ATTACHMENTS,
   PROVIDER_SEND_TURN_MAX_IMAGE_BYTES,
-} from "@t3tools/contracts";
-import { createModelSelection, normalizeModelSlug } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection, normalizeModelSlug } from "@ghostforge/shared/model";
 import {
   memo,
   useCallback,
@@ -103,7 +103,7 @@ import {
   type ProviderInstanceEntry,
 } from "../../providerInstances";
 import { type AppModelOption, getAppModelOptionsForInstance } from "../../modelSelection";
-import type { UnifiedSettings } from "@t3tools/contracts/settings";
+import type { UnifiedSettings } from "@ghostforge/contracts/settings";
 import type { SessionPhase, Thread } from "../../types";
 import type { PendingUserInputDraftAnswer } from "../../pendingUserInput";
 import type { PendingApproval, PendingUserInput } from "../../session-logic";
@@ -206,8 +206,8 @@ const ComposerFooterModeControls = memo(function ComposerFooterModeControls(prop
             onClick={props.onToggleInteractionMode}
             title={
               props.interactionMode === "plan"
-                ? "Plan mode — click to return to normal build mode"
-                : "Default mode — click to enter plan mode"
+                ? "Plan mode â€” click to return to normal build mode"
+                : "Default mode â€” click to enter plan mode"
             }
           >
             <BotIcon />
@@ -631,7 +631,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
 
   // Resolve which configured instance the composer is currently targeting.
   // Priority:
-  //   1. The composer draft's `activeProvider` — the user's unsaved pick
+  //   1. The composer draft's `activeProvider` â€” the user's unsaved pick
   //      from the model picker (must win, otherwise the UI appears to
   //      ignore picker selections).
   //   2. Thread's persisted instance id (server-side saved selection).
@@ -705,7 +705,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
   });
 
   // Resolve the active instance's snapshot by `instanceId` so a custom
-  // instance gets its own slash commands, skills, and model list — not
+  // instance gets its own slash commands, skills, and model list â€” not
   // the first snapshot for the same driver kind.
   const selectedProviderEntry = useMemo(
     () => providerInstanceEntries.find((entry) => entry.instanceId === selectedInstanceId),

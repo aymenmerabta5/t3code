@@ -1,4 +1,4 @@
-import "../../index.css";
+﻿import "../../index.css";
 
 import {
   type AuthAccessStreamEvent,
@@ -16,7 +16,7 @@ import {
   type ServerProcessResourceHistoryResult,
   type ServerProvider,
   type SourceControlDiscoveryResult,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Option from "effect/Option";
 import { page } from "vitest/browser";
@@ -218,16 +218,16 @@ function createBaseServerConfig(): ServerConfig {
       policy: "loopback-browser",
       bootstrapMethods: ["one-time-token"],
       sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-      sessionCookieName: "t3_session",
+      sessionCookieName: "ghostforge_session",
     },
     cwd: "/repo/project",
-    keybindingsConfigPath: "/repo/project/.t3code-keybindings.json",
+    keybindingsConfigPath: "/repo/project/\.ghostforge-keybindings.json",
     keybindings: [],
     issues: [],
     providers: [],
     availableEditors: ["cursor"],
     observability: {
-      logsDirectoryPath: "/repo/project/.t3/logs",
+      logsDirectoryPath: "/repo/project/.ghostforge/logs",
       localTracingEnabled: true,
       otlpTracesUrl: "http://localhost:4318/v1/traces",
       otlpTracesEnabled: true,
@@ -406,7 +406,7 @@ const createDesktopBridgeStub = (overrides?: {
         policy: "remote-reachable",
         bootstrapMethods: ["one-time-token"],
         sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-        sessionCookieName: "t3_session",
+        sessionCookieName: "ghostforge_session",
       },
       role: "owner",
       sessionMethod: "bearer-session-token",
@@ -981,7 +981,9 @@ describe("GeneralSettingsPanel observability", () => {
     await networkAccessToggle.click();
     await expect.element(page.getByText("Enable network access?")).toBeInTheDocument();
     await expect
-      .element(page.getByText("T3 Code will restart to expose this environment over the network."))
+      .element(
+        page.getByText("GhostForge will restart to expose this environment over the network."),
+      )
       .toBeInTheDocument();
     await page.getByRole("button", { name: "Restart and enable", exact: true }).click();
     await vi.waitFor(() => {
@@ -1084,8 +1086,8 @@ describe("GeneralSettingsPanel observability", () => {
           .fn()
           .mockResolvedValue(createEmptyProcessResourceHistoryResult()),
         getTraceDiagnostics: vi.fn().mockResolvedValue({
-          traceFilePath: "/repo/project/.t3/traces.jsonl",
-          scannedFilePaths: ["/repo/project/.t3/traces.jsonl"],
+          traceFilePath: "/repo/project/.ghostforge/traces.jsonl",
+          scannedFilePaths: ["/repo/project/.ghostforge/traces.jsonl"],
           readAt: makeUtc("2036-04-07T00:00:00.000Z"),
           recordCount: 0,
           parseErrorCount: 0,
@@ -1118,7 +1120,7 @@ describe("GeneralSettingsPanel observability", () => {
     const openLogsButton = page.getByLabelText("Open logs folder");
     await openLogsButton.click();
 
-    expect(openInEditor).toHaveBeenCalledWith("/repo/project/.t3/logs", "cursor");
+    expect(openInEditor).toHaveBeenCalledWith("/repo/project/.ghostforge/logs", "cursor");
   });
 
   it("shows an OpenCode server URL field in provider settings", async () => {
@@ -1167,7 +1169,7 @@ describe("GeneralSettingsPanel observability", () => {
       </AppAtomRegistryProvider>,
     );
 
-    await page.getByRole("button", { name: "Update available — view details" }).click();
+    await page.getByRole("button", { name: "Update available â€” view details" }).click();
     await expect.element(page.getByRole("button", { name: "Update now" })).toBeInTheDocument();
     await page.getByRole("button", { name: "Update now" }).click();
 
@@ -1179,7 +1181,7 @@ describe("GeneralSettingsPanel observability", () => {
 
   it("keeps long provider update commands inside the fixed-width popover", async () => {
     const longUpdateCommand =
-      "npm install -g @anthropic-ai/claude-code@latest --registry=https://registry.npmjs.org --cache=/tmp/t3code-provider-update-cache";
+      "npm install -g @anthropic-ai/claude-code@latest --registry=https://registry.npmjs.org --cache=/tmp/ghostforge-provider-update-cache";
 
     setServerConfigSnapshot({
       ...createBaseServerConfig(),
@@ -1192,7 +1194,7 @@ describe("GeneralSettingsPanel observability", () => {
       </AppAtomRegistryProvider>,
     );
 
-    await page.getByRole("button", { name: "Update available — view details" }).click();
+    await page.getByRole("button", { name: "Update available â€” view details" }).click();
     await expect.element(page.getByText(longUpdateCommand)).toBeInTheDocument();
 
     await vi.waitFor(() => {

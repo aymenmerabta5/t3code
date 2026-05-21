@@ -1,4 +1,4 @@
-import type { ScopedThreadRef } from "@t3tools/contracts";
+﻿import type { ScopedThreadRef } from "@ghostforge/contracts";
 import { assert, describe, it } from "vitest";
 import {
   buildVisibleToastLayout,
@@ -90,7 +90,7 @@ describe("buildVisibleToastLayout", () => {
         offsetY,
       })),
       [
-        // Front live toast — unaffected
+        // Front live toast â€” unaffected
         { id: "a", visibleIndex: 0, offsetY: 0 },
         // Ending toast keeps its pre-dismissal slot so its horizontal exit
         // originates from where the user saw it (not from Y=0).

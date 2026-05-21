@@ -1,11 +1,11 @@
-import { afterEach, describe, it, assert } from "@effect/vitest";
+﻿import { afterEach, describe, it, assert } from "@effect/vitest";
 import {
   ProviderDriverKind,
   ProviderInstanceId,
   type ServerProvider,
   type ServerProviderUpdateState,
-} from "@t3tools/contracts";
-import { ServerProviderUpdateError } from "@t3tools/contracts";
+} from "@ghostforge/contracts";
+import { ServerProviderUpdateError } from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";

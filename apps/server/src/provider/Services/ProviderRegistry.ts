@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProviderRegistry - Provider snapshot service.
  *
  * Owns provider install/auth/version/model snapshots and exposes the latest
@@ -11,7 +11,7 @@ import type {
   ProviderDriverKind,
   ServerProvider,
   ServerProviderUpdateState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 import type * as Stream from "effect/Stream";
@@ -41,7 +41,7 @@ export interface ProviderRegistryShape {
   /**
    * Refresh the specific configured instance. Returns the updated snapshot
    * list. When the instance id is unknown the call resolves with the
-   * currently cached list (no error) — matching the legacy `refresh` shim
+   * currently cached list (no error) â€” matching the legacy `refresh` shim
    * behaviour so transport layers don't have to special-case unknowns.
    */
   readonly refreshInstance: (
@@ -70,12 +70,12 @@ export interface ProviderRegistryShape {
   }) => Effect.Effect<ReadonlyArray<ServerProvider>>;
 
   /**
-   * Stream of provider snapshot updates — one emission per aggregated
+   * Stream of provider snapshot updates â€” one emission per aggregated
    * change. The array contains the full current state.
    */
   readonly streamChanges: Stream.Stream<ReadonlyArray<ServerProvider>>;
 }
 
 export class ProviderRegistry extends Context.Service<ProviderRegistry, ProviderRegistryShape>()(
-  "t3/provider/Services/ProviderRegistry",
+  "ghostforge/provider/Services/ProviderRegistry",
 ) {}

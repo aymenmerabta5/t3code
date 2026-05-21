@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { EnvironmentId, ProjectId, ProviderInstanceId, ThreadId } from "@t3tools/contracts";
+﻿import { describe, expect, it, vi } from "vitest";
+import { EnvironmentId, ProjectId, ProviderInstanceId, ThreadId } from "@ghostforge/contracts";
 import type { Thread } from "../types";
 import {
   buildThreadActionItems,

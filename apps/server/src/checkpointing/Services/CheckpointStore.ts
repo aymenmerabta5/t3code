@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CheckpointStore - Repository interface for filesystem-backed workspace checkpoints.
  *
  * Owns hidden Git-ref checkpoint capture/restore and diff computation for a
@@ -14,7 +14,7 @@ import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 
 import type { CheckpointStoreError } from "../Errors.ts";
-import { CheckpointRef } from "@t3tools/contracts";
+import { CheckpointRef } from "@ghostforge/contracts";
 
 export interface CaptureCheckpointInput {
   readonly cwd: string;
@@ -97,5 +97,5 @@ export interface CheckpointStoreShape {
  * CheckpointStore - Service tag for checkpoint persistence and restore operations.
  */
 export class CheckpointStore extends Context.Service<CheckpointStore, CheckpointStoreShape>()(
-  "t3/checkpointing/Services/CheckpointStore",
+  "ghostforge/checkpointing/Services/CheckpointStore",
 ) {}

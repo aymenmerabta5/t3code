@@ -1,9 +1,9 @@
-import {
+﻿import {
   type ProviderInstanceId,
   type ProviderDriverKind,
   type ResolvedKeybindingsConfig,
-} from "@t3tools/contracts";
-import { resolveSelectableModel } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { resolveSelectableModel } from "@ghostforge/shared/model";
 import { memo, useMemo, useState, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { SearchIcon } from "lucide-react";
 import { ModelListRow } from "./ModelListRow";
@@ -40,7 +40,7 @@ const EMPTY_MODEL_JUMP_LABELS = new Map<string, string>();
 
 // Split a `${instanceId}:${slug}` combobox key back into its pieces. Slugs
 // can contain colons (e.g. some vendor model ids), so we only split on the
-// first colon — anything after that is the slug.
+// first colon â€” anything after that is the slug.
 function splitInstanceModelKey(key: string): { instanceId: ProviderInstanceId; slug: string } {
   const colonIndex = key.indexOf(":");
   if (colonIndex === -1) {
@@ -57,7 +57,7 @@ export const ModelPickerContent = memo(function ModelPickerContent(props: {
   activeInstanceId: ProviderInstanceId;
   model: string;
   /**
-   * When set, the picker is locked to the given driver kind — typically
+   * When set, the picker is locked to the given driver kind â€” typically
    * because the user is editing a previously-sent message and can't change
    * which driver served the turn. Multiple instances of the same kind
    * remain selectable (e.g. locked to `codex` still lets the user switch
@@ -141,7 +141,7 @@ export const ModelPickerContent = memo(function ModelPickerContent(props: {
   // Create a Set for efficient lookup. Favorites are keyed by
   // `${instanceId}:${slug}`; the storage schema widened from ProviderDriverKind
   // to ProviderInstanceId so pre-migration favorites keyed by driver slugs
-  // (e.g. `"codex:gpt-5"`) still resolve — the default instance id equals
+  // (e.g. `"codex:gpt-5"`) still resolve â€” the default instance id equals
   // the driver slug.
   const favoritesSet = useMemo(() => {
     return new Set(favorites.map((fav) => providerModelKey(fav.provider, fav.model)));
@@ -186,7 +186,7 @@ export const ModelPickerContent = memo(function ModelPickerContent(props: {
       const entry = entryByInstanceId.get(instanceId);
       if (!entry) {
         // Instance disappeared between renders (configuration change). Skip
-        // its models — stale options shouldn't appear in the picker.
+        // its models â€” stale options shouldn't appear in the picker.
         continue;
       }
       if (!readyInstanceSet.has(instanceId)) {

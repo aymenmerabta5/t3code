@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_BY_PROVIDER,
   EnvironmentId,
@@ -6,14 +6,14 @@ import {
   ProviderInstanceId,
   ProviderDriverKind,
   ThreadId,
-} from "@t3tools/contracts";
-import { scopedThreadKey, scopeThreadRef } from "@t3tools/client-runtime";
+} from "@ghostforge/contracts";
+import { scopedThreadKey, scopeThreadRef } from "@ghostforge/client-runtime";
 import "../../index.css";
 
 import { page } from "vitest/browser";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { createModelCapabilities, createModelSelection } from "@t3tools/shared/model";
+import { createModelCapabilities, createModelSelection } from "@ghostforge/shared/model";
 
 import { CompactComposerControlsMenu } from "./CompactComposerControlsMenu";
 import { TraitsMenuContent } from "./TraitsPicker";

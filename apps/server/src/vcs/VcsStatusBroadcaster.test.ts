@@ -1,4 +1,4 @@
-import { assert, it, describe } from "@effect/vitest";
+﻿import { assert, it, describe } from "@effect/vitest";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import * as Deferred from "effect/Deferred";
 import * as Duration from "effect/Duration";
@@ -15,7 +15,7 @@ import type {
   VcsStatusRemoteResult,
   VcsStatusResult,
   VcsStatusStreamEvent,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import * as VcsStatusBroadcaster from "./VcsStatusBroadcaster.ts";
 import * as GitWorkflowService from "../git/GitWorkflowService.ts";
@@ -226,10 +226,10 @@ describe("VcsStatusBroadcaster", () => {
       const fileSystem = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
       const realDir = yield* fileSystem.makeTempDirectoryScoped({
-        prefix: "t3-vcs-status-real-",
+        prefix: "ghostforge-vcs-status-real-",
       });
       const linkParent = yield* fileSystem.makeTempDirectoryScoped({
-        prefix: "t3-vcs-status-link-",
+        prefix: "ghostforge-vcs-status-link-",
       });
       const linkDir = path.join(linkParent, "repo-link");
       yield* fileSystem.symlink(realDir, linkDir);

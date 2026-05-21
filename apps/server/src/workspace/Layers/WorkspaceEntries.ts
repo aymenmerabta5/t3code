@@ -1,4 +1,4 @@
-// @effect-diagnostics nodeBuiltinImport:off
+﻿// @effect-diagnostics nodeBuiltinImport:off
 import * as OS from "node:os";
 import fsPromises from "node:fs/promises";
 import type { Dirent } from "node:fs";
@@ -11,14 +11,14 @@ import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
 import * as Path from "effect/Path";
 
-import { type FilesystemBrowseInput, type ProjectEntry } from "@t3tools/contracts";
-import { isExplicitRelativePath, isWindowsAbsolutePath } from "@t3tools/shared/path";
+import { type FilesystemBrowseInput, type ProjectEntry } from "@ghostforge/contracts";
+import { isExplicitRelativePath, isWindowsAbsolutePath } from "@ghostforge/shared/path";
 import {
   insertRankedSearchResult,
   normalizeSearchQuery,
   scoreQueryMatch,
   type RankedSearchResult,
-} from "@t3tools/shared/searchRanking";
+} from "@ghostforge/shared/searchRanking";
 
 import { VcsDriverRegistry } from "../../vcs/VcsDriverRegistry.ts";
 import {

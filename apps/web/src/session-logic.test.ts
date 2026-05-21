@@ -1,10 +1,10 @@
-import {
+﻿import {
   EventId,
   MessageId,
   ThreadId,
   TurnId,
   type OrchestrationThreadActivity,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -358,7 +358,7 @@ describe("deriveActivePlanState", () => {
       }),
     ];
 
-    // Current turn is turn-2, which has no plan activity — should fall back to turn-1's plan
+    // Current turn is turn-2, which has no plan activity â€” should fall back to turn-1's plan
     const result = deriveActivePlanState(activities, TurnId.make("turn-2"));
     expect(result).toEqual({
       createdAt: "2026-02-23T00:00:01.000Z",

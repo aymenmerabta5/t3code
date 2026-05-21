@@ -1,11 +1,11 @@
-import type {
+﻿import type {
   ProviderDriverKind,
   ProviderInstanceConfig,
   ProviderInstanceId,
   ServerSettings,
   UnifiedSettings,
-} from "@t3tools/contracts";
-import { DEFAULT_UNIFIED_SETTINGS } from "@t3tools/contracts/settings";
+} from "@ghostforge/contracts";
+import { DEFAULT_UNIFIED_SETTINGS } from "@ghostforge/contracts/settings";
 
 function collapseOtelSignalsUrl(input: {
   readonly tracesUrl: string;

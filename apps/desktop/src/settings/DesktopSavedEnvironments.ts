@@ -1,5 +1,5 @@
-import { EnvironmentId, type PersistedSavedEnvironmentRecord } from "@t3tools/contracts";
-import { fromLenientJson } from "@t3tools/shared/schemaJson";
+import { EnvironmentId, type PersistedSavedEnvironmentRecord } from "@ghostforge/contracts";
+import { fromLenientJson } from "@ghostforge/shared/schemaJson";
 import * as Context from "effect/Context";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
@@ -121,7 +121,7 @@ export interface DesktopSavedEnvironmentsShape {
 export class DesktopSavedEnvironments extends Context.Service<
   DesktopSavedEnvironments,
   DesktopSavedEnvironmentsShape
->()("t3/desktop/SavedEnvironments") {}
+>()("ghostforge/desktop/SavedEnvironments") {}
 
 function toPersistedSavedEnvironmentRecord(
   record: PersistedSavedEnvironmentStorageRecord,

@@ -1,5 +1,5 @@
-import { type ServerLifecycleWelcomePayload } from "@t3tools/contracts";
-import { scopedProjectKey, scopeProjectRef } from "@t3tools/client-runtime";
+﻿import { type ServerLifecycleWelcomePayload } from "@ghostforge/contracts";
+import { scopedProjectKey, scopeProjectRef } from "@ghostforge/client-runtime";
 import {
   Outlet,
   createRootRouteWithContext,

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProjectionThreadMessageRepository - Projection repository interface for messages.
  *
  * Owns persistence operations for projected thread messages rendered in the
@@ -13,7 +13,7 @@ import {
   ThreadId,
   TurnId,
   IsoDateTime,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Schema from "effect/Schema";
 import * as Context from "effect/Context";
 import type * as Option from "effect/Option";
@@ -92,4 +92,4 @@ export interface ProjectionThreadMessageRepositoryShape {
 export class ProjectionThreadMessageRepository extends Context.Service<
   ProjectionThreadMessageRepository,
   ProjectionThreadMessageRepositoryShape
->()("t3/persistence/Services/ProjectionThreadMessages/ProjectionThreadMessageRepository") {}
+>()("ghostforge/persistence/Services/ProjectionThreadMessages/ProjectionThreadMessageRepository") {}

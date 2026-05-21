@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CheckpointDiffQuery - Query interface for computed checkpoint diffs.
  *
  * Provides read-only diff operations across checkpoint snapshots used by
@@ -11,7 +11,7 @@ import type {
   OrchestrationGetFullThreadDiffResult,
   OrchestrationGetTurnDiffInput,
   OrchestrationGetTurnDiffResult,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 
@@ -46,4 +46,4 @@ export interface CheckpointDiffQueryShape {
 export class CheckpointDiffQuery extends Context.Service<
   CheckpointDiffQuery,
   CheckpointDiffQueryShape
->()("t3/checkpointing/Services/CheckpointDiffQuery") {}
+>()("ghostforge/checkpointing/Services/CheckpointDiffQuery") {}

@@ -24,7 +24,9 @@ const makeServerConfigLayer = (
       } satisfies ServerConfigShape;
     }),
   ).pipe(
-    Layer.provide(ServerConfig.layerTest(process.cwd(), { prefix: "t3-auth-bootstrap-test-" })),
+    Layer.provide(
+      ServerConfig.layerTest(process.cwd(), { prefix: "ghostforge-auth-bootstrap-test-" }),
+    ),
   );
 
 const makeBootstrapCredentialLayer = (

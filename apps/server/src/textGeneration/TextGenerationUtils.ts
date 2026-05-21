@@ -1,4 +1,4 @@
-import { TextGenerationError } from "@t3tools/contracts";
+﻿import { TextGenerationError } from "@ghostforge/contracts";
 import * as Schema from "effect/Schema";
 
 const isTextGenerationError = Schema.is(TextGenerationError);
@@ -19,7 +19,7 @@ export function limitSection(value: string, maxChars: number): string {
   return `${truncated}\n\n[truncated]`;
 }
 
-/** Normalise a raw commit subject to imperative-mood, ≤72 chars, no trailing period. */
+/** Normalise a raw commit subject to imperative-mood, â‰¤72 chars, no trailing period. */
 export function sanitizeCommitSubject(raw: string): string {
   const singleLine = raw.trim().split(/\r?\n/g)[0]?.trim() ?? "";
   const withoutTrailingPeriod = singleLine.replace(/[.]+$/g, "").trim();
@@ -63,7 +63,7 @@ export function sanitizeThreadTitle(raw: string): string {
   return `${normalized.slice(0, 47).trimEnd()}...`;
 }
 
-/** CLI name to human-readable label, e.g. "codex" → "Codex CLI (`codex`)" */
+/** CLI name to human-readable label, e.g. "codex" â†’ "Codex CLI (`codex`)" */
 function cliLabel(cliName: string): string {
   const capitalized = cliName.charAt(0).toUpperCase() + cliName.slice(1);
   return `${capitalized} CLI (\`${cliName}\`)`;

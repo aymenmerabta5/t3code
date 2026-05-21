@@ -1,5 +1,5 @@
-import { EnvironmentId, ProjectId, ProviderInstanceId, ThreadId } from "@t3tools/contracts";
-import { scopeProjectRef } from "@t3tools/client-runtime";
+﻿import { EnvironmentId, ProjectId, ProviderInstanceId, ThreadId } from "@ghostforge/contracts";
+import { scopeProjectRef } from "@ghostforge/client-runtime";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -19,7 +19,7 @@ import {
 import type { Project, SidebarThreadSummary } from "./types";
 import { DEFAULT_INTERACTION_MODE } from "./types";
 
-// ── Fixture Identifiers ──────────────────────────────────────────────
+// â”€â”€ Fixture Identifiers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const primaryEnvId = EnvironmentId.make("env-primary");
 const remoteEnvId = EnvironmentId.make("env-remote");
@@ -41,7 +41,7 @@ const DEFAULT_GROUPING_SETTINGS = {
   sidebarProjectGroupingOverrides: {},
 };
 
-// ── Factory Helpers ──────────────────────────────────────────────────
+// â”€â”€ Factory Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function makeProject(
   overrides: Partial<Project> & Pick<Project, "id" | "environmentId" | "name">,
@@ -99,7 +99,7 @@ function makeEmptyEnvironmentState(): EnvironmentState {
   };
 }
 
-// ── Fixture: Two environments, shared + local-only + remote-only projects ──
+// â”€â”€ Fixture: Two environments, shared + local-only + remote-only projects â”€â”€
 
 function makeFixtureState(): AppState {
   // Shared project: same repo in both envs
@@ -220,7 +220,7 @@ function makeFixtureState(): AppState {
   };
 }
 
-// ── Tests ────────────────────────────────────────────────────────────
+// â”€â”€ Tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 describe("environment grouping", () => {
   describe("deriveLogicalProjectKey", () => {

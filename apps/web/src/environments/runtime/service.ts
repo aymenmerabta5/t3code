@@ -1,4 +1,4 @@
-import {
+﻿import {
   type AuthSessionRole,
   type DesktopSshEnvironmentBootstrap,
   type DesktopSshEnvironmentTarget,
@@ -9,7 +9,7 @@ import {
   type ServerConfig,
   type TerminalEvent,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { type QueryClient } from "@tanstack/react-query";
 import { Throttler } from "@tanstack/react-pacer";
 import {
@@ -18,7 +18,7 @@ import {
   scopedThreadKey,
   scopeProjectRef,
   scopeThreadRef,
-} from "@t3tools/client-runtime";
+} from "@ghostforge/client-runtime";
 
 import {
   markPromotedDraftThreadByRef,

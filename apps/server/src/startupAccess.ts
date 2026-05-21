@@ -1,6 +1,6 @@
-import { networkInterfaces } from "node:os";
+﻿import { networkInterfaces } from "node:os";
 
-import { QrCode } from "@t3tools/shared/qrCode";
+import { QrCode } from "@ghostforge/shared/qrCode";
 import * as Effect from "effect/Effect";
 import { HttpServer } from "effect/unstable/http";
 
@@ -110,7 +110,7 @@ export const renderTerminalQrCode = (value: string, margin = 2): string => {
       const topDark = isDark(x, y);
       const bottomDark = isDark(x, y + 1);
 
-      row += topDark ? (bottomDark ? "█" : "▀") : bottomDark ? "▄" : " ";
+      row += topDark ? (bottomDark ? "â–ˆ" : "â–€") : bottomDark ? "â–„" : " ";
     }
 
     rows.push(row);
@@ -121,7 +121,7 @@ export const renderTerminalQrCode = (value: string, margin = 2): string => {
 
 export const formatHeadlessServeOutput = (accessInfo: HeadlessServeAccessInfo): string =>
   [
-    "T3 Code server is ready.",
+    "GhostForge server is ready.",
     `Connection string: ${accessInfo.connectionString}`,
     `Token: ${accessInfo.token}`,
     `Pairing URL: ${accessInfo.pairingUrl}`,

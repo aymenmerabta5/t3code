@@ -1,14 +1,14 @@
-import * as Effect from "effect/Effect";
+﻿import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
 import * as Ref from "effect/Ref";
 import * as Schema from "effect/Schema";
 import { ChildProcessSpawner } from "effect/unstable/process";
 
-import { type CursorSettings, type ModelSelection } from "@t3tools/contracts";
-import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@t3tools/shared/git";
-import { extractJsonObject } from "@t3tools/shared/schemaJson";
+import { type CursorSettings, type ModelSelection } from "@ghostforge/contracts";
+import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@ghostforge/shared/git";
+import { extractJsonObject } from "@ghostforge/shared/schemaJson";
 
-import { TextGenerationError } from "@t3tools/contracts";
+import { TextGenerationError } from "@ghostforge/contracts";
 import { type ThreadTitleGenerationResult, type TextGenerationShape } from "./TextGeneration.ts";
 import {
   buildBranchNamePrompt,
@@ -87,7 +87,7 @@ export const makeCursorTextGeneration = Effect.fn("makeCursorTextGeneration")(fu
         environment,
         childProcessSpawner: commandSpawner,
         cwd,
-        clientInfo: { name: "t3-code-git-text", version: "0.0.0" },
+        clientInfo: { name: "ghostforge-code-git-text", version: "0.0.0" },
       });
 
       yield* runtime.handleSessionUpdate((notification) => {

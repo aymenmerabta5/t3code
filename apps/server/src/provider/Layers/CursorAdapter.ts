@@ -1,5 +1,5 @@
-/**
- * CursorAdapterLive — Cursor CLI (`agent acp`) via ACP.
+﻿/**
+ * CursorAdapterLive â€” Cursor CLI (`agent acp`) via ACP.
  *
  * @module CursorAdapterLive
  */
@@ -20,7 +20,7 @@ import {
   type RuntimeMode,
   type ThreadId,
   TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Deferred from "effect/Deferred";
 import * as Effect from "effect/Effect";
@@ -104,8 +104,8 @@ export interface CursorAdapterLiveOptions {
    *
    * Production instances bind settings to the instance scope (the hydration
    * layer rebuilds the adapter on config change) and leave this undefined.
-   * Test suites that mutate `ServerSettingsService` mid-flight — e.g. to
-   * swap `binaryPath` to a mock ACP wrapper — pass a resolver that reads
+   * Test suites that mutate `ServerSettingsService` mid-flight â€” e.g. to
+   * swap `binaryPath` to a mock ACP wrapper â€” pass a resolver that reads
    * the latest snapshot so the closure isn't stale.
    */
   readonly resolveSettings?: Effect.Effect<CursorSettings>;
@@ -492,7 +492,7 @@ export function makeCursorAdapter(
 
           // Resolve the CursorSettings used to spawn the ACP child. Production
           // leaves `options.resolveSettings` undefined so we use the value
-          // captured at adapter construction — per-instance isolation is
+          // captured at adapter construction â€” per-instance isolation is
           // enforced by the hydration layer rebuilding this adapter whenever
           // its config changes. Tests set `resolveSettings` to pull the latest
           // snapshot from `ServerSettingsService` so that mid-suite
@@ -508,7 +508,7 @@ export function makeCursorAdapter(
             childProcessSpawner,
             cwd,
             ...(resumeSessionId ? { resumeSessionId } : {}),
-            clientInfo: { name: "t3-code", version: "0.0.0" },
+            clientInfo: { name: "ghostforge-code", version: "0.0.0" },
             ...acpNativeLoggers,
           }).pipe(
             Effect.provideService(Scope.Scope, sessionScope),

@@ -1,4 +1,4 @@
-// @effect-diagnostics-next-line nodeBuiltinImport:off - NodeHttpServer.layer takes `NodeHttp.createServer` as arg
+﻿// @effect-diagnostics-next-line nodeBuiltinImport:off - NodeHttpServer.layer takes `NodeHttp.createServer` as arg
 import * as NodeHttp from "node:http";
 
 import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer";
@@ -20,8 +20,8 @@ const resolveMockUpdateServerConfig = Effect.gen(function* () {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
   const config = yield* Config.all({
-    port: Config.port("T3CODE_DESKTOP_MOCK_UPDATE_SERVER_PORT").pipe(Config.withDefault(3000)),
-    root: Config.string("T3CODE_DESKTOP_MOCK_UPDATE_SERVER_ROOT").pipe(
+    port: Config.port("GHOSTFORGE_DESKTOP_MOCK_UPDATE_SERVER_PORT").pipe(Config.withDefault(3000)),
+    root: Config.string("GHOSTFORGE_DESKTOP_MOCK_UPDATE_SERVER_ROOT").pipe(
       Config.withDefault("../release-mock"),
     ),
   }).asEffect();

@@ -1,4 +1,4 @@
-import * as NodeOs from "node:os";
+﻿import * as NodeOs from "node:os";
 import type {
   CursorSettings,
   ModelCapabilities,
@@ -7,8 +7,8 @@ import type {
   ServerProviderAuth,
   ServerProviderModel,
   ServerProviderState,
-} from "@t3tools/contracts";
-import { ProviderDriverKind } from "@t3tools/contracts";
+} from "@ghostforge/contracts";
+import { ProviderDriverKind } from "@ghostforge/contracts";
 import type * as EffectAcpSchema from "effect-acp/schema";
 import * as Cause from "effect/Cause";
 import * as DateTime from "effect/DateTime";
@@ -25,7 +25,7 @@ import {
   createModelCapabilities,
   getProviderOptionBooleanSelectionValue,
   getProviderOptionStringSelectionValue,
-} from "@t3tools/shared/model";
+} from "@ghostforge/shared/model";
 
 import {
   buildBooleanOptionDescriptor,
@@ -81,7 +81,7 @@ export function buildInitialCursorProviderSnapshot(
           version: null,
           status: "warning",
           auth: { status: "unknown" },
-          message: "Cursor is disabled in T3 Code settings.",
+          message: "Cursor is disabled in GhostForge settings.",
         },
       });
     }
@@ -424,7 +424,7 @@ const makeCursorAcpProbeRuntime = (
           env: environment,
         },
         cwd: process.cwd(),
-        clientInfo: { name: "t3-code-provider-probe", version: "0.0.0" },
+        clientInfo: { name: "ghostforge-code-provider-probe", version: "0.0.0" },
         authMethodId: "cursor_login",
         clientCapabilities: CURSOR_PARAMETERIZED_MODEL_PICKER_CAPABILITIES,
       }).pipe(Layer.provide(Layer.succeed(ChildProcessSpawner.ChildProcessSpawner, spawner))),
@@ -694,7 +694,7 @@ export function getCursorFallbackModels(
   return providerModelsFromSettings([], PROVIDER, cursorSettings.customModels, EMPTY_CAPABILITIES);
 }
 
-/** Timeout for `agent about` — it's slower than a simple `--version` probe. */
+/** Timeout for `agent about` â€” it's slower than a simple `--version` probe. */
 const ABOUT_TIMEOUT_MS = 8_000;
 
 /** Strip ANSI escape sequences so we can parse plain key-value lines. */
@@ -1011,7 +1011,7 @@ export function parseCursorAboutOutput(result: CommandResult): CursorAboutResult
 
   // Determine auth from the User Email field.
   if (userEmail === undefined) {
-    // Field missing entirely — can't determine auth.
+    // Field missing entirely â€” can't determine auth.
     if (result.code === 0) {
       return { version, status: "ready", auth: { status: "unknown" } };
     }
@@ -1108,7 +1108,7 @@ export const checkCursorProviderStatus = Effect.fn("checkCursorProviderStatus")(
         version: null,
         status: "warning",
         auth: { status: "unknown" },
-        message: "Cursor is disabled in T3 Code settings.",
+        message: "Cursor is disabled in GhostForge settings.",
       },
     });
   }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CheckpointStoreLive - Filesystem checkpoint store adapter layer.
  *
  * Resolves the active VCS driver once per checkpoint operation and delegates
@@ -10,7 +10,7 @@ import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 
 import { CheckpointStore, type CheckpointStoreShape } from "../Services/CheckpointStore.ts";
-import { VcsUnsupportedOperationError } from "@t3tools/contracts";
+import { VcsUnsupportedOperationError } from "@ghostforge/contracts";
 import { VcsDriverRegistry } from "../../vcs/VcsDriverRegistry.ts";
 import type { VcsCheckpointOps } from "../../vcs/VcsDriver.ts";
 

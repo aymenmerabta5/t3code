@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WorkspaceFileSystem - Effect service contract for workspace file mutations.
  *
  * Owns workspace-root-relative file write operations and their associated
@@ -10,7 +10,7 @@ import * as Schema from "effect/Schema";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 
-import type { ProjectWriteFileInput, ProjectWriteFileResult } from "@t3tools/contracts";
+import type { ProjectWriteFileInput, ProjectWriteFileResult } from "@ghostforge/contracts";
 import { WorkspacePathOutsideRootError } from "./WorkspacePaths.ts";
 
 export class WorkspaceFileSystemError extends Schema.TaggedErrorClass<WorkspaceFileSystemError>()(
@@ -48,4 +48,4 @@ export interface WorkspaceFileSystemShape {
 export class WorkspaceFileSystem extends Context.Service<
   WorkspaceFileSystem,
   WorkspaceFileSystemShape
->()("t3/workspace/Services/WorkspaceFileSystem") {}
+>()("ghostforge/workspace/Services/WorkspaceFileSystem") {}

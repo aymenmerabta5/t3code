@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ProviderDriverKind } from "@t3tools/contracts";
+﻿import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ProviderDriverKind } from "@ghostforge/contracts";
 
 import {
   createThreadJumpHintVisibilityController,
@@ -27,7 +27,7 @@ import {
   ProjectId,
   ProviderInstanceId,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   DEFAULT_INTERACTION_MODE,
   DEFAULT_RUNTIME_MODE,
@@ -199,12 +199,12 @@ describe("resolveSidebarNewThreadSeedContext", () => {
         activeThread: {
           projectId: "project-1",
           branch: "feature/existing",
-          worktreePath: "/repo/.t3/worktrees/existing",
+          worktreePath: "/repo/.ghostforge/worktrees/existing",
         },
         activeDraftThread: {
           projectId: "project-1",
           branch: "feature/draft",
-          worktreePath: "/repo/.t3/worktrees/draft",
+          worktreePath: "/repo/.ghostforge/worktrees/draft",
           envMode: "worktree",
         },
       }),

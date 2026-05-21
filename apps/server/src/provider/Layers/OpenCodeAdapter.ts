@@ -1,4 +1,4 @@
-import {
+﻿import {
   EventId,
   type OpenCodeSettings,
   ProviderDriverKind,
@@ -11,7 +11,7 @@ import {
   type ToolLifecycleItemType,
   TurnId,
   type UserInputQuestion,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
@@ -22,7 +22,7 @@ import * as Ref from "effect/Ref";
 import * as Scope from "effect/Scope";
 import * as Stream from "effect/Stream";
 import type { OpencodeClient, Part, PermissionRequest, QuestionRequest } from "@opencode-ai/sdk/v2";
-import { getModelSelectionStringOptionValue } from "@t3tools/shared/model";
+import { getModelSelectionStringOptionValue } from "@ghostforge/shared/model";
 
 import { resolveAttachmentPath } from "../../attachmentStore.ts";
 import { ServerConfig } from "../../config.ts";
@@ -49,8 +49,6 @@ import {
   type OpenCodeServerConnection,
 } from "../opencodeRuntime.ts";
 import * as Option from "effect/Option";
-
-const PROVIDER = ProviderDriverKind.make("opencode");
 
 interface OpenCodeTurnSnapshot {
   readonly id: TurnId;
@@ -99,75 +97,13 @@ interface OpenCodeSessionContext {
 
 export interface OpenCodeAdapterLiveOptions {
   readonly instanceId?: ProviderInstanceId;
+  readonly driverKind?: ProviderDriverKind;
   readonly environment?: NodeJS.ProcessEnv;
   readonly nativeEventLogPath?: string;
   readonly nativeEventLogger?: EventNdjsonLogger;
 }
 
 const nowIso = Effect.map(DateTime.now, DateTime.formatIso);
-
-/**
- * Map a tagged OpenCodeRuntimeError produced by {@link runOpenCodeSdk} into
- * the adapter-boundary `ProviderAdapterRequestError`. SDK-method-level call
- * sites pipe through this in `Effect.mapError` so they never build the error
- * shape by hand.
- */
-const toRequestError = (cause: OpenCodeRuntimeError): ProviderAdapterRequestError =>
-  new ProviderAdapterRequestError({
-    provider: PROVIDER,
-    method: cause.operation,
-    detail: cause.detail,
-    cause: cause.cause,
-  });
-
-/**
- * Map a `Cause.squash`-ed failure into a `ProviderAdapterProcessError`. The
- * typed cause is usually an `OpenCodeRuntimeError` (from {@link runOpenCodeSdk}),
- * in which case we preserve its `detail`; otherwise we fall back to
- * {@link openCodeRuntimeErrorDetail} for unknown causes (defects, etc.).
- */
-const toProcessError = (threadId: ThreadId, cause: unknown): ProviderAdapterProcessError =>
-  new ProviderAdapterProcessError({
-    provider: PROVIDER,
-    threadId,
-    detail: OpenCodeRuntimeError.is(cause) ? cause.detail : openCodeRuntimeErrorDetail(cause),
-    cause,
-  });
-
-const buildEventBase = (input: {
-  readonly threadId: ThreadId;
-  readonly turnId?: TurnId | undefined;
-  readonly itemId?: string | undefined;
-  readonly requestId?: string | undefined;
-  readonly createdAt?: string | undefined;
-  readonly raw?: unknown;
-}): Effect.Effect<
-  Pick<
-    ProviderRuntimeEvent,
-    "eventId" | "provider" | "threadId" | "createdAt" | "turnId" | "itemId" | "requestId" | "raw"
-  >
-> =>
-  Effect.gen(function* () {
-    const uuid = yield* Random.nextUUIDv4;
-    const createdAt = input.createdAt ?? (yield* nowIso);
-    return {
-      eventId: EventId.make(uuid),
-      provider: PROVIDER,
-      threadId: input.threadId,
-      createdAt,
-      ...(input.turnId ? { turnId: input.turnId } : {}),
-      ...(input.itemId ? { itemId: RuntimeItemId.make(input.itemId) } : {}),
-      ...(input.requestId ? { requestId: RuntimeRequestId.make(input.requestId) } : {}),
-      ...(input.raw !== undefined
-        ? {
-            raw: {
-              source: "opencode.sdk.event",
-              payload: input.raw,
-            },
-          }
-        : {}),
-    };
-  });
 
 function toToolLifecycleItemType(toolName: string): ToolLifecycleItemType {
   const normalized = toolName.toLowerCase();
@@ -251,29 +187,6 @@ function appendTurnItem(
     return;
   }
   resolveTurnSnapshot(context, turnId).items.push(item);
-}
-
-function ensureSessionContext(
-  sessions: ReadonlyMap<ThreadId, OpenCodeSessionContext>,
-  threadId: ThreadId,
-): OpenCodeSessionContext {
-  const session = sessions.get(threadId);
-  if (!session) {
-    throw new ProviderAdapterSessionNotFoundError({
-      provider: PROVIDER,
-      threadId,
-    });
-  }
-  // `ensureSessionContext` is a sync gate used from both sync helpers and
-  // Effect bodies. `Ref.getUnsafe` is an atomic read of the backing cell —
-  // no fiber suspension required, which keeps this callable everywhere.
-  if (Ref.getUnsafe(session.stopped)) {
-    throw new ProviderAdapterSessionClosedError({
-      provider: PROVIDER,
-      threadId,
-    });
-  }
-  return session;
 }
 
 function normalizeQuestionRequest(request: QuestionRequest): ReadonlyArray<UserInputQuestion> {
@@ -443,7 +356,7 @@ const stopOpenCodeContext = Effect.fn("stopOpenCodeContext")(function* (
   ).pipe(Effect.ignore({ log: true }));
 
   // Closing the session scope interrupts every fiber forked into it and
-  // runs each finalizer we registered — the `AbortController.abort()` call,
+  // runs each finalizer we registered â€” the `AbortController.abort()` call,
   // the child-process termination, etc.
   yield* Scope.close(context.sessionScope, Exit.void);
   return true;
@@ -455,6 +368,89 @@ export function makeOpenCodeAdapter(
 ) {
   return Effect.gen(function* () {
     const boundInstanceId = options?.instanceId ?? ProviderInstanceId.make("opencode");
+    const provider = options?.driverKind ?? ProviderDriverKind.make("opencode");
+
+    const toRequestError = (cause: OpenCodeRuntimeError): ProviderAdapterRequestError =>
+      new ProviderAdapterRequestError({
+        provider,
+        method: cause.operation,
+        detail: cause.detail,
+        cause: cause.cause,
+      });
+
+    const toProcessError = (threadId: ThreadId, cause: unknown): ProviderAdapterProcessError =>
+      new ProviderAdapterProcessError({
+        provider,
+        threadId,
+        detail: OpenCodeRuntimeError.is(cause) ? cause.detail : openCodeRuntimeErrorDetail(cause),
+        cause,
+      });
+
+    const buildEventBase = (input: {
+      readonly threadId: ThreadId;
+      readonly turnId?: TurnId | undefined;
+      readonly itemId?: string | undefined;
+      readonly requestId?: string | undefined;
+      readonly createdAt?: string | undefined;
+      readonly raw?: unknown;
+    }): Effect.Effect<
+      Pick<
+        ProviderRuntimeEvent,
+        | "eventId"
+        | "provider"
+        | "threadId"
+        | "createdAt"
+        | "turnId"
+        | "itemId"
+        | "requestId"
+        | "raw"
+      >
+    > =>
+      Effect.gen(function* () {
+        const uuid = yield* Random.nextUUIDv4;
+        const createdAt = input.createdAt ?? (yield* nowIso);
+        return {
+          eventId: EventId.make(uuid),
+          provider,
+          threadId: input.threadId,
+          createdAt,
+          ...(input.turnId ? { turnId: input.turnId } : {}),
+          ...(input.itemId ? { itemId: RuntimeItemId.make(input.itemId) } : {}),
+          ...(input.requestId ? { requestId: RuntimeRequestId.make(input.requestId) } : {}),
+          ...(input.raw !== undefined
+            ? {
+                raw: {
+                  source: "opencode.sdk.event",
+                  payload: input.raw,
+                },
+              }
+            : {}),
+        };
+      });
+
+    function ensureSessionContext(
+      sessionsArg: ReadonlyMap<ThreadId, OpenCodeSessionContext>,
+      threadId: ThreadId,
+    ): OpenCodeSessionContext {
+      const session = sessionsArg.get(threadId);
+      if (!session) {
+        throw new ProviderAdapterSessionNotFoundError({
+          provider,
+          threadId,
+        });
+      }
+      // `ensureSessionContext` is a sync gate used from both sync helpers and
+      // Effect bodies. `Ref.getUnsafe` is an atomic read of the backing cell â€”
+      // no fiber suspension required, which keeps this callable everywhere.
+      if (Ref.getUnsafe(session.stopped)) {
+        throw new ProviderAdapterSessionClosedError({
+          provider,
+          threadId,
+        });
+      }
+      return session;
+    }
+
     const serverConfig = yield* ServerConfig;
     const openCodeRuntime = yield* OpenCodeRuntime;
     const nativeEventLogger =
@@ -646,7 +642,7 @@ export function makeOpenCodeAdapter(
       yield* writeNativeEventBestEffort(context.session.threadId, {
         observedAt: yield* nowIso,
         event: {
-          provider: PROVIDER,
+          provider: provider,
           threadId: context.session.threadId,
           providerThreadId: context.openCodeSessionId,
           type: event.type,
@@ -864,6 +860,9 @@ export function makeOpenCodeAdapter(
         }
 
         case "session.status": {
+          yield* Effect.logInfo(
+            `[GHOSTCODE-DEBUG] session.status received: type=${event.properties.status.type}, turnId=${turnId}`,
+          );
           if (event.properties.status.type === "busy") {
             yield* updateProviderSession(context, {
               status: "running",
@@ -963,7 +962,7 @@ export function makeOpenCodeAdapter(
       );
 
       // Fibers forked into `context.sessionScope` are interrupted
-      // automatically when the scope closes — no bookkeeping required.
+      // automatically when the scope closes â€” no bookkeeping required.
       yield* Effect.flatMap(
         runOpenCodeSdk("event.subscribe", () =>
           context.client.event.subscribe(undefined, {
@@ -1032,21 +1031,26 @@ export function makeOpenCodeAdapter(
           const startedExit = yield* Effect.exit(
             Effect.gen(function* () {
               // The runtime binds the server's lifetime to the Scope.Scope
-              // we provide below — closing `sessionScope` kills the child
+              // we provide below â€” closing `sessionScope` kills the child
               // process automatically. No manual `server.close()` needed.
               const server = yield* openCodeRuntime.connectToOpenCodeServer({
                 binaryPath,
                 serverUrl,
+                cwd: directory,
                 ...(options?.environment ? { environment: options.environment } : {}),
+                ...(provider === "ghostcode"
+                  ? { configEnvVarName: "GHOSTCODE_CONFIG_CONTENT" }
+                  : {}),
               });
               const client = openCodeRuntime.createOpenCodeSdkClient({
                 baseUrl: server.url,
                 directory,
                 ...(server.external && serverPassword ? { serverPassword } : {}),
+                serverUsername: provider,
               });
               const openCodeSession = yield* runOpenCodeSdk("session.create", () =>
                 client.session.create({
-                  title: `T3 Code ${input.threadId}`,
+                  title: `GhostForge ${input.threadId}`,
                   permission: buildOpenCodePermissionRules(input.runtimeMode),
                 }),
               );
@@ -1075,7 +1079,7 @@ export function makeOpenCodeAdapter(
         // and already inserted a session while we were awaiting async work.
         const raceWinner = sessions.get(input.threadId);
         if (raceWinner) {
-          // Another call won the race – clean up the session we just created
+          // Another call won the race â€“ clean up the session we just created
           // (including the remote SDK session) and return the existing one.
           yield* runOpenCodeSdk("session.abort", () =>
             started.client.session.abort({
@@ -1088,7 +1092,7 @@ export function makeOpenCodeAdapter(
 
         const createdAt = yield* nowIso;
         const session: ProviderSession = {
-          provider: PROVIDER,
+          provider: provider,
           providerInstanceId: boundInstanceId,
           status: "ready",
           runtimeMode: input.runtimeMode,
@@ -1150,7 +1154,7 @@ export function makeOpenCodeAdapter(
           : undefined);
       if (modelSelection !== undefined && modelSelection.instanceId !== boundInstanceId) {
         return yield* new ProviderAdapterValidationError({
-          provider: PROVIDER,
+          provider: provider,
           operation: "sendTurn",
           issue: `OpenCode model selection is bound to instance '${modelSelection?.instanceId}', expected '${boundInstanceId}'.`,
         });
@@ -1158,7 +1162,7 @@ export function makeOpenCodeAdapter(
       const parsedModel = parseOpenCodeModelSlug(modelSelection?.model);
       if (!parsedModel) {
         return yield* new ProviderAdapterValidationError({
-          provider: PROVIDER,
+          provider: provider,
           operation: "sendTurn",
           issue: "OpenCode model selection must use the 'provider/model' format.",
         });
@@ -1175,7 +1179,7 @@ export function makeOpenCodeAdapter(
       });
       if ((!text || text.length === 0) && fileParts.length === 0) {
         return yield* new ProviderAdapterValidationError({
-          provider: PROVIDER,
+          provider: provider,
           operation: "sendTurn",
           issue: "OpenCode turns require text input or at least one attachment.",
         });
@@ -1206,6 +1210,9 @@ export function makeOpenCodeAdapter(
         },
       });
 
+      yield* Effect.logInfo(
+        `[GHOSTCODE-DEBUG] Calling promptAsync for turnId=${turnId}, sessionID=${context.openCodeSessionId}`,
+      );
       yield* runOpenCodeSdk("session.promptAsync", () =>
         context.client.session.promptAsync({
           sessionID: context.openCodeSessionId,
@@ -1215,10 +1222,13 @@ export function makeOpenCodeAdapter(
           parts: [...(text ? [{ type: "text" as const, text }] : []), ...fileParts],
         }),
       ).pipe(
+        Effect.tap(() =>
+          Effect.logInfo(`[GHOSTCODE-DEBUG] promptAsync returned for turnId=${turnId}`),
+        ),
         Effect.mapError(toRequestError),
         // On failure: clear active-turn state, flip the session back to ready
         // with lastError set, emit turn.aborted, then let the typed error
-        // propagate. We don't need to rebuild the error here — `toRequestError`
+        // propagate. We don't need to rebuild the error here â€” `toRequestError`
         // already produced the right shape.
         Effect.tapError((requestError) =>
           Effect.gen(function* () {
@@ -1281,7 +1291,7 @@ export function makeOpenCodeAdapter(
       const context = ensureSessionContext(sessions, threadId);
       if (!context.pendingPermissions.has(requestId)) {
         return yield* new ProviderAdapterRequestError({
-          provider: PROVIDER,
+          provider: provider,
           method: "permission.reply",
           detail: `Unknown pending permission request: ${requestId}`,
         });
@@ -1302,7 +1312,7 @@ export function makeOpenCodeAdapter(
       const request = context.pendingQuestions.get(requestId);
       if (!request) {
         return yield* new ProviderAdapterRequestError({
-          provider: PROVIDER,
+          provider: provider,
           method: "question.reply",
           detail: `Unknown pending user-input request: ${requestId}`,
         });
@@ -1321,7 +1331,7 @@ export function makeOpenCodeAdapter(
         const context = sessions.get(threadId);
         if (!context) {
           throw new ProviderAdapterSessionNotFoundError({
-            provider: PROVIDER,
+            provider: provider,
             threadId,
           });
         }
@@ -1400,7 +1410,7 @@ export function makeOpenCodeAdapter(
       Effect.gen(function* () {
         const contexts = [...sessions.values()];
         sessions.clear();
-        // `stopOpenCodeContext` is typed as never-failing — SDK aborts are
+        // `stopOpenCodeContext` is typed as never-failing â€” SDK aborts are
         // already `Effect.ignore`'d inside it. `ignoreCause` here also
         // swallows defects from throwing finalizers so one bad close can't
         // interrupt the sibling fibers. Same pattern as the layer finalizer.
@@ -1412,7 +1422,7 @@ export function makeOpenCodeAdapter(
       });
 
     return {
-      provider: PROVIDER,
+      provider: provider,
       capabilities: {
         sessionModelSwitch: "in-session",
       },

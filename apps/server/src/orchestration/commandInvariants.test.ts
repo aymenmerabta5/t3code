@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   MessageId,
   CommandId,
@@ -8,7 +8,7 @@ import {
   type OrchestrationCommand,
   type OrchestrationReadModel,
   ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 
 import {

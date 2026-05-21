@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 
@@ -26,7 +26,7 @@ import {
   type VcsStatusLocalResult,
   type VcsStatusRemoteResult,
   type VcsStatusResult,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { GitManager, type GitRunStackedActionOptions } from "./GitManager.ts";
 import { GitVcsDriver } from "../vcs/GitVcsDriver.ts";
@@ -77,7 +77,7 @@ export interface GitWorkflowServiceShape {
 export class GitWorkflowService extends Context.Service<
   GitWorkflowService,
   GitWorkflowServiceShape
->()("t3/git/GitWorkflowService") {}
+>()("ghostforge/git/GitWorkflowService") {}
 
 const unsupportedGitWorkflow = (operation: string, cwd: string, detail: string) =>
   new GitManagerError({

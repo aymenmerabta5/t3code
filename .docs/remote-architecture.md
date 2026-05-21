@@ -1,6 +1,6 @@
 # Remote Architecture
 
-This document describes the target architecture for first-class remote environments in T3 Code.
+This document describes the target architecture for first-class remote environments in GhostForge.
 
 It is intentionally architecture-first. It does not define a complete implementation plan or user-facing rollout checklist. The goal is to establish the core model so remote support can be added without another broad rewrite.
 
@@ -8,7 +8,7 @@ It is intentionally architecture-first. It does not define a complete implementa
 
 - Treat remote environments as first-class product primitives, not special cases.
 - Support multiple ways to reach the same environment.
-- Keep the T3 server as the execution boundary.
+- Keep the GhostForge server as the execution boundary.
 - Let desktop, mobile, and web all share the same conceptual model.
 - Avoid introducing a local control plane unless product pressure proves it is necessary.
 
@@ -56,7 +56,7 @@ Remote support should preserve that boundary.
 └──────────────────────────────────────────────┘
 ```
 
-The important decision is that remoteness is expressed at the environment connection layer, not by splitting the T3 runtime itself.
+The important decision is that remoteness is expressed at the environment connection layer, not by splitting the GhostForge runtime itself.
 
 ## Domain model
 
@@ -103,7 +103,7 @@ This is the key abstraction that keeps SSH from taking over the model.
 
 A single environment may have many endpoints:
 
-- `wss://t3.example.com`
+- `wss://ghostforge.example.com`
 - `ws://10.0.0.25:3773`
 - a tunneled relay URL
 - a desktop-managed SSH tunnel that resolves to a local forwarded WebSocket URL
@@ -158,7 +158,7 @@ A hosted pairing request is a bootstrap URL for the static web app, not a transp
 Example:
 
 ```text
-https://app.t3.codes/pair?host=https://backend.example.com:3773#token=PAIRCODE
+https://app.ghostforge.dev/pair?host=https://backend.example.com:3773#token=PAIRCODE
 ```
 
 The hosted app reads the `host` parameter and pairing token, exchanges the token directly with that backend, then saves the resulting environment record in browser local storage.
@@ -204,7 +204,7 @@ They do not answer:
 Examples:
 
 - `ws://10.0.0.15:3773`
-- `wss://t3.example.com`
+- `wss://ghostforge.example.com`
 
 This is the base model and should be the first-class default.
 

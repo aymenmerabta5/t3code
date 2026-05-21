@@ -1,9 +1,9 @@
-import { matchers, routes, type Transform, type VercelConfig } from "@vercel/config/v1";
+﻿import { matchers, routes, type Transform, type VercelConfig } from "@vercel/config/v1";
 
-const ROUTER_HOST = "app.t3.codes";
-const HOSTED_WEB_CHANNEL_COOKIE = "t3code_web_channel";
-const LATEST_ORIGIN = "https://latest.app.t3.codes";
-const NIGHTLY_ORIGIN = "https://nightly.app.t3.codes";
+const ROUTER_HOST = "app.ghostforge.dev";
+const HOSTED_WEB_CHANNEL_COOKIE = "ghostforge_web_channel";
+const LATEST_ORIGIN = "https://latest.app.ghostforge.dev";
+const NIGHTLY_ORIGIN = "https://nightly.app.ghostforge.dev";
 const CLEAN_CHANNEL_QUERY_TRANSFORMS = [
   {
     type: "request.query",
@@ -25,15 +25,15 @@ function channelCookie(channel: "latest" | "nightly"): string {
 
 export const config: VercelConfig = {
   buildCommand:
-    'turbo build --filter @t3tools/web && bun ../../scripts/apply-web-brand-assets.ts --channel "${VITE_HOSTED_APP_CHANNEL:-latest}"',
+    'turbo build --filter @ghostforge/web && bun ../../scripts/apply-web-brand-assets.ts --channel "${VITE_HOSTED_APP_CHANNEL:-latest}"',
   git: {
     deploymentEnabled: false,
   },
   installCommand:
-    "bun add -g turbo && bun install --filter '@t3tools/contracts' --filter '@t3tools/client-runtime' --filter '@t3tools/scripts' --filter '@t3tools/web'",
+    "bun add -g turbo && bun install --filter '@ghostforge/contracts' --filter '@ghostforge/client-runtime' --filter '@ghostforge/scripts' --filter '@ghostforge/web'",
   routes: [
     {
-      src: "/__t3code/channel",
+      src: "/__ghostforge/channel",
       has: [matchers.query("channel", "nightly")],
       transforms: CLEAN_CHANNEL_QUERY_TRANSFORMS,
       headers: {
@@ -43,7 +43,7 @@ export const config: VercelConfig = {
       status: 302,
     },
     {
-      src: "/__t3code/channel",
+      src: "/__ghostforge/channel",
       transforms: CLEAN_CHANNEL_QUERY_TRANSFORMS,
       headers: {
         Location: "/",

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CodexAdapterLive - Scoped live implementation for the Codex provider adapter.
  *
  * Wraps the typed Codex session runtime behind the `CodexAdapter` service
@@ -23,7 +23,7 @@ import {
   ProviderApprovalDecision,
   ThreadId,
   ProviderSendTurnInput,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
@@ -39,7 +39,7 @@ import * as EffectCodexSchema from "effect-codex-app-server/schema";
 import {
   getModelSelectionBooleanOptionValue,
   getModelSelectionStringOptionValue,
-} from "@t3tools/shared/model";
+} from "@ghostforge/shared/model";
 
 import {
   ProviderAdapterRequestError,
@@ -1336,7 +1336,7 @@ function mapToRuntimeEvents(
 /**
  * Build a Codex provider adapter bound to a specific `CodexSettings` payload.
  *
- * The adapter is a captured closure over `codexConfig` — the `binaryPath` and
+ * The adapter is a captured closure over `codexConfig` â€” the `binaryPath` and
  * `homePath` are read from that payload, not from `ServerSettingsService`.
  * This is what makes multi-instance routing possible: each `ProviderInstance`
  * in the registry owns its own closure with its own config, so two Codex

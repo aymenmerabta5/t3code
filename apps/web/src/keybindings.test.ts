@@ -1,11 +1,11 @@
-import { assert, describe, it } from "vitest";
+﻿import { assert, describe, it } from "vitest";
 
 import {
   type KeybindingCommand,
   type KeybindingShortcut,
   type KeybindingWhenNode,
   type ResolvedKeybindingsConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   formatShortcutLabel,
   isChatNewShortcut,
@@ -285,11 +285,14 @@ describe("shortcutLabelForCommand", () => {
   });
 
   it("returns effective labels for non-terminal commands", () => {
-    assert.strictEqual(shortcutLabelForCommand(DEFAULT_BINDINGS, "chat.new", "MacIntel"), "⇧⌘O");
+    assert.strictEqual(
+      shortcutLabelForCommand(DEFAULT_BINDINGS, "chat.new", "MacIntel"),
+      "â‡§âŒ˜O",
+    );
     assert.strictEqual(shortcutLabelForCommand(DEFAULT_BINDINGS, "diff.toggle", "Linux"), "Ctrl+D");
     assert.strictEqual(
       shortcutLabelForCommand(DEFAULT_BINDINGS, "commandPalette.toggle", "MacIntel"),
-      "⌘K",
+      "âŒ˜K",
     );
     assert.strictEqual(
       shortcutLabelForCommand(DEFAULT_BINDINGS, "modelPicker.toggle", "Linux"),
@@ -301,7 +304,7 @@ describe("shortcutLabelForCommand", () => {
     );
     assert.strictEqual(
       shortcutLabelForCommand(DEFAULT_BINDINGS, "thread.jump.3", "MacIntel"),
-      "⌘3",
+      "âŒ˜3",
     );
     assert.strictEqual(
       shortcutLabelForCommand(DEFAULT_BINDINGS, "thread.previous", "Linux"),
@@ -312,7 +315,7 @@ describe("shortcutLabelForCommand", () => {
         platform: "MacIntel",
         context: { modelPickerOpen: true },
       }),
-      "⌘3",
+      "âŒ˜3",
     );
   });
 
@@ -323,7 +326,7 @@ describe("shortcutLabelForCommand", () => {
     ]);
 
     assert.isNull(shortcutLabelForCommand(bindings, "thread.jump.1", "MacIntel"));
-    assert.strictEqual(shortcutLabelForCommand(bindings, "thread.jump.7", "MacIntel"), "⇧⌘1");
+    assert.strictEqual(shortcutLabelForCommand(bindings, "thread.jump.7", "MacIntel"), "â‡§âŒ˜1");
   });
 
   it("respects when-context while resolving labels", () => {
@@ -596,7 +599,7 @@ describe("formatShortcutLabel", () => {
   it("formats labels for macOS", () => {
     assert.strictEqual(
       formatShortcutLabel(modShortcut("d", { shiftKey: true }), "MacIntel"),
-      "⇧⌘D",
+      "â‡§âŒ˜D",
     );
   });
 
@@ -608,7 +611,7 @@ describe("formatShortcutLabel", () => {
   });
 
   it("formats labels for plus key", () => {
-    assert.strictEqual(formatShortcutLabel(modShortcut("+"), "MacIntel"), "⌘+");
+    assert.strictEqual(formatShortcutLabel(modShortcut("+"), "MacIntel"), "âŒ˜+");
     assert.strictEqual(formatShortcutLabel(modShortcut("+"), "Linux"), "Ctrl++");
   });
 });

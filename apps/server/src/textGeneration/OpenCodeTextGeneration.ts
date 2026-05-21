@@ -1,4 +1,4 @@
-import * as Effect from "effect/Effect";
+﻿import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Schema from "effect/Schema";
@@ -10,10 +10,10 @@ import {
   type ChatAttachment,
   type ModelSelection,
   type OpenCodeSettings,
-} from "@t3tools/contracts";
-import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@t3tools/shared/git";
-import { getModelSelectionStringOptionValue } from "@t3tools/shared/model";
-import { extractJsonObject } from "@t3tools/shared/schemaJson";
+} from "@ghostforge/contracts";
+import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@ghostforge/shared/git";
+import { getModelSelectionStringOptionValue } from "@ghostforge/shared/model";
+import { extractJsonObject } from "@ghostforge/shared/schemaJson";
 
 import { ServerConfig } from "../config.ts";
 import { resolveAttachmentPath } from "../attachmentStore.ts";
@@ -89,7 +89,7 @@ interface SharedOpenCodeTextGenerationServerState {
    * The scope that owns the shared server's lifetime. Closing this scope
    * terminates the OpenCode child process and interrupts any fibers the
    * runtime forked during startup. We don't hold a `close()` function on
-   * the server handle anymore — the scope is the only lifecycle handle.
+   * the server handle anymore â€” the scope is the only lifecycle handle.
    */
   serverScope: Scope.Closeable | null;
   binaryPath: string | null;
@@ -100,6 +100,7 @@ interface SharedOpenCodeTextGenerationServerState {
 export const makeOpenCodeTextGeneration = Effect.fn("makeOpenCodeTextGeneration")(function* (
   openCodeSettings: OpenCodeSettings,
   environment: NodeJS.ProcessEnv = process.env,
+  serverUsername?: string,
 ) {
   const serverConfig = yield* ServerConfig;
   const openCodeRuntime = yield* OpenCodeRuntime;
@@ -300,9 +301,10 @@ export const makeOpenCodeTextGeneration = Effect.fn("makeOpenCodeTextGeneration"
             ...(openCodeSettings.serverUrl.length > 0 && openCodeSettings.serverPassword
               ? { serverPassword: openCodeSettings.serverPassword }
               : {}),
+            ...(serverUsername ? { serverUsername } : {}),
           });
           const session = await client.session.create({
-            title: `T3 Code ${input.operation}`,
+            title: `GhostForge ${input.operation}`,
             permission: [{ permission: "*", pattern: "*", action: "deny" }],
           });
           if (!session.data) {

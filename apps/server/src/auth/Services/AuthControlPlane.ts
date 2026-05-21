@@ -1,9 +1,9 @@
-import type {
+﻿import type {
   AuthClientMetadata,
   AuthClientSession,
   AuthPairingLink,
   AuthSessionId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Data from "effect/Data";
 import * as DateTime from "effect/DateTime";
 import * as Duration from "effect/Duration";
@@ -69,5 +69,5 @@ export interface AuthControlPlaneShape {
 }
 
 export class AuthControlPlane extends Context.Service<AuthControlPlane, AuthControlPlaneShape>()(
-  "t3/AuthControlPlane",
+  "ghostforge/AuthControlPlane",
 ) {}

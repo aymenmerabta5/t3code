@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { it } from "@effect/vitest";
@@ -7,7 +7,7 @@ import * as Layer from "effect/Layer";
 import * as Schema from "effect/Schema";
 import { beforeEach } from "vitest";
 
-import { OpenCodeSettings } from "@t3tools/contracts";
+import { OpenCodeSettings } from "@ghostforge/contracts";
 import { ServerConfig } from "../../config.ts";
 import {
   OpenCodeRuntime,

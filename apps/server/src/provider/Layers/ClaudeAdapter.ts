@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ClaudeAdapterLive - Scoped live implementation for the Claude Agent provider adapter.
  *
  * Wraps `@anthropic-ai/claude-agent-sdk` query sessions behind the generic
@@ -19,7 +19,7 @@ import {
   type SDKUserMessage,
   type ModelUsage,
 } from "@anthropic-ai/claude-agent-sdk";
-import { parseCliArgs } from "@t3tools/shared/cliArgs";
+import { parseCliArgs } from "@ghostforge/shared/cliArgs";
 import {
   ApprovalRequestId,
   type CanonicalItemType,
@@ -43,14 +43,14 @@ import {
   ThreadId,
   TurnId,
   type UserInputQuestion,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   applyClaudePromptEffortPrefix,
   getModelSelectionBooleanOptionValue,
   getModelSelectionStringOptionValue,
   getProviderOptionDescriptors,
   resolvePromptInjectedEffort,
-} from "@t3tools/shared/model";
+} from "@ghostforge/shared/model";
 import * as Cause from "effect/Cause";
 import * as DateTime from "effect/DateTime";
 import * as Deferred from "effect/Deferred";
@@ -2591,10 +2591,10 @@ export const makeClaudeAdapter = Effect.fn("makeClaudeAdapter")(function* (
         const requestId = ApprovalRequestId.make(yield* Random.nextUUIDv4);
 
         // Parse questions from the SDK's AskUserQuestion input.
-        // `id` MUST equal the full question text — Claude SDK >= 2.1.121 looks
+        // `id` MUST equal the full question text â€” Claude SDK >= 2.1.121 looks
         // up answers by question text in `mapToolResultToToolResultBlockParam`,
         // so the key the UI uses to keep its draft answer must match the SDK's
-        // expected lookup key. See https://github.com/pingdotgg/t3code/issues/2388
+        // expected lookup key. See https://github.com/pingdotgg/ghostforge/issues/2388
         const rawQuestions = Array.isArray(toolInput.questions) ? toolInput.questions : [];
         const questions: Array<UserInputQuestion> = rawQuestions.map(
           (q: Record<string, unknown>, idx: number) => ({

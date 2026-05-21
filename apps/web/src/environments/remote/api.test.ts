@@ -52,7 +52,7 @@ describe("remote environment api", () => {
     expect(
       resolveRemotePairingTarget({
         pairingUrl:
-          "https://app.t3.codes/pair?host=https%3A%2F%2Fdesktop.tailnet.ts.net%3A44342%2F#token=pairing-token",
+          "https://app.ghostforge.dev/pair?host=https%3A%2F%2Fdesktop.tailnet.ts.net%3A44342%2F#token=pairing-token",
       }),
     ).toEqual({
       credential: "pairing-token",
@@ -151,7 +151,7 @@ describe("remote environment api", () => {
               policy: "remote-reachable",
               bootstrapMethods: ["one-time-token"],
               sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-              sessionCookieName: "t3_session",
+              sessionCookieName: "ghostforge_session",
             },
             role: "client",
             sessionMethod: "bearer-session-token",
@@ -201,7 +201,7 @@ describe("remote environment api", () => {
 
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
-      "https://remote.example.com/.well-known/t3/environment",
+      "https://remote.example.com/.well-known/ghostforge/environment",
       {
         method: "GET",
         headers: {},

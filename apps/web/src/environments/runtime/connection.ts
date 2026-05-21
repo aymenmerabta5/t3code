@@ -1,12 +1,12 @@
-import type {
+﻿import type {
   EnvironmentId,
   OrchestrationShellSnapshot,
   OrchestrationShellStreamEvent,
   ServerConfig,
   ServerLifecycleWelcomePayload,
   TerminalEvent,
-} from "@t3tools/contracts";
-import type { KnownEnvironment } from "@t3tools/client-runtime";
+} from "@ghostforge/contracts";
+import type { KnownEnvironment } from "@ghostforge/client-runtime";
 
 import type { WsRpcClient } from "~/rpc/wsRpcClient";
 

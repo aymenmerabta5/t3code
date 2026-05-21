@@ -1,4 +1,4 @@
-import {
+﻿import {
   CommandId,
   DEFAULT_PROVIDER_INTERACTION_MODE,
   EventId,
@@ -6,8 +6,8 @@ import {
   ProjectId,
   ThreadId,
   ProviderInstanceId,
-} from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 import { describe, expect, it } from "vitest";
 import * as Effect from "effect/Effect";
 

@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 
@@ -7,7 +7,7 @@ import {
   type VcsError,
   type VcsInitInput,
   VcsUnsupportedOperationError,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as VcsDriverRegistry from "./VcsDriverRegistry.ts";
 
 export interface VcsProvisioningServiceShape {
@@ -17,7 +17,7 @@ export interface VcsProvisioningServiceShape {
 export class VcsProvisioningService extends Context.Service<
   VcsProvisioningService,
   VcsProvisioningServiceShape
->()("t3/vcs/VcsProvisioningService") {}
+>()("ghostforge/vcs/VcsProvisioningService") {}
 
 function resolveRequestedKind(
   kind: VcsDriverKind | undefined,

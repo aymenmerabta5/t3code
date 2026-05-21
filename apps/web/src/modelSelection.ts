@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_GIT_TEXT_GENERATION_MODEL,
   DEFAULT_GIT_TEXT_GENERATION_MODEL_BY_PROVIDER,
   defaultInstanceIdForDriver,
@@ -6,14 +6,14 @@ import {
   ProviderDriverKind,
   ProviderInstanceId,
   type ServerProvider,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   createModelSelection,
   normalizeModelSlug,
   resolveSelectableModel,
-} from "@t3tools/shared/model";
+} from "@ghostforge/shared/model";
 import { getComposerProviderState } from "./components/chat/composerProviderState";
-import { UnifiedSettings } from "@t3tools/contracts/settings";
+import { UnifiedSettings } from "@ghostforge/contracts/settings";
 import {
   getDefaultServerModel,
   getProviderModels,
@@ -37,7 +37,7 @@ const DEFAULT_TEXT_GENERATION_INSTANCE_ID = ProviderInstanceId.make("codex");
  * `providerInstances[defaultId]` entry on every edit (the "migrate on
  * first write" scheme documented in
  * `ProviderInstanceRegistryHydration`), so this helper exists primarily
- * so readers pick up that promotion immediately — and so first-time
+ * so readers pick up that promotion immediately â€” and so first-time
  * viewers on pre-migration settings still see their legacy list on
  * default slots. Custom instances intentionally do not read the legacy
  * per-driver bucket; otherwise one custom model added to `claude_openrouter`
@@ -285,7 +285,7 @@ export function resolveAppModelSelectionState(
     selectedEntry ?? entries.find((candidate) => candidate.enabled && candidate.isAvailable);
   if (entry) {
     // When the instance changed due to fallback (e.g. selected instance was disabled),
-    // don't carry over the old instance's model — use the fallback instance's default.
+    // don't carry over the old instance's model â€” use the fallback instance's default.
     const selectedModel = selectedEntry ? selection.model : null;
     const model =
       resolveAppModelSelectionForInstance(entry.instanceId, settings, providers, selectedModel) ??
@@ -310,7 +310,7 @@ export function resolveAppModelSelectionState(
   const keptSelectedProvider = false;
 
   // When the provider changed due to fallback (e.g. selected provider was disabled),
-  // don't carry over the old provider's model — use the fallback provider's default.
+  // don't carry over the old provider's model â€” use the fallback provider's default.
   const selectedModel = keptSelectedProvider ? selection.model : null;
   const model = resolveAppModelSelection(provider, settings, providers, selectedModel);
   const { modelOptionsForDispatch } = getComposerProviderState({

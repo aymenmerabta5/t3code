@@ -1,11 +1,11 @@
-import type {
+﻿import type {
   OrchestrationCommand,
   OrchestrationProject,
   OrchestrationReadModel,
   OrchestrationThread,
   ProjectId,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 
 import { OrchestrationCommandInvariantError } from "./Errors.ts";

@@ -1,18 +1,18 @@
-/**
- * CursorDriver — `ProviderDriver` for the Cursor Agent (`agent`) runtime.
+﻿/**
+ * CursorDriver â€” `ProviderDriver` for the Cursor Agent (`agent`) runtime.
  *
  * Cursor exposes an ACP-based CLI. The driver is still a plain value, but
  * its snapshot uses `makeManagedServerProvider`'s optional `enrichSnapshot`
  * hook to run the slow ACP model-capability probe in the background without
  * blocking the initial `ready`-state publish.
  *
- * Text generation is supported via the ACP runtime — `makeCursorTextGeneration`
+ * Text generation is supported via the ACP runtime â€” `makeCursorTextGeneration`
  * drives `runtime.prompt` with a structured-output schema and collects the
  * agent's `agent_message_chunk` stream into a single JSON blob.
  *
  * @module provider/Drivers/CursorDriver
  */
-import { CursorSettings, ProviderDriverKind, type ServerProvider } from "@t3tools/contracts";
+import { CursorSettings, ProviderDriverKind, type ServerProvider } from "@ghostforge/contracts";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";

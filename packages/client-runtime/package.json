@@ -1,5 +1,5 @@
 {
-  "name": "@t3tools/client-runtime",
+  "name": "@ghostforge/client-runtime",
   "private": true,
   "type": "module",
   "exports": {
@@ -13,8 +13,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@t3tools/contracts": "workspace:*",
-    "@t3tools/shared": "workspace:*",
+    "@ghostforge/contracts": "workspace:*",
+    "@ghostforge/shared": "workspace:*",
     "effect": "catalog:"
   },
   "devDependencies": {

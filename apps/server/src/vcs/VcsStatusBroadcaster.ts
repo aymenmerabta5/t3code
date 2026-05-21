@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -18,8 +18,8 @@ import type {
   VcsStatusRemoteResult,
   VcsStatusResult,
   VcsStatusStreamEvent,
-} from "@t3tools/contracts";
-import { mergeGitStatusParts } from "@t3tools/shared/git";
+} from "@ghostforge/contracts";
+import { mergeGitStatusParts } from "@ghostforge/shared/git";
 
 import * as GitWorkflowService from "../git/GitWorkflowService.ts";
 
@@ -82,7 +82,7 @@ export interface VcsStatusBroadcasterShape {
 export class VcsStatusBroadcaster extends Context.Service<
   VcsStatusBroadcaster,
   VcsStatusBroadcasterShape
->()("t3/vcs/VcsStatusBroadcaster") {}
+>()("ghostforge/vcs/VcsStatusBroadcaster") {}
 
 function fingerprintStatusPart(status: unknown): string {
   return JSON.stringify(status);

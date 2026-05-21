@@ -1,4 +1,4 @@
-import { type ProviderInstanceId } from "@t3tools/contracts";
+﻿import { type ProviderInstanceId } from "@ghostforge/contracts";
 import { memo, useMemo } from "react";
 import { Clock3Icon, SparklesIcon, StarIcon } from "lucide-react";
 import { Gemini, GithubCopilotIcon } from "../Icons";
@@ -11,7 +11,7 @@ import type { ProviderInstanceEntry } from "../../providerInstances";
 /**
  * Build the hover tooltip for an instance button. Mirrors the old
  * kind-based copy but uses the entry's configured `displayName` so custom
- * instances get their user-authored name (e.g. "Codex Personal — Unavailable.").
+ * instances get their user-authored name (e.g. "Codex Personal â€” Unavailable.").
  */
 function describeUnavailableInstance(entry: ProviderInstanceEntry): string {
   const label = entry.displayName;
@@ -27,7 +27,7 @@ function describeUnavailableInstance(entry: ProviderInstanceEntry): string {
           ? "Disabled in settings"
           : "Not ready";
   const msg = entry.snapshot.message?.trim();
-  return msg ? `${label} — ${kind}. ${msg}` : `${label} — ${kind}.`;
+  return msg ? `${label} â€” ${kind}. ${msg}` : `${label} â€” ${kind}.`;
 }
 
 const SELECTED_BUTTON_CLASS = "bg-background text-foreground shadow-sm";
@@ -59,7 +59,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
   /**
    * Instance id values that should render the "new" sparkle badge. Callers
    * pass the subset of default built-in ids they want flagged (custom
-   * instances are never flagged — the user just made them).
+   * instances are never flagged â€” the user just made them).
    */
   newBadgeInstanceIds?: ReadonlySet<ProviderInstanceId>;
 }) {
@@ -120,7 +120,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
           </div>
         ) : null}
 
-        {/* Instance buttons (one per configured instance — built-in + custom) */}
+        {/* Instance buttons (one per configured instance â€” built-in + custom) */}
         {props.instanceEntries.map((entry) => {
           const isDisabled = !entry.isAvailable || entry.status !== "ready";
           const isSelected = props.selectedInstanceId === entry.instanceId;
@@ -131,7 +131,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
           const tooltip = isDisabled
             ? describeUnavailableInstance(entry)
             : showNewBadge
-              ? `${entry.displayName} — New`
+              ? `${entry.displayName} â€” New`
               : entry.displayName;
 
           const button = (
@@ -207,7 +207,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
                       disabled
                       type="button"
                       data-model-picker-provider="gemini-coming-soon"
-                      aria-label="Gemini — coming soon"
+                      aria-label="Gemini â€” coming soon"
                     >
                       <Gemini className="size-5 text-muted-foreground/85" aria-hidden />
                       <span className={SOON_BADGE_CLASS} aria-hidden>
@@ -222,7 +222,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
                 align="center"
                 className={PICKER_TOOLTIP_CLASS}
               >
-                Gemini — Coming soon
+                Gemini â€” Coming soon
               </TooltipPopup>
             </Tooltip>
             {/* Github Copilot button (coming soon) */}
@@ -237,7 +237,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
                       disabled
                       type="button"
                       data-model-picker-provider="github-copilot-coming-soon"
-                      aria-label="Github Copilot — coming soon"
+                      aria-label="Github Copilot â€” coming soon"
                     >
                       <GithubCopilotIcon className="size-5 text-muted-foreground/85" aria-hidden />
                       <span className={SOON_BADGE_CLASS} aria-hidden>
@@ -252,7 +252,7 @@ export const ModelPickerSidebar = memo(function ModelPickerSidebar(props: {
                 align="center"
                 className={PICKER_TOOLTIP_CLASS}
               >
-                Github Copilot — Coming soon
+                Github Copilot â€” Coming soon
               </TooltipPopup>
             </Tooltip>
           </>

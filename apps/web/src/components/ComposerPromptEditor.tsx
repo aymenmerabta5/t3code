@@ -1,11 +1,11 @@
-import { LexicalComposer, type InitialConfigType } from "@lexical/react/LexicalComposer";
+﻿import { LexicalComposer, type InitialConfigType } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
-import { type ServerProviderSkill } from "@t3tools/contracts";
+import { type ServerProviderSkill } from "@ghostforge/contracts";
 import {
   $applyNodeReplacement,
   $createRangeSelection,
@@ -82,10 +82,10 @@ const SURROUND_SYMBOLS: [string, string][] = [
   ["{", "}"],
   ["'", "'"],
   ['"', '"'],
-  ["“", "”"],
+  ["â€œ", "â€"],
   ["`", "`"],
   ["<", ">"],
-  ["«", "»"],
+  ["Â«", "Â»"],
   ["*", "*"],
   ["_", "_"],
 ];
@@ -1660,7 +1660,7 @@ export function ComposerPromptEditor({
   const initialSkillMetadataRef = useRef(skillMetadataByName(skills));
   const initialConfig = useMemo<InitialConfigType>(
     () => ({
-      namespace: "t3tools-composer-editor",
+      namespace: "ghostforge-composer-editor",
       editable: true,
       nodes: [ComposerMentionNode, ComposerSkillNode, ComposerTerminalContextNode],
       editorState: () => {

@@ -1,9 +1,9 @@
-import {
+﻿import {
   KeybindingRule as KeybindingRuleSchema,
   type KeybindingCommand,
   type KeybindingRule,
   type ResolvedKeybindingsConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Schema from "effect/Schema";
 
 export const PROJECT_SCRIPT_KEYBINDING_INVALID_MESSAGE = "Invalid keybinding.";

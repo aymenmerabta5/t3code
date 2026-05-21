@@ -1,4 +1,4 @@
-import * as Effect from "effect/Effect";
+﻿import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Result from "effect/Result";
@@ -7,7 +7,7 @@ import {
   SourceControlProviderError,
   type ChangeRequest,
   type ChangeRequestState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import * as GitHubCli from "./GitHubCli.ts";
 import * as GitHubPullRequests from "./gitHubPullRequests.ts";

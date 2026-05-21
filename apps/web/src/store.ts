@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   EnvironmentId,
   MessageId,
   OrchestrationCheckpointSummary,
@@ -17,11 +17,11 @@ import type {
   ProjectId,
   ScopedProjectRef,
   ScopedThreadRef,
-} from "@t3tools/contracts";
-import { isProviderDriverKind, ProviderDriverKind } from "@t3tools/contracts";
-import type { ThreadId, TurnId } from "@t3tools/contracts";
+} from "@ghostforge/contracts";
+import { isProviderDriverKind, ProviderDriverKind } from "@ghostforge/contracts";
+import type { ThreadId, TurnId } from "@ghostforge/contracts";
 import * as Schema from "effect/Schema";
-import { resolveModelSlugForProvider } from "@t3tools/shared/model";
+import { resolveModelSlugForProvider } from "@ghostforge/shared/model";
 import { create } from "zustand";
 import {
   type ChatMessage,
@@ -44,7 +44,7 @@ export interface EnvironmentState {
   projectById: Record<ProjectId, Project>;
 
   // ---------------------------------------------------------------------------
-  // Thread bookkeeping — written by BOTH shell stream and detail stream.
+  // Thread bookkeeping â€” written by BOTH shell stream and detail stream.
   // Both streams ensure the thread is registered here; the bookkeeping is
   // additive (append-only IDs) so concurrent writes are safe.
   // ---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ export interface EnvironmentState {
   threadIdsByProjectId: Record<ProjectId, ThreadId[]>;
 
   // ---------------------------------------------------------------------------
-  // Thread shell / session / turn — written by BOTH shell stream and detail
+  // Thread shell / session / turn â€” written by BOTH shell stream and detail
   // stream.  The shell stream is the *authoritative* source (server pre-
   // computes these from the projection pipeline), but the detail stream also
   // writes them so the active thread has up-to-date state even if the shell
@@ -65,7 +65,7 @@ export interface EnvironmentState {
   threadTurnStateById: Record<ThreadId, ThreadTurnState>;
 
   // ---------------------------------------------------------------------------
-  // Thread detail content — written ONLY by the detail stream
+  // Thread detail content â€” written ONLY by the detail stream
   // (writeThreadState / syncServerThreadDetail).  The shell stream never
   // touches these.
   // ---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ export interface EnvironmentState {
   turnDiffSummaryByThreadId: Record<ThreadId, Record<TurnId, TurnDiffSummary>>;
 
   // ---------------------------------------------------------------------------
-  // Sidebar summary — written ONLY by the shell stream
+  // Sidebar summary â€” written ONLY by the shell stream
   // (writeThreadShellState / mapThreadShell).  Pre-computed server-side with
   // fields like latestUserMessageAt, hasPendingApprovals, etc.  The detail
   // stream must NOT write here; the shell stream is the single source of
@@ -508,7 +508,7 @@ function getThreads(state: EnvironmentState): Thread[] {
 /**
  * Ensure a thread is registered in the bookkeeping indices (threadIds,
  * threadIdsByProjectId).  Shared by both the shell stream and detail stream
- * write paths — the bookkeeping is additive (append-only IDs) so concurrent
+ * write paths â€” the bookkeeping is additive (append-only IDs) so concurrent
  * writes from both streams are safe.
  */
 function ensureThreadRegistered(
@@ -568,7 +568,7 @@ function ensureThreadRegistered(
  * the active thread has up-to-date state even if the shell stream event
  * hasn't arrived yet (both streams use structural equality checks to avoid
  * unnecessary re-renders when delivering equivalent data).
- * Does NOT write sidebarThreadSummaryById — that is shell-stream-only.
+ * Does NOT write sidebarThreadSummaryById â€” that is shell-stream-only.
  */
 function writeThreadState(
   state: EnvironmentState,
@@ -688,7 +688,7 @@ function writeThreadState(
  * the authoritative source for these fields.  The detail stream may also
  * write them for the focused thread (see writeThreadState); structural
  * equality checks prevent unnecessary re-renders.
- * Does NOT write message/activity/proposedPlan/turnDiff content — that is
+ * Does NOT write message/activity/proposedPlan/turnDiff content â€” that is
  * detail-stream-only.
  */
 function writeThreadShellState(

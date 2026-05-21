@@ -1,5 +1,5 @@
-/**
- * ProviderInstanceRegistryLive — runtime implementation of
+﻿/**
+ * ProviderInstanceRegistryLive â€” runtime implementation of
  * `ProviderInstanceRegistry` plus its sibling mutator.
  *
  * Materializes every entry in a `ProviderInstanceConfigMap`:
@@ -16,7 +16,7 @@
  *     `forward/backward compatibility invariant` in
  *     `packages/contracts/src/providerInstance.ts`.
  *   - When the entry's config fails schema decode, the registry logs and
- *     emits a shadow snapshot with the schema detail — same bucket as an
+ *     emits a shadow snapshot with the schema detail â€” same bucket as an
  *     unknown driver.
  *
  * Unlike the pre-Slice-D layer, the registry now holds mutable state
@@ -39,7 +39,7 @@ import {
   type ProviderInstanceConfigMap,
   type ProviderDriverKind,
   type ServerProvider,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
@@ -104,7 +104,7 @@ const decodedConfigEnabled = (config: unknown): boolean | undefined => {
 /**
  * Build one live entry from a raw config envelope. Returns either a
  * `LiveEntry` plus undefined unavailable shadow, or a shadow snapshot and
- * undefined entry — callers dispatch to the appropriate Ref bucket.
+ * undefined entry â€” callers dispatch to the appropriate Ref bucket.
  */
 const buildEntry = <R>(input: {
   readonly driversById: ReadonlyMap<ProviderDriverKind, AnyProviderDriver<R>>;
@@ -352,7 +352,7 @@ export const makeProviderInstanceRegistry = <R>(input: {
     // Capture the driver R context at construction time so `reconcile`
     // can be invoked later without re-providing driver dependencies.
     // The service tag's declared `reconcile: Effect<void>` hides R from
-    // consumers — we materialize that here.
+    // consumers â€” we materialize that here.
     const driverContext = yield* Effect.context<R>();
 
     const entries = yield* Ref.make<ReadonlyMap<ProviderInstanceId, LiveEntry>>(new Map());
@@ -387,7 +387,7 @@ export const makeProviderInstanceRegistry = <R>(input: {
       get streamChanges() {
         return Stream.fromPubSub(changes);
       },
-      // Synchronous subscribe — callers that need to consume changes
+      // Synchronous subscribe â€” callers that need to consume changes
       // from a forked fibre must acquire the subscription in their own
       // fibre first (via `yield* registry.subscribeChanges`) and only
       // then fork a consumer loop on `Stream.fromSubscription(...)` /
@@ -408,7 +408,7 @@ export const makeProviderInstanceRegistry = <R>(input: {
  * that want explicit control over the registry's source-of-truth without
  * wiring up the settings watcher.
  *
- * Only exposes the public registry tag — hot-reload consumers should use
+ * Only exposes the public registry tag â€” hot-reload consumers should use
  * `ProviderInstanceRegistryMutableLayer` (below) or the hydration layer.
  */
 export const ProviderInstanceRegistryLayer = <R>(input: {

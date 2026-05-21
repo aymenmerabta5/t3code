@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Test helpers for constructing a `ProviderAdapterRegistryShape` mock from a
  * kind-keyed adapter map.
  *
@@ -8,7 +8,7 @@
  * input so individual fixtures can stay concise.
  *
  * Non-default instance ids (e.g. `codex_personal`) are not addressable via
- * the shim returned here — the legacy test fixtures only ever had
+ * the shim returned here â€” the legacy test fixtures only ever had
  * single-instance-per-driver data anyway.
  *
  * @module provider/testUtils/providerAdapterRegistryMock
@@ -17,7 +17,7 @@ import {
   defaultInstanceIdForDriver,
   ProviderDriverKind,
   type ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as PubSub from "effect/PubSub";
 import * as Record from "effect/Record";

@@ -1,4 +1,4 @@
-import "../index.css";
+﻿import "../index.css";
 
 import {
   DEFAULT_SERVER_SETTINGS,
@@ -15,7 +15,7 @@ import {
   ServerSettings,
   type ThreadId,
   WS_METHODS,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { RouterProvider, createMemoryHistory } from "@tanstack/react-router";
 import { ws, http, HttpResponse } from "msw";
 import { setupWorker } from "msw/browser";
@@ -71,10 +71,10 @@ function createBaseServerConfig(): ServerConfig {
       policy: "loopback-browser",
       bootstrapMethods: ["one-time-token"],
       sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-      sessionCookieName: "t3_session",
+      sessionCookieName: "ghostforge_session",
     },
     cwd: "/repo/project",
-    keybindingsConfigPath: "/repo/project/.t3code-keybindings.json",
+    keybindingsConfigPath: "/repo/project/\.ghostforge-keybindings.json",
     keybindings: [],
     issues: [],
     providers: [
@@ -94,7 +94,7 @@ function createBaseServerConfig(): ServerConfig {
     ],
     availableEditors: [],
     observability: {
-      logsDirectoryPath: "/repo/project/.t3/logs",
+      logsDirectoryPath: "/repo/project/.ghostforge/logs",
       localTracingEnabled: true,
       otlpTracesEnabled: false,
       otlpMetricsEnabled: false,
@@ -124,6 +124,13 @@ function createBaseServerConfig(): ServerConfig {
         },
         cursor: { enabled: true, binaryPath: "", apiEndpoint: "", customModels: [] },
         opencode: {
+          enabled: true,
+          binaryPath: "",
+          serverUrl: "",
+          serverPassword: "",
+          customModels: [],
+        },
+        ghostcode: {
           enabled: true,
           binaryPath: "",
           serverUrl: "",
@@ -577,7 +584,7 @@ describe("Keybindings update toast", () => {
       await waitForToast("Keybindings updated");
       await waitForNoToast("Keybindings updated");
 
-      // Remount the app — onServerConfigUpdated replays the cached value
+      // Remount the app â€” onServerConfigUpdated replays the cached value
       // synchronously on subscribe. This should NOT produce a toast.
       await mounted.cleanup();
       const remounted = await mountApp();

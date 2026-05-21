@@ -1,4 +1,4 @@
-import {
+﻿import {
   AlertTriangleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
@@ -12,7 +12,7 @@ import type {
   ServerProcessDiagnosticsEntry,
   ServerProcessResourceHistorySummary,
   ServerProcessSignal,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Option from "effect/Option";
 
@@ -296,7 +296,7 @@ function formatProcessName(command: string): string {
 
 function formatProcessType(process: ServerProcessDiagnosticsEntry): string {
   if (process.depth > 0) return "Subprocess";
-  if (/\b(codex|claude|opencode|cursor)\b/i.test(process.command)) return "Agent";
+  if (/\b(codex|claude|opencode|ghostcode|cursor)\b/i.test(process.command)) return "Agent";
   return "Process";
 }
 
@@ -876,7 +876,7 @@ export function DiagnosticsSettingsPanel() {
                 type: "info",
                 title: "Process already exited",
                 description:
-                  "The process is not a child of the T3 Server. It might already have exited.",
+                  "The process is not a child of the GhostForge Server. It might already have exited.",
               });
               return;
             }
@@ -995,7 +995,7 @@ export function DiagnosticsSettingsPanel() {
           <StatBlock
             label="CPU Time"
             value={resourceData ? formatCpuTime(resourceData.totalCpuSecondsApprox) : "..."}
-            tooltip="Approximate active CPU time for the T3 server root process and its descendants during the selected window. It grows only while sampled processes use CPU and older samples leave as the window moves."
+            tooltip="Approximate active CPU time for the GhostForge server root process and its descendants during the selected window. It grows only while sampled processes use CPU and older samples leave as the window moves."
           />
           <StatBlock
             label="Samples"

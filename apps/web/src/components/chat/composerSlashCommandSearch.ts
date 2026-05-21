@@ -1,8 +1,8 @@
-import {
+﻿import {
   insertRankedSearchResult,
   normalizeSearchQuery,
   scoreQueryMatch,
-} from "@t3tools/shared/searchRanking";
+} from "@ghostforge/shared/searchRanking";
 
 import type { ComposerCommandItem } from "./ComposerCommandMenu";
 

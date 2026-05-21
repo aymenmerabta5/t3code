@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { it } from "@effect/vitest";
 import * as Context from "effect/Context";
@@ -18,8 +18,8 @@ import {
   ProviderDriverKind,
   ProviderInstanceId,
   ThreadId,
-} from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 import { ServerConfig } from "../../config.ts";
 import { ServerSettingsService } from "../../serverSettings.ts";
 import { ProviderSessionDirectory } from "../Services/ProviderSessionDirectory.ts";
@@ -100,7 +100,7 @@ const OpenCodeRuntimeTestDouble: OpenCodeRuntimeShape = {
   connectToOpenCodeServer: ({ serverUrl }) =>
     Effect.gen(function* () {
       const url = serverUrl ?? "http://127.0.0.1:4301";
-      // Unconditionally register a scope finalizer for test observability —
+      // Unconditionally register a scope finalizer for test observability â€”
       // preserves the `closeCalls` / `closeError` probes that the existing
       // suites rely on. Production code never attaches a finalizer to an
       // external server (it simply returns `Effect.succeed(...)`).
@@ -190,7 +190,7 @@ const providerSessionDirectoryTestLayer = Layer.succeed(ProviderSessionDirectory
 // The adapter now receives its settings as a plain argument (the old design
 // read from `ServerSettingsService` internally). The test-only
 // `ServerSettingsService` below is still kept because other dependencies in
-// the layer graph reach for it — but the routing values the assertions
+// the layer graph reach for it â€” but the routing values the assertions
 // probe (serverUrl, serverPassword) must be threaded directly through the
 // decoded `OpenCodeSettings`.
 const openCodeAdapterTestSettings = Schema.decodeSync(OpenCodeSettings)({
@@ -309,7 +309,7 @@ it.layer(OpenCodeAdapterTestLayer)("OpenCodeAdapterLive", (it) => {
 
       runtimeMock.state.closeError = new Error("close failed");
       // `stopAll` relies on `stopOpenCodeContext`, which is typed as
-      // never-failing. A throwing finalizer surfaces as a defect — `Effect.exit`
+      // never-failing. A throwing finalizer surfaces as a defect â€” `Effect.exit`
       // captures it so the assertions can still run. The key invariant we're
       // validating is "the sessions map and close-call probes reflect cleanup
       // attempts regardless of finalizer outcome".
@@ -816,7 +816,7 @@ it.layer(OpenCodeAdapterTestLayer)("OpenCodeAdapterLive", (it) => {
       // layer finalizer now tears down any live sessions when the layer
       // closes (which is exactly what we want for leak prevention), so
       // inspecting closeCalls after `Effect.provide` completes would observe
-      // the teardown — not the behavior under test. We care that the event
+      // the teardown â€” not the behavior under test. We care that the event
       // pump kept the session alive while logging was failing.
       const { sessions, closeCallsDuringRun } = yield* Effect.gen(function* () {
         const adapter = yield* OpenCodeAdapter;

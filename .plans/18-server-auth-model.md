@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define the long-term server auth architecture for T3 Code before first-class remote environments ship.
+Define the long-term server auth architecture for GhostForge before first-class remote environments ship.
 
 This plan is deliberately broader than the current WebSocket token check and narrower than a complete remote collaboration system. The goal is to make the server secure by default, keep local desktop UX frictionless, and leave clean integration points for future remote access methods.
 
@@ -29,7 +29,7 @@ This document is written in terms of Effect-native services and layers because a
 
 ### 1. Auth is a server concern
 
-Every privileged surface of the T3 server must go through the same auth policy engine:
+Every privileged surface of the GhostForge server must go through the same auth policy engine:
 
 - HTTP routes
 - WebSocket upgrades
@@ -291,7 +291,7 @@ export interface ServerAuthShape {
 }
 
 export class ServerAuth extends ServiceMap.Service<ServerAuth, ServerAuthShape>()(
-  "t3/ServerAuth",
+  "ghostforge/ServerAuth",
 ) {}
 ```
 
@@ -571,7 +571,7 @@ T3Server -> T3Server : validate cookie session
 T3Server --> Frontend : websocket accepted
 ```
 
-### `npx t3` user
+### `npx ghostforge` user
 
 This is the standalone local server flow.
 
@@ -579,7 +579,7 @@ There is no trusted desktop shell here, so pairing should be explicit.
 
 ```text
 Participants:
-  UserShell     = npx t3 launcher
+  UserShell     = npx ghostforge launcher
   T3Server      = standalone local server
   Browser       = browser tab
 
@@ -692,9 +692,9 @@ Participants:
 
 DesktopUser -> DesktopMain : add SSH host
 DesktopMain -> SSH : connect to remote host
-SSH -> RemoteHost : probe environment / verify t3 availability
+SSH -> RemoteHost : probe environment / verify ghostforge availability
 DesktopMain -> SSH : run remote launch command
-SSH -> RemoteHost : t3 remote launch --json
+SSH -> RemoteHost : ghostforge remote launch --json
 RemoteHost -> RemoteT3 : start or reuse server
 RemoteT3 --> RemoteHost : port + environment metadata
 RemoteHost --> SSH : launch result JSON

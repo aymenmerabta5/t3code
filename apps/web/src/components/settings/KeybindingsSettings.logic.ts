@@ -1,14 +1,14 @@
-import {
+﻿import {
   type KeybindingCommand,
   type KeybindingShortcut,
   type KeybindingWhenNode,
   type ResolvedKeybindingRule,
   type ResolvedKeybindingsConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   DEFAULT_RESOLVED_KEYBINDINGS,
   parseKeybindingWhenExpression,
-} from "@t3tools/shared/keybindings";
+} from "@ghostforge/shared/keybindings";
 
 import { isMacPlatform } from "../../lib/utils";
 

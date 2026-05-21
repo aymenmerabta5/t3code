@@ -1,12 +1,12 @@
-import * as NodeServices from "@effect/platform-node/NodeServices";
+﻿import * as NodeServices from "@effect/platform-node/NodeServices";
 import {
   DEFAULT_SERVER_SETTINGS,
   ProviderDriverKind,
   ProviderInstanceId,
   ServerSettings,
   ServerSettingsPatch,
-} from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 import { assert, it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import * as Duration from "effect/Duration";
@@ -21,7 +21,7 @@ const makeServerSettingsLayer = () =>
     Layer.provideMerge(
       Layer.fresh(
         ServerConfig.layerTest(process.cwd(), {
-          prefix: "t3code-server-settings-test-",
+          prefix: "ghostforge-server-settings-test-",
         }),
       ),
     ),
@@ -158,7 +158,7 @@ it.layer(NodeServices.layer)("server settings", (it) => {
         },
       });
 
-      // Switch to Codex — the stale Claude "effort" in options must not
+      // Switch to Codex â€” the stale Claude "effort" in options must not
       // cause the update to lose the selected model.
       const next = yield* serverSettings.updateSettings({
         textGenerationModelSelection: {

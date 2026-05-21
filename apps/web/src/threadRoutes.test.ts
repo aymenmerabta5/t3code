@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { scopeThreadRef } from "@t3tools/client-runtime";
-import { ThreadId } from "@t3tools/contracts";
+﻿import { describe, expect, it } from "vitest";
+import { scopeThreadRef } from "@ghostforge/client-runtime";
+import { ThreadId } from "@ghostforge/contracts";
 import { DraftId } from "./composerDraftStore";
 
 import {

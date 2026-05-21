@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProjectionPendingApprovalRepository - Repository interface for pending approvals.
  *
  * Owns persistence operations for projected approval requests awaiting user
@@ -13,7 +13,7 @@ import {
   ProjectionPendingApprovalStatus,
   ThreadId,
   TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 import * as Context from "effect/Context";
@@ -90,4 +90,6 @@ export interface ProjectionPendingApprovalRepositoryShape {
 export class ProjectionPendingApprovalRepository extends Context.Service<
   ProjectionPendingApprovalRepository,
   ProjectionPendingApprovalRepositoryShape
->()("t3/persistence/Services/ProjectionPendingApprovals/ProjectionPendingApprovalRepository") {}
+>()(
+  "ghostforge/persistence/Services/ProjectionPendingApprovals/ProjectionPendingApprovalRepository",
+) {}

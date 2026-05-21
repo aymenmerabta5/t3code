@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   ProviderDriverKind,
   ModelCapabilities,
   ServerProvider,
@@ -7,12 +7,12 @@ import type {
   ServerProviderSlashCommand,
   ServerProviderModel,
   ServerProviderState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as Data from "effect/Data";
 import * as Stream from "effect/Stream";
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process";
-import { normalizeModelSlug } from "@t3tools/shared/model";
+import { normalizeModelSlug } from "@ghostforge/shared/model";
 import { isWindowsCommandNotFound } from "../processRunner.ts";
 import { createProviderVersionAdvisory } from "./providerMaintenance.ts";
 import { collectUint8StreamText } from "../stream/collectUint8StreamText.ts";
@@ -116,8 +116,12 @@ export function extractAuthBoolean(value: unknown): boolean | undefined {
   return undefined;
 }
 
+// oxlint-disable-next-line no-control-regex
+const ANSI_ESCAPE_SEQUENCE = new RegExp("\\u001B\\[[0-9;]*m", "g");
+
 export function parseGenericCliVersion(output: string): string | null {
-  const match = output.match(/\b(\d+\.\d+\.\d+)\b/);
+  const stripped = output.replace(ANSI_ESCAPE_SEQUENCE, "");
+  const match = stripped.match(/\b(\d+\.\d+\.\d+)\b/);
   return match?.[1] ?? null;
 }
 

@@ -1,4 +1,4 @@
-import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer";
+﻿import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { assert, it } from "@effect/vitest";
 import * as ConfigProvider from "effect/ConfigProvider";
@@ -41,16 +41,16 @@ it.layer(NodeServices.layer)("AnalyticsService test", (it) => {
     Effect.gen(function* () {
       const capturedRequests: Array<RecordedBatchRequest> = [];
       const serverConfigLayer = ServerConfig.layerTest(process.cwd(), {
-        prefix: "t3-telemetry-base-",
+        prefix: "ghostforge-telemetry-base-",
       });
 
       const telemetryLayer = AnalyticsServiceLayerLive.pipe(Layer.provideMerge(serverConfigLayer));
       const configLayer = ConfigProvider.layer(
         ConfigProvider.fromUnknown({
-          T3CODE_TELEMETRY_ENABLED: true,
-          T3CODE_POSTHOG_KEY: "phc_test_key",
-          T3CODE_POSTHOG_HOST: "",
-          T3CODE_TELEMETRY_FLUSH_BATCH_SIZE: 20,
+          GHOSTFORGE_TELEMETRY_ENABLED: true,
+          GHOSTFORGE_POSTHOG_KEY: "phc_test_key",
+          GHOSTFORGE_POSTHOG_HOST: "",
+          GHOSTFORGE_TELEMETRY_FLUSH_BATCH_SIZE: 20,
         }),
       );
       const batchServerLayer = HttpServer.serve(

@@ -1,9 +1,9 @@
-import { useAtomValue } from "@effect/atom-react";
+﻿import { useAtomValue } from "@effect/atom-react";
 import {
   type EnvironmentId,
   type GitManagerServiceError,
   type VcsStatusResult,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import { Atom } from "effect/unstable/reactivity";
 import { useEffect } from "react";

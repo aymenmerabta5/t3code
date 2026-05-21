@@ -1,4 +1,4 @@
-import {
+﻿import {
   type EnvironmentId,
   isProviderDriverKind,
   ProjectId,
@@ -7,7 +7,7 @@ import {
   type ScopedThreadRef,
   type ThreadId,
   type TurnId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { type ChatMessage, type SessionPhase, type Thread, type ThreadSession } from "../types";
 import { type ComposerImageAttachment, type DraftThreadState } from "../composerDraftStore";
 import * as Schema from "effect/Schema";
@@ -19,7 +19,7 @@ import {
 } from "../lib/terminalContext";
 import type { DraftThreadEnvMode } from "../composerDraftStore";
 
-export const LAST_INVOKED_SCRIPT_BY_PROJECT_KEY = "t3code:last-invoked-script-by-project";
+export const LAST_INVOKED_SCRIPT_BY_PROJECT_KEY = "ghostforge:last-invoked-script-by-project";
 export const MAX_HIDDEN_MOUNTED_TERMINAL_THREADS = 10;
 
 export const LastInvokedScriptByProjectSchema = Schema.Record(ProjectId, Schema.String);
@@ -229,7 +229,7 @@ export function threadHasStarted(thread: Thread | null | undefined): boolean {
 
 // `threadProvider` is the open branded driver kind carried by the session.
 // Unknown driver kinds degrade to `null` (i.e. "unlocked"), which is the safe
-// rollback / fork behavior — the routing layer is the right place to surface
+// rollback / fork behavior â€” the routing layer is the right place to surface
 // "driver not installed" errors, not the lock state.
 //
 // `selectedProvider` takes the same open-string shape because the composer

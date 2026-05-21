@@ -1,12 +1,12 @@
-import { useAtomValue } from "@effect/atom-react";
+﻿import { useAtomValue } from "@effect/atom-react";
 import {
   type SourceControlDiscoveryTarget,
   type SourceControlDiscoveryState,
   createSourceControlDiscoveryManager,
   getSourceControlDiscoveryTargetKey,
   sourceControlDiscoveryStateAtom,
-} from "@t3tools/client-runtime";
-import { EnvironmentId, type SourceControlDiscoveryResult } from "@t3tools/contracts";
+} from "@ghostforge/client-runtime";
+import { EnvironmentId, type SourceControlDiscoveryResult } from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import { Atom } from "effect/unstable/reactivity";
 

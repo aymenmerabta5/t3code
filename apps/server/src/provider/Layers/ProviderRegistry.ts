@@ -1,11 +1,11 @@
-/**
- * ProviderRegistryLive — aggregates per-instance snapshot streams into a
+﻿/**
+ * ProviderRegistryLive â€” aggregates per-instance snapshot streams into a
  * single materialized list.
  *
  * Historically this Layer composed four per-kind Live Layers
- * (`CodexProviderLive`, `ClaudeProviderLive`, …) that each exposed a
+ * (`CodexProviderLive`, `ClaudeProviderLive`, â€¦) that each exposed a
  * `ServerProviderShape`. Those Lives were deleted during the driver /
- * instance refactor — every driver now carries its `snapshot: ServerProviderShape`
+ * instance refactor â€” every driver now carries its `snapshot: ServerProviderShape`
  * bundled onto the `ProviderInstance` the registry produces.
  *
  * Each configured instance (including multi-instance setups like
@@ -28,7 +28,7 @@ import {
   type ProviderInstanceId,
   type ServerProvider,
   type ServerProviderUpdateState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
@@ -192,7 +192,7 @@ export const ProviderRegistryLive = Layer.effect(
     const fileSystem = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
 
-    // Aggregator PubSub — consumers (WS gateway, etc.) subscribe here for
+    // Aggregator PubSub â€” consumers (WS gateway, etc.) subscribe here for
     // coalesced updates across every instance.
     const changesPubSub = yield* Effect.acquireRelease(
       PubSub.unbounded<ReadonlyArray<ServerProvider>>(),
@@ -222,7 +222,7 @@ export const ProviderRegistryLive = Layer.effect(
       (source) =>
         Effect.gen(function* () {
           // One cache file per configured instance. For the default
-          // instance of a built-in kind the path equals `<kind>.json` —
+          // instance of a built-in kind the path equals `<kind>.json` â€”
           // identical to the legacy filename. We still require the cache
           // payload to carry matching instance id + driver kind; old
           // identity-less payloads are discarded and the awaited refresh
@@ -271,7 +271,7 @@ export const ProviderRegistryLive = Layer.effect(
       ReadonlyMap<ProviderInstanceId, { readonly update?: ServerProviderUpdateState | undefined }>
     >(new Map());
 
-    // Live-source registry — the dynamic counterpart to the boot-time
+    // Live-source registry â€” the dynamic counterpart to the boot-time
     // `bootSources`. Keyed by `instanceId`; the stored `ProviderInstance`
     // reference is used for identity equality so "no-op" reconciles
     // (settings unchanged) skip re-subscribing + re-probing.
@@ -288,7 +288,7 @@ export const ProviderRegistryLive = Layer.effect(
 
     const persistProvider = (provider: ServerProvider) =>
       Effect.gen(function* () {
-        // Persist every instance — the file name is the instance id, so
+        // Persist every instance â€” the file name is the instance id, so
         // multi-instance setups (e.g. `codex_personal`, `codex_work`) each
         // get their own cache. We resolve the path fresh so snapshots
         // produced by newly-added instances post-boot still land on disk
@@ -543,7 +543,7 @@ export const ProviderRegistryLive = Layer.effect(
         }
 
         // Fork long-lived subscriptions to each new/rebuilt instance's
-        // change stream BEFORE kicking off refreshes — if the driver's
+        // change stream BEFORE kicking off refreshes â€” if the driver's
         // own initial probe (line 140 in `makeManagedServerProvider`)
         // wins the refreshSemaphore race, its PubSub publish must land
         // in an active subscriber or the result is dropped.
@@ -557,7 +557,7 @@ export const ProviderRegistryLive = Layer.effect(
         // Force-refresh every new/rebuilt instance in parallel and wait
         // for them all to complete. The refresh's result is piped
         // directly into `syncProvider`, so `providersRef` is populated
-        // deterministically by the time this block returns — regardless
+        // deterministically by the time this block returns â€” regardless
         // of PubSub subscription timing. Failures are logged and
         // swallowed so one bad driver can't wedge the whole registry.
         yield* Effect.forEach(
@@ -577,7 +577,7 @@ export const ProviderRegistryLive = Layer.effect(
         }
         yield* Ref.set(liveSubsRef, nextSubs);
 
-        // Drop aggregator state for instances that have disappeared —
+        // Drop aggregator state for instances that have disappeared â€”
         // otherwise the UI would keep rendering ghosts.
         const [previousProviders, providers] = yield* Ref.modify(
           providersRef,
@@ -620,7 +620,7 @@ export const ProviderRegistryLive = Layer.effect(
 
     // Seed `providersRef` with the boot-time fallback snapshots so
     // consumers calling `getProviders` immediately after layer build see
-    // a populated list — even before the first `syncLiveSources` refresh
+    // a populated list â€” even before the first `syncLiveSources` refresh
     // resolves. Cached snapshots (already in `providersRef`) merge with
     // these via `upsertProviders` so on-disk state wins where present
     // and pending fallbacks fill the gaps.
@@ -632,9 +632,9 @@ export const ProviderRegistryLive = Layer.effect(
     // because no publish can reach a not-yet-subscribed dequeue.
     //
     // (Contrast with the pre-fix code that did
-    // `Stream.runForEach(instanceRegistry.streamChanges, …).pipe(Effect.forkScoped)`.
+    // `Stream.runForEach(instanceRegistry.streamChanges, â€¦).pipe(Effect.forkScoped)`.
     // `Stream.fromPubSub` defers `PubSub.subscribe` to stream start,
-    // and `forkScoped` only schedules the fibre — so a reconcile that
+    // and `forkScoped` only schedules the fibre â€” so a reconcile that
     // published between "fibre scheduled" and "fibre starts running"
     // was dropped, which made any settings change that replaced an
     // instance never propagate to the aggregator's `providersRef`.)
@@ -646,10 +646,10 @@ export const ProviderRegistryLive = Layer.effect(
     // fibre below actually starts running.
     //
     // (Contrast with the pre-fix code that did
-    // `Stream.runForEach(instanceRegistry.streamChanges, …).pipe(Effect.forkScoped)`.
+    // `Stream.runForEach(instanceRegistry.streamChanges, â€¦).pipe(Effect.forkScoped)`.
     // `instanceRegistry.streamChanges` is `Stream.fromPubSub(changes)`,
     // which defers `PubSub.subscribe` to stream start. `forkScoped` only
-    // schedules the consumer fibre — so a reconcile that published
+    // schedules the consumer fibre â€” so a reconcile that published
     // between "fibre scheduled" and "fibre starts running + subscribes"
     // was dropped, which made any settings change that replaced an
     // instance never propagate to the aggregator's `providersRef`.)
@@ -658,7 +658,7 @@ export const ProviderRegistryLive = Layer.effect(
     // present at boot. Run synchronously so consumers pulling immediately
     // after the layer build see the correct aggregator state.
     yield* syncLiveSources;
-    // React to registry mutations — instance added / removed / rebuilt.
+    // React to registry mutations â€” instance added / removed / rebuilt.
     // `Stream.fromSubscription` builds a stream over the pre-acquired
     // subscription rather than subscribing on stream start, which is
     // what closes the race.

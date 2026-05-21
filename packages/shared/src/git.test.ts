@@ -1,4 +1,4 @@
-import type { VcsStatusRemoteResult, VcsStatusResult } from "@t3tools/contracts";
+import type { VcsStatusRemoteResult, VcsStatusResult } from "@ghostforge/contracts";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -13,22 +13,22 @@ import {
 describe("normalizeGitRemoteUrl", () => {
   it("canonicalizes equivalent GitHub remotes across protocol variants", () => {
     expect(normalizeGitRemoteUrl("git@github.com:T3Tools/T3Code.git")).toBe(
-      "github.com/t3tools/t3code",
+      "github.com/anomalyco/ghostforge",
     );
     expect(normalizeGitRemoteUrl("https://github.com/T3Tools/T3Code.git")).toBe(
-      "github.com/t3tools/t3code",
+      "github.com/anomalyco/ghostforge",
     );
     expect(normalizeGitRemoteUrl("ssh://git@github.com/T3Tools/T3Code")).toBe(
-      "github.com/t3tools/t3code",
+      "github.com/anomalyco/ghostforge",
     );
   });
 
   it("preserves nested group paths for providers like GitLab", () => {
     expect(normalizeGitRemoteUrl("git@gitlab.com:T3Tools/platform/T3Code.git")).toBe(
-      "gitlab.com/t3tools/platform/t3code",
+      "gitlab.com/anomalyco/platform/ghostforge",
     );
     expect(normalizeGitRemoteUrl("https://gitlab.com/T3Tools/platform/T3Code.git")).toBe(
-      "gitlab.com/t3tools/platform/t3code",
+      "gitlab.com/anomalyco/platform/ghostforge",
     );
   });
 

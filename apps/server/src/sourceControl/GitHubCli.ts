@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Result from "effect/Result";
@@ -9,7 +9,7 @@ import {
   TrimmedNonEmptyString,
   type SourceControlRepositoryVisibility,
   type VcsError,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import * as VcsProcess from "../vcs/VcsProcess.ts";
 import * as GitHubPullRequests from "./gitHubPullRequests.ts";
@@ -93,7 +93,7 @@ export interface GitHubCliShape {
 }
 
 export class GitHubCli extends Context.Service<GitHubCli, GitHubCliShape>()(
-  "t3/source-control/GitHubCli",
+  "ghostforge/source-control/GitHubCli",
 ) {}
 
 function errorText(error: VcsError | unknown): string {

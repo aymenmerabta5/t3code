@@ -1,5 +1,5 @@
-import { scopeProjectRef, scopeThreadRef } from "@t3tools/client-runtime";
-import type { EnvironmentId, VcsRef, ThreadId } from "@t3tools/contracts";
+﻿import { scopeProjectRef, scopeThreadRef } from "@ghostforge/client-runtime";
+import type { EnvironmentId, VcsRef, ThreadId } from "@ghostforge/contracts";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { LegendList, type LegendListRef } from "@legendapp/list/react";
 import { ChevronDownIcon } from "lucide-react";
@@ -135,7 +135,7 @@ export function BranchToolbarBranchSelector({
     });
 
   // ---------------------------------------------------------------------------
-  // Thread branch mutation (colocated — only this component calls it)
+  // Thread branch mutation (colocated â€” only this component calls it)
   // ---------------------------------------------------------------------------
   const setThreadBranch = useCallback(
     (branch: string | null, worktreePath: string | null) => {

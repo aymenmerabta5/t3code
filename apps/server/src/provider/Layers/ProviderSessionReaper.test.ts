@@ -1,11 +1,11 @@
-import * as NodeServices from "@effect/platform-node/NodeServices";
+﻿import * as NodeServices from "@effect/platform-node/NodeServices";
 import {
   ProjectId,
   ThreadId,
   TurnId,
   ProviderDriverKind,
   ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Clock from "effect/Clock";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";

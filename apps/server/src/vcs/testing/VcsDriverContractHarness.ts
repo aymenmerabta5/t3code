@@ -1,4 +1,4 @@
-import { assert, it, describe } from "@effect/vitest";
+﻿import { assert, it, describe } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
@@ -8,7 +8,7 @@ import type * as Scope from "effect/Scope";
 import * as DateTime from "effect/DateTime";
 import * as Option from "effect/Option";
 
-import type { VcsDriverKind } from "@t3tools/contracts";
+import type { VcsDriverKind } from "@ghostforge/contracts";
 import * as VcsDriver from "../VcsDriver.ts";
 
 function normalizePathForComparison(value: string): string {
@@ -43,7 +43,7 @@ export interface VcsDriverContractSuiteInput<R, E> {
 
 export function runVcsDriverContractSuite<R, E>(input: VcsDriverContractSuiteInput<R, E>) {
   const makeTmpDir = (
-    prefix = `t3-${input.kind}-vcs-contract-`,
+    prefix = `ghostforge-${input.kind}-vcs-contract-`,
   ): Effect.Effect<string, PlatformError.PlatformError, FileSystem.FileSystem | Scope.Scope> =>
     Effect.gen(function* () {
       const fileSystem = yield* FileSystem.FileSystem;

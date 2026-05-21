@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Shared prompt builders for text generation providers.
  *
  * Extracts the prompt construction logic that is identical across
@@ -7,7 +7,7 @@
  * @module textGenerationPrompts
  */
 import * as Schema from "effect/Schema";
-import type { ChatAttachment } from "@t3tools/contracts";
+import type { ChatAttachment } from "@ghostforge/contracts";
 
 import { limitSection } from "./TextGenerationUtils.ts";
 import type { TextGenerationPolicy } from "./TextGenerationPolicy.ts";

@@ -1,4 +1,4 @@
-import {
+﻿import {
   CommandId,
   DEFAULT_SERVER_SETTINGS,
   type DesktopBridge,
@@ -12,10 +12,10 @@ import {
   type ServerProvider,
   type TerminalEvent,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ContextMenuItem } from "@t3tools/contracts";
+import type { ContextMenuItem } from "@ghostforge/contracts";
 
 const showContextMenuFallbackMock =
   vi.fn<
@@ -281,7 +281,7 @@ const baseServerConfig: ServerConfig = {
     policy: "loopback-browser",
     bootstrapMethods: ["one-time-token"],
     sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-    sessionCookieName: "t3_session",
+    sessionCookieName: "ghostforge_session",
   },
   cwd: "/tmp/workspace",
   keybindingsConfigPath: "/tmp/workspace/.config/keybindings.json",

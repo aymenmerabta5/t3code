@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, type ReactNode } from "react";
 import * as Option from "effect/Option";
@@ -7,7 +7,7 @@ import type {
   ProviderSettingsFormAnnotation,
   ProviderSettingsFormControl,
   ProviderSettingsFormSchemaAnnotation,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { cn } from "../../lib/utils";
 import { DraftInput } from "../ui/draft-input";

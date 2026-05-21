@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { ChildProcessSpawner } from "effect/unstable/process";
@@ -9,7 +9,7 @@ import {
   VcsProcessExitError,
   VcsProcessSpawnError,
   VcsProcessTimeoutError,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { ProcessRunner, layer as ProcessRunnerLive } from "../processRunner.ts";
 import * as Match from "effect/Match";
 
@@ -40,7 +40,7 @@ export interface VcsProcessShape {
 }
 
 export class VcsProcess extends Context.Service<VcsProcess, VcsProcessShape>()(
-  "t3/vcs/VcsProcess",
+  "ghostforge/vcs/VcsProcess",
 ) {}
 
 const DEFAULT_TIMEOUT_MS = 30_000;

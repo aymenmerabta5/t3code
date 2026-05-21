@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RuntimeReceiptBus - Internal checkpoint-reactor synchronization receipts.
  *
  * This service exists to expose short-lived orchestration milestones that are
@@ -14,7 +14,13 @@
  *
  * @module RuntimeReceiptBus
  */
-import { CheckpointRef, IsoDateTime, NonNegativeInt, ThreadId, TurnId } from "@t3tools/contracts";
+import {
+  CheckpointRef,
+  IsoDateTime,
+  NonNegativeInt,
+  ThreadId,
+  TurnId,
+} from "@ghostforge/contracts";
 import * as Schema from "effect/Schema";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
@@ -62,5 +68,5 @@ export interface RuntimeReceiptBusShape {
 }
 
 export class RuntimeReceiptBus extends Context.Service<RuntimeReceiptBus, RuntimeReceiptBusShape>()(
-  "t3/orchestration/Services/RuntimeReceiptBus",
+  "ghostforge/orchestration/Services/RuntimeReceiptBus",
 ) {}

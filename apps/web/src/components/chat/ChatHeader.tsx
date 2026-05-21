@@ -1,11 +1,11 @@
-import {
+﻿import {
   type EnvironmentId,
   type EditorId,
   type ProjectScript,
   type ResolvedKeybindingsConfig,
   type ThreadId,
-} from "@t3tools/contracts";
-import { scopeThreadRef } from "@t3tools/client-runtime";
+} from "@ghostforge/contracts";
+import { scopeThreadRef } from "@ghostforge/client-runtime";
 import { memo } from "react";
 import GitActionsControl from "../GitActionsControl";
 import { type DraftId } from "~/composerDraftStore";

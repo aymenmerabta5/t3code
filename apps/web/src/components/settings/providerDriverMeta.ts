@@ -1,10 +1,11 @@
-import {
+﻿import {
   ClaudeSettings,
   CodexSettings,
   CursorSettings,
+  GhostCodeSettings,
   OpenCodeSettings,
   ProviderDriverKind,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import type * as Schema from "effect/Schema";
 import { ClaudeAI, CursorIcon, type Icon, OpenAI, OpenCodeIcon } from "../Icons";
 
@@ -26,9 +27,9 @@ export interface ProviderClientDefinition {
   /**
    * Optional short label rendered as a `variant="warning"` badge next to
    * the instance title. Used to flag drivers that still ship under an
-   * early-access or preview gate — the flag is a property of the driver
-   * kind (not a specific instance), so every instance of that driver —
-   * built-in default or custom — advertises the same marker.
+   * early-access or preview gate â€” the flag is a property of the driver
+   * kind (not a specific instance), so every instance of that driver â€”
+   * built-in default or custom â€” advertises the same marker.
    */
   readonly badgeLabel?: string;
 }
@@ -59,6 +60,12 @@ export const PROVIDER_CLIENT_DEFINITIONS: readonly ProviderClientDefinition[] = 
     icon: OpenCodeIcon,
     settingsSchema: OpenCodeSettings,
   },
+  {
+    value: ProviderDriverKind.make("ghostcode"),
+    label: "GhostCode",
+    icon: OpenCodeIcon,
+    settingsSchema: GhostCodeSettings,
+  },
 ];
 
 export const PROVIDER_CLIENT_DEFINITION_BY_VALUE: Partial<
@@ -74,7 +81,7 @@ export type DriverOption = ProviderClientDefinition;
 /**
  * Look up the driver metadata for an instance's `driver` field. Accepts
  * Returns `undefined` for fork / unknown drivers so callers can decide how
- * to render them — typically by falling back to a generic card.
+ * to render them â€” typically by falling back to a generic card.
  */
 export function getDriverOption(driver: ProviderDriverKind | undefined): DriverOption | undefined {
   if (driver === undefined) return undefined;

@@ -1,8 +1,8 @@
-import { useAtomValue } from "@effect/atom-react";
+﻿import { useAtomValue } from "@effect/atom-react";
 import type {
   ServerProcessDiagnosticsResult,
   ServerProcessResourceHistoryResult,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";

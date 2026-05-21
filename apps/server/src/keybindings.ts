@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Keybindings - Keybinding configuration service definitions.
  *
  * Owns parsing, validation, merge, and persistence of user keybinding
@@ -18,7 +18,7 @@ import {
   type ServerRemoveKeybindingInput,
   type ServerUpsertKeybindingInput,
   type ServerConfigIssue,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Array from "effect/Array";
 import * as Cache from "effect/Cache";
 import * as Cause from "effect/Cause";
@@ -42,14 +42,14 @@ import * as Stream from "effect/Stream";
 import * as Semaphore from "effect/Semaphore";
 import { ServerConfig } from "./config.ts";
 import { writeFileStringAtomically } from "./atomicWrite.ts";
-import { fromJsonStringPretty, fromLenientJson } from "@t3tools/shared/schemaJson";
+import { fromJsonStringPretty, fromLenientJson } from "@ghostforge/shared/schemaJson";
 import {
   DEFAULT_KEYBINDINGS,
   DEFAULT_RESOLVED_KEYBINDINGS,
   compileResolvedKeybindingRule,
   compileResolvedKeybindingsConfig,
   parseKeybindingShortcut,
-} from "@t3tools/shared/keybindings";
+} from "@ghostforge/shared/keybindings";
 
 export {
   DEFAULT_KEYBINDINGS,
@@ -287,7 +287,7 @@ export interface KeybindingsShape {
  * Keybindings - Service tag for keybinding configuration operations.
  */
 export class Keybindings extends Context.Service<Keybindings, KeybindingsShape>()(
-  "t3/keybindings",
+  "ghostforge/keybindings",
 ) {}
 
 const makeKeybindings = Effect.gen(function* () {

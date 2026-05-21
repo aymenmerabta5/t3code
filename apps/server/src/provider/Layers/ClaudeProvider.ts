@@ -1,11 +1,11 @@
-import {
+﻿import {
   type ClaudeSettings,
   type ModelCapabilities,
   type ModelSelection,
   ProviderDriverKind,
   type ServerProviderModel,
   type ServerProviderSlashCommand,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
@@ -17,8 +17,8 @@ import {
   getModelSelectionStringOptionValue,
   getProviderOptionCurrentValue,
   getProviderOptionDescriptors,
-} from "@t3tools/shared/model";
-import { compareSemverVersions } from "@t3tools/shared/semver";
+} from "@ghostforge/shared/model";
+import { compareSemverVersions } from "@ghostforge/shared/semver";
 import {
   query as claudeQuery,
   type SlashCommand as ClaudeSlashCommand,
@@ -345,7 +345,7 @@ function claudeAuthMetadata(input: {
   return undefined;
 }
 
-// ── SDK capability probe ────────────────────────────────────────────
+// â”€â”€ SDK capability probe â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const CAPABILITIES_PROBE_TIMEOUT_MS = 8_000;
 
@@ -455,7 +455,7 @@ const probeClaudeCapabilities = (
     const claudeEnvironment = yield* makeClaudeEnvironment(claudeSettings, environment);
     return yield* Effect.tryPromise(async () => {
       const q = claudeQuery({
-        // Never yield — we only need initialization data, not a conversation.
+        // Never yield â€” we only need initialization data, not a conversation.
         // This prevents any prompt from reaching the Anthropic API.
         // oxlint-disable-next-line require-yield
         prompt: (async function* (): AsyncGenerator<SDKUserMessage> {
@@ -544,7 +544,7 @@ export const checkClaudeProviderStatus = Effect.fn("checkClaudeProviderStatus")(
         version: null,
         status: "warning",
         auth: { status: "unknown" },
-        message: "Claude is disabled in T3 Code settings.",
+        message: "Claude is disabled in GhostForge settings.",
       },
     });
   }
@@ -693,7 +693,7 @@ export const makePendingClaudeProvider = (
           version: null,
           status: "warning",
           auth: { status: "unknown" },
-          message: "Claude is disabled in T3 Code settings.",
+          message: "Claude is disabled in GhostForge settings.",
         },
       });
     }

@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Instance-aware view over the wire `ServerProvider[]`.
  *
- * The wire carries one `ServerProvider` per *configured instance* — the
+ * The wire carries one `ServerProvider` per *configured instance* â€” the
  * default built-in codex instance, a user-authored `codex_personal`, an
  * unavailable shadow for a fork driver, etc. Legacy UI code collapsed these
  * into a single bucket per built-in driver via `.find((p) => p.driver === kind)`,
@@ -20,7 +20,7 @@ import {
   type ServerProvider,
   type ServerProviderModel,
   type ServerProviderState,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { formatProviderDriverKindLabel } from "./providerModels";
 
@@ -40,7 +40,7 @@ export interface ProviderInstanceEntry {
   readonly installed: boolean;
   readonly status: ServerProviderState;
   /**
-   * True when this entry is the default instance for its driver kind —
+   * True when this entry is the default instance for its driver kind â€”
    * i.e. its instance id equals `defaultInstanceIdForDriver(driverKind)`.
    * The settings panel and picker sort defaults before customs.
    */
@@ -88,16 +88,16 @@ export function normalizeProviderAccentColor(value: string | undefined): string 
 /**
  * Resolve an entry's displayName with a tiered priority:
  *
- *   1. A snapshot `displayName` that differs from the driver-kind label —
+ *   1. A snapshot `displayName` that differs from the driver-kind label â€”
  *      the server has explicitly named this instance, trust it.
- *   2. For non-default instances, a humanized `instanceId` — the server
+ *   2. For non-default instances, a humanized `instanceId` â€” the server
  *      fell back to the driver-level presentation constant (which is the
  *      same for every instance of that kind), so we differentiate at the
  *      UI layer by slug. This is what keeps "Codex" + "Codex Personal"
  *      distinguishable in tooltips and list labels today.
- *   3. The snapshot's `displayName` (if any) — default instance, trust
+ *   3. The snapshot's `displayName` (if any) â€” default instance, trust
  *      whatever label the driver stamped.
- *   4. `driverKindLabel(driverKind)` — nothing else on hand, so use the
+ *   4. `driverKindLabel(driverKind)` â€” nothing else on hand, so use the
  *      canonical brand label from contracts (falling back to a generic
  *      title-case of the kind slug).
  */
@@ -122,7 +122,7 @@ function resolveInstanceDisplayName(
 /**
  * Project the wire `ServerProvider[]` into instance entries, one per
  * configured instance. Preserves the server's ordering (which sources
- * from `deriveProviderInstanceConfigMap` — explicit `providerInstances.*`
+ * from `deriveProviderInstanceConfigMap` â€” explicit `providerInstances.*`
  * first, synthesized defaults after) so callers that want "default first"
  * should sort with `sortProviderInstanceEntries` below.
  */

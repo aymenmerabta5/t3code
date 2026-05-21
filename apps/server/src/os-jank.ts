@@ -1,4 +1,4 @@
-import * as NodeOS from "node:os";
+﻿import * as NodeOS from "node:os";
 import * as Effect from "effect/Effect";
 import * as Path from "effect/Path";
 import {
@@ -10,7 +10,7 @@ import {
   listLoginShellCandidates,
   mergePathEntries,
   readPathFromLaunchctl,
-} from "@t3tools/shared/shell";
+} from "@ghostforge/shared/shell";
 
 type WindowsCommandAvailabilityChecker = (
   command: string,
@@ -98,7 +98,7 @@ export const expandHomePath = Effect.fn(function* (input: string) {
 export const resolveBaseDir = Effect.fn(function* (raw: string | undefined) {
   const { join, resolve } = yield* Path.Path;
   if (!raw || raw.trim().length === 0) {
-    return join(NodeOS.homedir(), ".t3");
+    return join(NodeOS.homedir(), ".ghostforge");
   }
   return resolve(yield* expandHomePath(raw.trim()));
 });

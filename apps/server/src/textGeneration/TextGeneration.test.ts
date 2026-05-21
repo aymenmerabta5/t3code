@@ -1,12 +1,12 @@
-import { it } from "@effect/vitest";
+﻿import { it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import * as PubSub from "effect/PubSub";
 import * as Result from "effect/Result";
 import * as Stream from "effect/Stream";
 import { describe, expect } from "vitest";
 
-import { ProviderInstanceId } from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+import { ProviderInstanceId } from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 
 import type { ProviderInstance } from "../provider/ProviderDriver.ts";
 import type { ProviderInstanceRegistryShape } from "../provider/Services/ProviderInstanceRegistry.ts";

@@ -1,9 +1,9 @@
-import {
+﻿import {
   DEFAULT_SERVER_SETTINGS,
   ProviderDriverKind,
   ProviderInstanceId,
   type ProviderInstanceConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { describe, expect, it } from "vitest";
 import {
   buildProviderInstanceUpdatePatch,
@@ -55,7 +55,7 @@ describe("buildProviderInstanceUpdatePatch", () => {
       driver: ProviderDriverKind.make("codex"),
       enabled: true,
       config: {
-        binaryPath: "/opt/t3/codex",
+        binaryPath: "/opt/ghostforge/codex",
       },
     } satisfies ProviderInstanceConfig;
 

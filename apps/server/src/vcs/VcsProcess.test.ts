@@ -1,4 +1,4 @@
-import * as NodeServices from "@effect/platform-node/NodeServices";
+﻿import * as NodeServices from "@effect/platform-node/NodeServices";
 import { describe, expect, it } from "@effect/vitest";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
@@ -6,7 +6,7 @@ import * as Fiber from "effect/Fiber";
 import * as Layer from "effect/Layer";
 import { TestClock } from "effect/testing";
 
-import { VcsProcessExitError, VcsProcessTimeoutError } from "@t3tools/contracts";
+import { VcsProcessExitError, VcsProcessTimeoutError } from "@ghostforge/contracts";
 import * as VcsProcess from "./VcsProcess.ts";
 
 const run = (input: VcsProcess.VcsProcessInput) =>

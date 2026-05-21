@@ -1,4 +1,4 @@
-// @effect-diagnostics nodeBuiltinImport:off
+﻿// @effect-diagnostics nodeBuiltinImport:off
 import path from "node:path";
 
 import * as NodeServices from "@effect/platform-node/NodeServices";
@@ -15,12 +15,12 @@ import { CheckpointStoreLive } from "./CheckpointStore.ts";
 import { CheckpointStore } from "../Services/CheckpointStore.ts";
 import * as VcsDriverRegistry from "../../vcs/VcsDriverRegistry.ts";
 import * as VcsProcess from "../../vcs/VcsProcess.ts";
-import type { VcsError } from "@t3tools/contracts";
+import type { VcsError } from "@ghostforge/contracts";
 import { ServerConfig } from "../../config.ts";
-import { ThreadId } from "@t3tools/contracts";
+import { ThreadId } from "@ghostforge/contracts";
 
 const ServerConfigLayer = ServerConfig.layerTest(process.cwd(), {
-  prefix: "t3-checkpoint-store-test-",
+  prefix: "ghostforge-checkpoint-store-test-",
 });
 const VcsProcessTestLayer = VcsProcess.layer.pipe(Layer.provide(NodeServices.layer));
 const VcsDriverTestLayer = VcsDriverRegistry.layer.pipe(Layer.provide(VcsProcessTestLayer));

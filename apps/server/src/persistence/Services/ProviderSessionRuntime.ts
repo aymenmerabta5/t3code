@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProviderSessionRuntimeRepository - Repository interface for provider runtime sessions.
  *
  * Owns persistence operations for provider runtime metadata and resume cursors.
@@ -11,7 +11,7 @@ import {
   ProviderSessionRuntimeStatus,
   RuntimeMode,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 import * as Context from "effect/Context";
@@ -89,4 +89,4 @@ export interface ProviderSessionRuntimeRepositoryShape {
 export class ProviderSessionRuntimeRepository extends Context.Service<
   ProviderSessionRuntimeRepository,
   ProviderSessionRuntimeRepositoryShape
->()("t3/persistence/Services/ProviderSessionRuntime/ProviderSessionRuntimeRepository") {}
+>()("ghostforge/persistence/Services/ProviderSessionRuntime/ProviderSessionRuntimeRepository") {}

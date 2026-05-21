@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   ArrowUpCircleIcon,
@@ -19,7 +19,7 @@ import {
   type ProviderDriverKind,
   type ServerProvider,
   type ServerProviderModel,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import { cn } from "../../lib/utils";
 import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
@@ -96,7 +96,7 @@ function readConfigStringArray(config: unknown, key: string): ReadonlyArray<stri
 
 /**
  * Set `key` to an arbitrary value on the opaque config blob. Unlike
- * provider settings field updates, does not drop empty-looking values — the
+ * provider settings field updates, does not drop empty-looking values â€” the
  * caller is responsible for deciding whether an empty array / empty
  * object should be stored explicitly (e.g. `customModels: []` is a
  * meaningful "user cleared their custom list" state distinct from
@@ -400,7 +400,7 @@ interface ProviderInstanceCardProps {
   readonly onUpdate: (nextInstance: ProviderInstanceConfig) => void;
   /**
    * Pass `undefined` to hide the delete button entirely. Built-in default
-   * instance slots use `undefined` — they can't be deleted without losing
+   * instance slots use `undefined` â€” they can't be deleted without losing
    * the slot, and their "reset to defaults" affordance lives on an outer
    * reset button instead. Explicit `| undefined` in the type accommodates
    * `exactOptionalPropertyTypes: true`, where an absent key and
@@ -425,7 +425,7 @@ interface ProviderInstanceCardProps {
 
 /**
  * A single configured provider-instance row in the Providers settings
- * section. Used for every row — both the built-in default instance for a
+ * section. Used for every row â€” both the built-in default instance for a
  * driver (rendered with `onDelete` omitted) and user-authored custom
  * instances (`onDelete` supplied). The only UI difference between the two
  * is whether the trash button is visible; every other field (display
@@ -443,7 +443,7 @@ interface ProviderInstanceCardProps {
  *     field; the server's registry consults this at `entry.enabled ?? true`
  *     before materializing the instance, and the probe also checks its
  *     driver-specific `config.enabled`. We treat the envelope flag as the
- *     single source of truth from the UI — built-in cards used to write
+ *     single source of truth from the UI â€” built-in cards used to write
  *     the inner flag, but on the promotion-to-instance path every edit
  *     flows through the envelope.
  */
@@ -692,7 +692,7 @@ export function ProviderInstanceCard({
                             ? "text-warning hover:text-warning"
                             : "text-primary hover:text-primary",
                         )}
-                        aria-label="Update available — view details"
+                        aria-label="Update available â€” view details"
                       >
                         <ArrowUpCircleIcon className="size-3.5 [animation:bounce_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
                       </Button>

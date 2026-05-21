@@ -1,9 +1,9 @@
-import type {
+﻿import type {
   AuthClientMetadata,
   AuthClientSession,
   AuthSessionId,
   ServerAuthSessionMethod,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Data from "effect/Data";
 import * as DateTime from "effect/DateTime";
 import * as Duration from "effect/Duration";
@@ -88,4 +88,4 @@ export interface SessionCredentialServiceShape {
 export class SessionCredentialService extends Context.Service<
   SessionCredentialService,
   SessionCredentialServiceShape
->()("t3/auth/Services/SessionCredentialService") {}
+>()("ghostforge/auth/Services/SessionCredentialService") {}

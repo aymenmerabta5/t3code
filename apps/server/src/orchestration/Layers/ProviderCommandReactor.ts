@@ -1,4 +1,4 @@
-import {
+﻿import {
   type ChatAttachment,
   CommandId,
   EventId,
@@ -11,8 +11,8 @@ import {
   type ProviderSession,
   type RuntimeMode,
   type TurnId,
-} from "@t3tools/contracts";
-import { isTemporaryWorktreeBranch, WORKTREE_BRANCH_PREFIX } from "@t3tools/shared/git";
+} from "@ghostforge/contracts";
+import { isTemporaryWorktreeBranch, WORKTREE_BRANCH_PREFIX } from "@ghostforge/shared/git";
 import * as Cache from "effect/Cache";
 import * as Cause from "effect/Cause";
 import * as Duration from "effect/Duration";
@@ -22,7 +22,7 @@ import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
-import { makeDrainableWorker } from "@t3tools/shared/DrainableWorker";
+import { makeDrainableWorker } from "@ghostforge/shared/DrainableWorker";
 
 import { resolveThreadWorkspaceCwd } from "../../checkpointing/Utils.ts";
 import { increment, orchestrationEventsProcessedTotal } from "../../observability/Metrics.ts";

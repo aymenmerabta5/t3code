@@ -32,7 +32,9 @@ describe("ssh auth", () => {
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
-      const directory = yield* fs.makeTempDirectoryScoped({ prefix: "t3-ssh-askpass-test-" });
+      const directory = yield* fs.makeTempDirectoryScoped({
+        prefix: "ghostforge-ssh-askpass-test-",
+      });
       const env = yield* buildSshChildEnvironment({
         authSecret: "super-secret",
         interactiveAuth: true,
@@ -45,7 +47,7 @@ describe("ssh auth", () => {
       assert.equal(env.SSH_ASKPASS, askpassPath);
       assert.equal(env.SSH_ASKPASS_REQUIRE, "force");
       assert.equal(env.T3_SSH_AUTH_SECRET, "super-secret");
-      assert.equal(env.DISPLAY, "t3code");
+      assert.equal(env.DISPLAY, "ghostforge");
       assert.equal(yield* fs.exists(askpassPath), true);
       assert.include(yield* fs.readFileString(askpassPath), 'printf "%s\\n" "$T3_SSH_AUTH_SECRET"');
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
@@ -54,11 +56,11 @@ describe("ssh auth", () => {
   it.effect("builds a windows askpass launcher pair", () =>
     Effect.gen(function* () {
       const descriptor = yield* buildSshAskpassHelperDescriptor({
-        directory: "C:\\temp\\t3code-ssh-askpass",
+        directory: "C:\\temp\\ghostforge-ssh-askpass",
         platform: "win32",
       }).pipe(Effect.provide(NodeServices.layer));
 
-      assert.equal(descriptor.launcherPath, "C:\\temp\\t3code-ssh-askpass\\ssh-askpass.cmd");
+      assert.equal(descriptor.launcherPath, "C:\\temp\\ghostforge-ssh-askpass\\ssh-askpass.cmd");
       assert.deepEqual(
         descriptor.files.map((file) => file.path.split("\\").at(-1)),
         ["ssh-askpass.cmd", "ssh-askpass.ps1"],

@@ -1,6 +1,6 @@
-import { pathToFileURL } from "node:url";
+﻿import { pathToFileURL } from "node:url";
 
-import type { ChatAttachment, ProviderApprovalDecision, RuntimeMode } from "@t3tools/contracts";
+import type { ChatAttachment, ProviderApprovalDecision, RuntimeMode } from "@ghostforge/contracts";
 import {
   createOpencodeClient,
   type Agent,
@@ -30,7 +30,7 @@ import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process";
 
 import { isWindowsCommandNotFound } from "../processRunner.ts";
 import { collectStreamAsString } from "./providerSnapshot.ts";
-import * as NetService from "@t3tools/shared/Net";
+import * as NetService from "@ghostforge/shared/Net";
 const encodeUnknownJsonStringExit = Schema.encodeUnknownExit(Schema.UnknownFromJsonString);
 const OPENCODE_EMPTY_CONFIG_CONTENT = "{}";
 
@@ -67,7 +67,7 @@ export function openCodeRuntimeErrorDetail(cause: unknown): string {
   if (OpenCodeRuntimeError.is(cause)) return cause.detail;
   if (cause instanceof Error && cause.message.trim().length > 0) return cause.message.trim();
   if (cause && typeof cause === "object") {
-    // SDK v2 throws { response, request, error? } shapes — extract what's useful
+    // SDK v2 throws { response, request, error? } shapes â€” extract what's useful
     const anyCause = cause as Record<string, unknown>;
     const status = (anyCause.response as { status?: number } | undefined)?.status;
     const body = anyCause.error ?? anyCause.data ?? anyCause.body;
@@ -108,7 +108,7 @@ export interface ParsedOpenCodeModelSlug {
 export interface OpenCodeRuntimeShape {
   /**
    * Spawns a local OpenCode server process. Its lifetime is bound to the caller's
-   * `Scope.Scope` — the child is killed automatically when that scope closes.
+   * `Scope.Scope` â€” the child is killed automatically when that scope closes.
    * Consumers that want a long-lived server must create and hold a scope explicitly
    * (see {@link Scope.make}) and close it when done.
    */
@@ -118,10 +118,12 @@ export interface OpenCodeRuntimeShape {
     readonly port?: number;
     readonly hostname?: string;
     readonly timeoutMs?: number;
+    readonly configEnvVarName?: string;
+    readonly cwd?: string;
   }) => Effect.Effect<OpenCodeServerProcess, OpenCodeRuntimeError, Scope.Scope>;
   /**
    * Returns a handle to either an externally-managed OpenCode server (when
-   * `serverUrl` is provided — no lifetime is attached to the caller's scope) or a
+   * `serverUrl` is provided â€” no lifetime is attached to the caller's scope) or a
    * freshly spawned local server whose lifetime is bound to the caller's scope.
    */
   readonly connectToOpenCodeServer: (input: {
@@ -131,6 +133,8 @@ export interface OpenCodeRuntimeShape {
     readonly port?: number;
     readonly hostname?: string;
     readonly timeoutMs?: number;
+    readonly configEnvVarName?: string;
+    readonly cwd?: string;
   }) => Effect.Effect<OpenCodeServerConnection, OpenCodeRuntimeError, Scope.Scope>;
   readonly runOpenCodeCommand: (input: {
     readonly binaryPath: string;
@@ -141,15 +145,18 @@ export interface OpenCodeRuntimeShape {
     readonly baseUrl: string;
     readonly directory: string;
     readonly serverPassword?: string;
+    readonly serverUsername?: string;
   }) => OpencodeClient;
   readonly loadOpenCodeInventory: (
     client: OpencodeClient,
   ) => Effect.Effect<OpenCodeInventory, OpenCodeRuntimeError>;
 }
 
+const OPENCODE_SERVER_READY_PREFIXES = [OPENCODE_SERVER_READY_PREFIX, "GhostCode server listening"];
+
 function parseServerUrlFromOutput(output: string): string | null {
   for (const line of output.split("\n")) {
-    if (!line.startsWith(OPENCODE_SERVER_READY_PREFIX)) {
+    if (!OPENCODE_SERVER_READY_PREFIXES.some((prefix) => line.startsWith(prefix))) {
       continue;
     }
     const match = line.match(/on\s+(https?:\/\/[^\s]+)/);
@@ -316,7 +323,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
     Effect.gen(function* () {
       // Bind this server's lifetime to the caller's scope. When the caller's
       // scope closes, the spawned child is killed and all associated fibers
-      // are interrupted automatically — no `close()` method needed.
+      // are interrupted automatically â€” no `close()` method needed.
       const runtimeScope = yield* Scope.Scope;
 
       const hostname = input.hostname ?? DEFAULT_HOSTNAME;
@@ -335,14 +342,17 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
       const timeoutMs = input.timeoutMs ?? DEFAULT_OPENCODE_SERVER_TIMEOUT_MS;
       const args = ["serve", `--hostname=${hostname}`, `--port=${port}`];
 
+      const configEnvVarName = input.configEnvVarName ?? "OPENCODE_CONFIG_CONTENT";
+      const envSource = input.environment ?? process.env;
       const child = yield* spawner
         .spawn(
           ChildProcess.make(input.binaryPath, args, {
             detached: process.platform !== "win32",
             shell: process.platform === "win32",
+            ...(input.cwd !== undefined ? { cwd: input.cwd } : {}),
             env: {
-              ...(input.environment ?? process.env),
-              OPENCODE_CONFIG_CONTENT: OPENCODE_EMPTY_CONFIG_CONTENT,
+              ...envSource,
+              [configEnvVarName]: envSource[configEnvVarName] ?? OPENCODE_EMPTY_CONFIG_CONTENT,
             },
           }),
         )
@@ -352,7 +362,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
             (cause) =>
               new OpenCodeRuntimeError({
                 operation: "startOpenCodeServerProcess",
-                detail: `Failed to spawn OpenCode server process: ${openCodeRuntimeErrorDetail(cause)}`,
+                detail: `Failed to spawn server process: ${openCodeRuntimeErrorDetail(cause)}`,
                 cause,
               }),
           ),
@@ -415,7 +425,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
               new OpenCodeRuntimeError({
                 operation: "startOpenCodeServerProcess",
                 detail: [
-                  `OpenCode server exited before startup completed (code: ${String(exitCode)}).`,
+                  `Server exited before startup completed (code: ${String(exitCode)}).`,
                   stdout.trim() ? `stdout:\n${stdout.trim()}` : null,
                   stderr.trim() ? `stderr:\n${stderr.trim()}` : null,
                 ]
@@ -445,7 +455,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
         const squashed = Cause.squash(readyExit.cause);
         return yield* ensureRuntimeError(
           "startOpenCodeServerProcess",
-          `Failed while waiting for OpenCode server startup: ${openCodeRuntimeErrorDetail(squashed)}`,
+          `Failed while waiting for server startup: ${openCodeRuntimeErrorDetail(squashed)}`,
           squashed,
         );
       }
@@ -455,7 +465,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
         yield* Fiber.interrupt(exitFiber).pipe(Effect.ignore);
         return yield* new OpenCodeRuntimeError({
           operation: "startOpenCodeServerProcess",
-          detail: `Timed out waiting for OpenCode server start after ${timeoutMs}ms.`,
+          detail: `Timed out waiting for server start after ${timeoutMs}ms.`,
         });
       }
 
@@ -471,7 +481,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
   const connectToOpenCodeServer: OpenCodeRuntimeShape["connectToOpenCodeServer"] = (input) => {
     const serverUrl = input.serverUrl?.trim();
     if (serverUrl) {
-      // We don't own externally-configured servers — no scope interaction.
+      // We don't own externally-configured servers â€” no scope interaction.
       return Effect.succeed({
         url: serverUrl,
         exitCode: null,
@@ -485,6 +495,8 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
       ...(input.port !== undefined ? { port: input.port } : {}),
       ...(input.hostname !== undefined ? { hostname: input.hostname } : {}),
       ...(input.timeoutMs !== undefined ? { timeoutMs: input.timeoutMs } : {}),
+      ...(input.configEnvVarName !== undefined ? { configEnvVarName: input.configEnvVarName } : {}),
+      ...(input.cwd !== undefined ? { cwd: input.cwd } : {}),
     }).pipe(
       Effect.map((server) => ({
         url: server.url,
@@ -501,7 +513,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
       ...(input.serverPassword
         ? {
             headers: {
-              Authorization: `Basic ${Buffer.from(`opencode:${input.serverPassword}`, "utf8").toString("base64")}`,
+              Authorization: `Basic ${Buffer.from(`${input.serverUsername ?? "opencode"}:${input.serverPassword}`, "utf8").toString("base64")}`,
             },
           }
         : {}),
@@ -544,7 +556,7 @@ const makeOpenCodeRuntime = Effect.gen(function* () {
 });
 
 export class OpenCodeRuntime extends Context.Service<OpenCodeRuntime, OpenCodeRuntimeShape>()(
-  "t3/provider/OpenCodeRuntime",
+  "ghostforge/provider/OpenCodeRuntime",
 ) {}
 
 export const OpenCodeRuntimeLive = Layer.effect(OpenCodeRuntime, makeOpenCodeRuntime).pipe(

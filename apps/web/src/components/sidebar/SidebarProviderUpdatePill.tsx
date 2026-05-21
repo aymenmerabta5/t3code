@@ -1,5 +1,5 @@
-import { useNavigate } from "@tanstack/react-router";
-import type { ServerProvider } from "@t3tools/contracts";
+﻿import { useNavigate } from "@tanstack/react-router";
+import type { ServerProvider } from "@ghostforge/contracts";
 import { CircleCheckIcon, DownloadIcon, LoaderIcon, TriangleAlertIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 

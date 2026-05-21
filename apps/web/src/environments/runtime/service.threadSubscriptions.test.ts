@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+﻿import { QueryClient } from "@tanstack/react-query";
 import {
   EnvironmentId,
   ProjectId,
@@ -6,7 +6,7 @@ import {
   ThreadId,
   TurnId,
   type OrchestrationShellSnapshot,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockSubscribeThread = vi.fn();

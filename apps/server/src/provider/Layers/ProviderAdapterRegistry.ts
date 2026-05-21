@@ -1,5 +1,5 @@
-/**
- * ProviderAdapterRegistryLive — facade over `ProviderInstanceRegistry`.
+﻿/**
+ * ProviderAdapterRegistryLive â€” facade over `ProviderInstanceRegistry`.
  *
  * `ProviderAdapterRegistry` historically mapped one `ProviderDriverKind` to one
  * adapter via the four `<X>AdapterLive` singleton Layers. The per-instance
@@ -9,7 +9,7 @@
  *
  * This facade fulfills the `ProviderAdapterRegistryShape` contract by doing
  * dynamic look-ups against `ProviderInstanceRegistry` on every call. That
- * means settings-driven hot-reload shows up here automatically — adding a
+ * means settings-driven hot-reload shows up here automatically â€” adding a
  * new instance via settings makes `getByInstance` resolve immediately
  * without rebuilding the facade.
  *
@@ -19,7 +19,7 @@ import {
   defaultInstanceIdForDriver,
   ProviderInstanceId,
   type ProviderDriverKind,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 
@@ -79,7 +79,7 @@ const makeProviderAdapterRegistry = Effect.fn("makeProviderAdapterRegistry")(fun
           const defaultId = defaultInstanceIdForDriver(instance.driverKind);
           if (instance.instanceId === defaultId) {
             // Only the default-instance rows show up through the legacy
-            // shim — custom instances like `codex_personal` have no
+            // shim â€” custom instances like `codex_personal` have no
             // `ProviderDriverKind` equivalent.
             kinds.add(instance.driverKind);
           }
@@ -93,7 +93,7 @@ const makeProviderAdapterRegistry = Effect.fn("makeProviderAdapterRegistry")(fun
     getInstanceInfo,
     listInstances,
     listProviders,
-    // Proxy directly — the facade has no state of its own; the instance
+    // Proxy directly â€” the facade has no state of its own; the instance
     // registry already coalesces adds/removes/rebuilds into one emission.
     streamChanges: registry.streamChanges,
     subscribeChanges: registry.subscribeChanges,

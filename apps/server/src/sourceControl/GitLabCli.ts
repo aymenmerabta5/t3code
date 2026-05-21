@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
@@ -7,7 +7,10 @@ import * as Schema from "effect/Schema";
 import * as SchemaIssue from "effect/SchemaIssue";
 import type * as DateTime from "effect/DateTime";
 
-import { TrimmedNonEmptyString, type SourceControlRepositoryVisibility } from "@t3tools/contracts";
+import {
+  TrimmedNonEmptyString,
+  type SourceControlRepositoryVisibility,
+} from "@ghostforge/contracts";
 
 import * as VcsProcess from "../vcs/VcsProcess.ts";
 import * as GitLabMergeRequests from "./gitLabMergeRequests.ts";
@@ -97,7 +100,7 @@ export interface GitLabCliShape {
 }
 
 export class GitLabCli extends Context.Service<GitLabCli, GitLabCliShape>()(
-  "t3/source-control/GitLabCli",
+  "ghostforge/source-control/GitLabCli",
 ) {}
 
 function isVcsProcessSpawnError(error: unknown): boolean {

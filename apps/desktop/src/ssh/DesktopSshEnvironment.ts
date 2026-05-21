@@ -2,14 +2,14 @@ import type {
   DesktopDiscoveredSshHost,
   DesktopSshEnvironmentBootstrap,
   DesktopSshEnvironmentTarget,
-} from "@t3tools/contracts";
-import * as NetService from "@t3tools/shared/Net";
+} from "@ghostforge/contracts";
+import * as NetService from "@ghostforge/shared/Net";
 import {
   SshPasswordPrompt,
   type SshPasswordPromptShape,
   type SshPasswordRequest,
-} from "@t3tools/ssh/auth";
-import { discoverSshHosts } from "@t3tools/ssh/config";
+} from "@ghostforge/ssh/auth";
+import { discoverSshHosts } from "@ghostforge/ssh/config";
 import {
   SshCommandError,
   SshHostDiscoveryError,
@@ -18,8 +18,8 @@ import {
   SshPairingError,
   SshPasswordPromptError,
   SshReadinessError,
-} from "@t3tools/ssh/errors";
-import { SshEnvironmentManager, type RemoteT3RunnerOptions } from "@t3tools/ssh/tunnel";
+} from "@ghostforge/ssh/errors";
+import { SshEnvironmentManager, type RemoteT3RunnerOptions } from "@ghostforge/ssh/tunnel";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -68,7 +68,7 @@ export interface DesktopSshEnvironmentShape {
 export class DesktopSshEnvironment extends Context.Service<
   DesktopSshEnvironment,
   DesktopSshEnvironmentShape
->()("t3/desktop/SshEnvironment") {}
+>()("ghostforge/desktop/SshEnvironment") {}
 
 export interface DesktopSshEnvironmentLayerOptions {
   readonly resolveCliPackageSpec?: () => string;

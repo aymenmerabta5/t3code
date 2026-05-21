@@ -1,17 +1,17 @@
-/**
- * CodexDriver — first concrete `ProviderDriver` in the new per-instance model.
+﻿/**
+ * CodexDriver â€” first concrete `ProviderDriver` in the new per-instance model.
  *
  * A driver is a plain value (not a Context.Service) whose `create()` returns
  * one `ProviderInstance` bundling:
- *   - `snapshot`   — the live `ServerProviderShape` for this instance;
- *   - `adapter`    — the Codex session/turn/approval runtime;
- *   - `textGeneration` — commit/PR/branch/title generation via `codex exec`.
+ *   - `snapshot`   â€” the live `ServerProviderShape` for this instance;
+ *   - `adapter`    â€” the Codex session/turn/approval runtime;
+ *   - `textGeneration` â€” commit/PR/branch/title generation via `codex exec`.
  *
  * Each call to `create()` captures the `codexConfig` argument in closures
  * owned by the returned instance. Two instances created with different
  * `homePath`s (e.g. `codex_personal` + `codex_work`) therefore run with
  * fully independent Codex app-server processes and `CODEX_HOME`
- * environments — no shared mutable state.
+ * environments â€” no shared mutable state.
  *
  * Resource lifecycle: `create()` runs in a scope handed in by the registry.
  * Closing that scope releases the adapter's child processes, the managed
@@ -21,7 +21,7 @@
  *
  * @module provider/Drivers/CodexDriver
  */
-import { CodexSettings, ProviderDriverKind, type ServerProvider } from "@t3tools/contracts";
+import { CodexSettings, ProviderDriverKind, type ServerProvider } from "@ghostforge/contracts";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -141,7 +141,7 @@ export const CodexDriver: ProviderDriver<CodexSettings, CodexDriverEnv> = {
       });
 
       // `makeCodexAdapter` and `makeCodexTextGeneration` have `never` error
-      // channels at construction time — their failure modes are all on the
+      // channels at construction time â€” their failure modes are all on the
       // per-operation closures they return. No `mapError` wrapper is needed
       // here; the registry only has to worry about snapshot-build and
       // spawner-availability failures surfaced from `checkCodexProviderStatus`
@@ -153,7 +153,7 @@ export const CodexDriver: ProviderDriver<CodexSettings, CodexDriverEnv> = {
       });
       const textGeneration = yield* makeCodexTextGeneration(effectiveConfig, processEnv);
 
-      // Build a managed snapshot whose settings never change — mutations come
+      // Build a managed snapshot whose settings never change â€” mutations come
       // in as instance rebuilds from the registry rather than in-place
       // updates. Pre-provide `ChildProcessSpawner` so the check fits
       // `makeManagedServerProvider.checkProvider`'s `R = never`.

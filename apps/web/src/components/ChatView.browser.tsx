@@ -1,4 +1,4 @@
-// Production CSS is part of the behavior under test because row height depends on it.
+﻿// Production CSS is part of the behavior under test because row height depends on it.
 import "../index.css";
 
 import {
@@ -19,9 +19,9 @@ import {
   OrchestrationSessionStatus,
   DEFAULT_SERVER_SETTINGS,
   ServerConfig as ServerConfigSchema,
-} from "@t3tools/contracts";
-import { scopedThreadKey, scopeThreadRef } from "@t3tools/client-runtime";
-import { createModelCapabilities, createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { scopedThreadKey, scopeThreadRef } from "@ghostforge/client-runtime";
+import { createModelCapabilities, createModelSelection } from "@ghostforge/shared/model";
 import { RouterProvider, createMemoryHistory } from "@tanstack/react-router";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
@@ -60,7 +60,7 @@ import { useUiStateStore } from "../uiStateStore";
 import { createAuthenticatedSessionHandlers } from "../../test/authHttpHandlers";
 import { BrowserWsRpcHarness, type NormalizedWsRpcRequestBody } from "../../test/wsRpcHarness";
 
-import { DEFAULT_CLIENT_SETTINGS } from "@t3tools/contracts/settings";
+import { DEFAULT_CLIENT_SETTINGS } from "@ghostforge/contracts/settings";
 
 vi.mock("../lib/gitStatusState", () => ({
   useGitStatus: () => ({ data: null, error: null, cause: null, isPending: false }),
@@ -165,10 +165,10 @@ function createBaseServerConfig(): ServerConfig {
       policy: "loopback-browser",
       bootstrapMethods: ["one-time-token"],
       sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-      sessionCookieName: "t3_session",
+      sessionCookieName: "ghostforge_session",
     },
     cwd: "/repo/project",
-    keybindingsConfigPath: "/repo/project/.t3code-keybindings.json",
+    keybindingsConfigPath: "/repo/project/\.ghostforge-keybindings.json",
     keybindings: [],
     issues: [],
     providers: [
@@ -188,7 +188,7 @@ function createBaseServerConfig(): ServerConfig {
     ],
     availableEditors: [],
     observability: {
-      logsDirectoryPath: "/repo/project/.t3/logs",
+      logsDirectoryPath: "/repo/project/.ghostforge/logs",
       localTracingEnabled: true,
       otlpTracesEnabled: false,
       otlpMetricsEnabled: false,
@@ -974,7 +974,7 @@ function resolveWsRpc(body: NormalizedWsRpcRequestBody): unknown {
           detail: Option.none(),
           auth: {
             status: "authenticated",
-            account: Option.some("t3-oss"),
+            account: Option.some("ghostforge-oss"),
             host: Option.some("github.com"),
             detail: Option.none(),
           },
@@ -989,7 +989,7 @@ function resolveWsRpc(body: NormalizedWsRpcRequestBody): unknown {
           detail: Option.none(),
           auth: {
             status: "authenticated",
-            account: Option.some("t3-oss"),
+            account: Option.some("ghostforge-oss"),
             host: Option.some("gitlab.com"),
             detail: Option.none(),
           },
@@ -1004,7 +1004,7 @@ function resolveWsRpc(body: NormalizedWsRpcRequestBody): unknown {
           detail: Option.none(),
           auth: {
             status: "authenticated",
-            account: Option.some("t3-oss"),
+            account: Option.some("ghostforge-oss"),
             host: Option.some("bitbucket.org"),
             detail: Option.none(),
           },
@@ -1019,7 +1019,7 @@ function resolveWsRpc(body: NormalizedWsRpcRequestBody): unknown {
           detail: Option.none(),
           auth: {
             status: "authenticated",
-            account: Option.some("t3-oss"),
+            account: Option.some("ghostforge-oss"),
             host: Option.some("dev.azure.com"),
             detail: Option.none(),
           },
@@ -1509,7 +1509,7 @@ async function waitForNewThreadShortcutLabel(): Promise<void> {
   await expect.element(newThreadButton).toBeInTheDocument();
   await newThreadButton.hover();
   const shortcutLabel = isMacPlatform(navigator.platform)
-    ? "New thread (⇧⌘O)"
+    ? "New thread (â‡§âŒ˜O)"
     : "New thread (Ctrl+Shift+O)";
   await expect.element(page.getByText(shortcutLabel)).toBeInTheDocument();
 }
@@ -1949,10 +1949,10 @@ describe("ChatView timeline estimator parity (full app)", () => {
             cwd: "/repo/project",
             worktreePath: null,
             env: {
-              T3CODE_PROJECT_ROOT: "/repo/project",
+              GHOSTFORGE_PROJECT_ROOT: "/repo/project",
             },
           });
-          expect(openRequest?.env?.T3CODE_WORKTREE_PATH).toBeUndefined();
+          expect(openRequest?.env?.GHOSTFORGE_WORKTREE_PATH).toBeUndefined();
         },
         { timeout: 8_000, interval: 16 },
       );
@@ -2166,7 +2166,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
   });
 
   it("falls back to the first installed editor when the stored favorite is unavailable", async () => {
-    localStorage.setItem("t3code:last-editor", JSON.stringify("vscodium"));
+    localStorage.setItem("ghostforge:last-editor", JSON.stringify("vscodium"));
     setDraftThreadWithoutWorktree();
 
     const mounted = await mountChatView({
@@ -2266,7 +2266,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
             threadId: THREAD_ID,
             cwd: "/repo/project",
             env: {
-              T3CODE_PROJECT_ROOT: "/repo/project",
+              GHOSTFORGE_PROJECT_ROOT: "/repo/project",
             },
           });
         },
@@ -2345,8 +2345,8 @@ describe("ChatView timeline estimator parity (full app)", () => {
             threadId: THREAD_ID,
             cwd: "/repo/worktrees/feature-draft",
             env: {
-              T3CODE_PROJECT_ROOT: "/repo/project",
-              T3CODE_WORKTREE_PATH: "/repo/worktrees/feature-draft",
+              GHOSTFORGE_PROJECT_ROOT: "/repo/project",
+              GHOSTFORGE_WORKTREE_PATH: "/repo/worktrees/feature-draft",
             },
           });
         },
@@ -2395,7 +2395,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
             pullRequest: {
               number: 1359,
               title: "Add thread archiving and settings navigation",
-              url: "https://github.com/pingdotgg/t3code/pull/1359",
+              url: "https://github.com/pingdotgg/ghostforge/pull/1359",
               baseBranch: "main",
               headBranch: "archive-settings-overhaul",
               state: "open",
@@ -2407,7 +2407,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
             pullRequest: {
               number: 1359,
               title: "Add thread archiving and settings navigation",
-              url: "https://github.com/pingdotgg/t3code/pull/1359",
+              url: "https://github.com/pingdotgg/ghostforge/pull/1359",
               baseBranch: "main",
               headBranch: "archive-settings-overhaul",
               state: "open",
@@ -2560,7 +2560,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
               prepareWorktree: {
                 projectCwd: "/repo/project",
                 baseBranch: "main",
-                branch: expect.stringMatching(/^t3code\/[0-9a-f]{8}$/),
+                branch: expect.stringMatching(/^ghostforge\/[0-9a-f]{8}$/),
               },
               runSetupScript: true,
             },
@@ -2784,7 +2784,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
               prepareWorktree: {
                 projectCwd: "/repo/project",
                 baseBranch: "main",
-                branch: expect.stringMatching(/^t3code\/[0-9a-f]{8}$/),
+                branch: expect.stringMatching(/^ghostforge\/[0-9a-f]{8}$/),
               },
               runSetupScript: true,
             },
@@ -3424,8 +3424,8 @@ describe("ChatView timeline estimator parity (full app)", () => {
     try {
       await waitForComposerText("quoted");
       await setComposerSelectionByTextOffsets({ start: 0, end: "quoted".length });
-      await pressComposerKey("«");
-      await waitForComposerText("«quoted»");
+      await pressComposerKey("Â«");
+      await waitForComposerText("Â«quotedÂ»");
     } finally {
       await mounted.cleanup();
     }
@@ -3813,7 +3813,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
 
   it("shows the confirm archive action after clicking the archive button", async () => {
     localStorage.setItem(
-      "t3code:client-settings:v1",
+      "ghostforge:client-settings:v1",
       JSON.stringify({
         ...DEFAULT_CLIENT_SETTINGS,
         confirmThreadArchive: true,
@@ -3842,7 +3842,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
       await expect.element(confirmButton).toBeInTheDocument();
       await expect.element(confirmButton).toBeVisible();
     } finally {
-      localStorage.removeItem("t3code:client-settings:v1");
+      localStorage.removeItem("ghostforge:client-settings:v1");
       await mounted.cleanup();
     }
   });
@@ -3965,7 +3965,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
           thread.id === THREAD_ID
             ? Object.assign({}, thread, {
                 branch: "feature/existing",
-                worktreePath: "/repo/.t3/worktrees/existing",
+                worktreePath: "/repo/.ghostforge/worktrees/existing",
               })
             : thread,
         ),
@@ -4618,9 +4618,9 @@ describe("ChatView timeline estimator parity (full app)", () => {
         if (body._tag === WS_METHODS.sourceControlLookupRepository) {
           return {
             provider: "github",
-            nameWithOwner: "t3-oss/t3-env",
-            url: "https://github.com/t3-oss/t3-env",
-            sshUrl: "git@github.com:t3-oss/t3-env.git",
+            nameWithOwner: "ghostforge-oss/ghostforge-env",
+            url: "https://github.com/ghostforge-oss/ghostforge-env",
+            sshUrl: "git@github.com:ghostforge-oss/ghostforge-env.git",
           };
         }
 
@@ -4654,7 +4654,9 @@ describe("ChatView timeline estimator parity (full app)", () => {
       const repositoryInput = await waitForCommandPaletteInput(
         "Enter GitHub repository (owner/repo)",
       );
-      await page.getByPlaceholder("Enter GitHub repository (owner/repo)").fill("t3-oss/t3-env");
+      await page
+        .getByPlaceholder("Enter GitHub repository (owner/repo)")
+        .fill("ghostforge-oss/ghostforge-env");
       await dispatchInputKey(repositoryInput, { key: "Enter" });
 
       await vi.waitFor(
@@ -4664,8 +4666,10 @@ describe("ChatView timeline estimator parity (full app)", () => {
           );
           expect(clonePathInput?.value).toBe("~/");
           expect(document.body.textContent).toContain("Repository");
-          expect(document.body.textContent).toContain("t3-oss/t3-env");
-          expect(document.body.textContent).toContain("https://github.com/t3-oss/t3-env");
+          expect(document.body.textContent).toContain("ghostforge-oss/ghostforge-env");
+          expect(document.body.textContent).toContain(
+            "https://github.com/ghostforge-oss/ghostforge-env",
+          );
           expect(document.body.textContent).toContain("Select where to clone");
           expect(document.body.textContent).toContain("Development");
           expect(document.body.textContent).toContain("Clone");
@@ -4675,7 +4679,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
 
       await page
         .getByPlaceholder("Enter path (e.g. ~/projects/my-app)")
-        .fill("~/Development/t3env");
+        .fill("~/Development/ghostforgeenv");
       const clonePathInput = await waitForCommandPaletteInput(
         "Enter path (e.g. ~/projects/my-app)",
       );
@@ -4687,8 +4691,8 @@ describe("ChatView timeline estimator parity (full app)", () => {
             (request) => request._tag === WS_METHODS.sourceControlCloneRepository,
           ) as { destinationPath?: string; remoteUrl?: string } | undefined;
           expect(cloneRequest).toMatchObject({
-            remoteUrl: "git@github.com:t3-oss/t3-env.git",
-            destinationPath: "~/Development/t3env",
+            remoteUrl: "git@github.com:ghostforge-oss/ghostforge-env.git",
+            destinationPath: "~/Development/ghostforgeenv",
           });
         },
         { timeout: 8_000, interval: 16 },
@@ -5848,7 +5852,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
           model: "gpt-5.3-codex-spark",
         },
         planMarkdown:
-          "# Imaginary Long-Range Plan: T3 Code Adaptive Orchestration and Safe-Delay Execution Initiative",
+          "# Imaginary Long-Range Plan: GhostForge Adaptive Orchestration and Safe-Delay Execution Initiative",
       }),
     });
 
@@ -5881,7 +5885,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
           model: "gpt-5.3-codex-spark",
         },
         planMarkdown:
-          "# Imaginary Long-Range Plan: T3 Code Adaptive Orchestration and Safe-Delay Execution Initiative",
+          "# Imaginary Long-Range Plan: GhostForge Adaptive Orchestration and Safe-Delay Execution Initiative",
       }),
     });
 
@@ -6121,7 +6125,7 @@ describe("ChatView timeline estimator parity (full app)", () => {
         expect(document.querySelector(".model-picker-list")).not.toBeNull();
       });
 
-      const jumpLabel = isMacPlatform(navigator.platform) ? "⌃1" : "Ctrl+1";
+      const jumpLabel = isMacPlatform(navigator.platform) ? "âŒƒ1" : "Ctrl+1";
       await vi.waitFor(() => {
         expect(
           Array.from(

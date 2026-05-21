@@ -1,4 +1,4 @@
-import {
+﻿import {
   type ApprovalRequestId,
   DEFAULT_MODEL,
   defaultInstanceIdForDriver,
@@ -20,20 +20,20 @@ import {
   ProviderDriverKind,
   RuntimeMode,
   TerminalOpenInput,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   parseScopedThreadKey,
   scopedThreadKey,
   scopeProjectRef,
   scopeThreadRef,
-} from "@t3tools/client-runtime";
+} from "@ghostforge/client-runtime";
 import {
   applyClaudePromptEffortPrefix,
   createModelSelection,
   resolvePromptInjectedEffort,
-} from "@t3tools/shared/model";
-import { projectScriptCwd, projectScriptRuntimeEnv } from "@t3tools/shared/projectScripts";
-import { truncate } from "@t3tools/shared/String";
+} from "@ghostforge/shared/model";
+import { projectScriptCwd, projectScriptRuntimeEnv } from "@ghostforge/shared/projectScripts";
+import { truncate } from "@ghostforge/shared/String";
 import { Debouncer } from "@tanstack/react-pacer";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
@@ -97,7 +97,7 @@ import {
 import { useTheme } from "../hooks/useTheme";
 import { useTurnDiffSummaries } from "../hooks/useTurnDiffSummaries";
 import { useCommandPaletteStore } from "../commandPaletteStore";
-import { buildTemporaryWorktreeBranchName } from "@t3tools/shared/git";
+import { buildTemporaryWorktreeBranchName } from "@ghostforge/shared/git";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { RIGHT_PANEL_INLINE_LAYOUT_MEDIA_QUERY } from "../rightPanelLayout";
 import { BranchToolbar } from "./BranchToolbar";
@@ -643,7 +643,7 @@ export default function ChatView(props: ChatViewProps) {
     select: (params) => parseDiffRouteSearch(params),
   });
   const { resolvedTheme } = useTheme();
-  // Granular store selectors — avoid subscribing to prompt changes.
+  // Granular store selectors â€” avoid subscribing to prompt changes.
   const composerRuntimeMode = useComposerDraftStore(
     (store) => store.getComposerDraft(composerDraftTarget)?.runtimeMode ?? null,
   );
@@ -2202,7 +2202,7 @@ export default function ChatView(props: ChatViewProps) {
     [environmentId, serverThread],
   );
 
-  // Scroll helpers — LegendList handles auto-scroll via maintainScrollAtEnd.
+  // Scroll helpers â€” LegendList handles auto-scroll via maintainScrollAtEnd.
   const scrollToEnd = useCallback((animated = false) => {
     legendListRef.current?.scrollToEnd?.({ animated });
   }, []);
@@ -3552,7 +3552,7 @@ export default function ChatView(props: ChatViewProps) {
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           {/* Messages Wrapper */}
           <div className="relative flex min-h-0 flex-1 flex-col">
-            {/* Messages — LegendList handles virtualization and scrolling internally */}
+            {/* Messages â€” LegendList handles virtualization and scrolling internally */}
             <MessagesTimeline
               key={activeThread.id}
               isWorking={isWorking}
@@ -3579,7 +3579,7 @@ export default function ChatView(props: ChatViewProps) {
               onIsAtEndChange={onIsAtEndChange}
             />
 
-            {/* scroll to bottom pill — shown when user has scrolled away from the bottom */}
+            {/* scroll to bottom pill â€” shown when user has scrolled away from the bottom */}
             {showScrollToBottom && (
               <div className="pointer-events-none absolute bottom-1 left-1/2 z-30 flex -translate-x-1/2 justify-center py-1.5">
                 <button

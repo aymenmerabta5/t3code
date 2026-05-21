@@ -1,18 +1,15 @@
 ﻿/**
- * OpenCodeDriver â€” `ProviderDriver` for the OpenCode runtime.
+ * GhostCodeDriver â€” `ProviderDriver` for the GhostCode runtime.
  *
- * Mirrors the Codex / Claude drivers: a plain value whose `create()`
- * bundles `snapshot` / `adapter` / `textGeneration` closures over the
- * per-instance `OpenCodeSettings`.
+ * GhostCode is an edited version of OpenCode that uses the same protocol
+ * (`@opencode-ai/sdk/v2`) but with the `ghostcode` binary. This driver
+ * reuses all OpenCode internals (adapter, provider layer, text generation,
+ * runtime) and only changes the presented driver kind, display name, and
+ * default binary path.
  *
- * Two instances with different `serverUrl`s therefore talk to independent
- * OpenCode servers; when no `serverUrl` is set, the adapter + text-generation
- * shares spin up their own scoped child processes, and those child
- * processes are released when the registry scope closes.
- *
- * @module provider/Drivers/OpenCodeDriver
+ * @module provider/Drivers/GhostCodeDriver
  */
-import { OpenCodeSettings, ProviderDriverKind, type ServerProvider } from "@ghostforge/contracts";
+import { GhostCodeSettings, ProviderDriverKind, type ServerProvider } from "@ghostforge/contracts";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -42,36 +39,26 @@ import type { ServerProviderDraft } from "../providerSnapshot.ts";
 import { mergeProviderInstanceEnvironment } from "../ProviderInstanceEnvironment.ts";
 import {
   enrichProviderSnapshotWithVersionAdvisory,
-  makePackageManagedProviderMaintenanceResolver,
-  normalizeCommandPath,
+  makeProviderMaintenanceCapabilities,
+  makeStaticProviderMaintenanceResolver,
   resolveProviderMaintenanceCapabilitiesEffect,
 } from "../providerMaintenance.ts";
-const decodeOpenCodeSettings = Schema.decodeSync(OpenCodeSettings);
+const decodeGhostCodeSettings = Schema.decodeSync(GhostCodeSettings);
 
-const DRIVER_KIND = ProviderDriverKind.make("opencode");
+const DRIVER_KIND = ProviderDriverKind.make("ghostcode");
 const SNAPSHOT_REFRESH_INTERVAL = Duration.minutes(5);
 
-function isOpenCodeNativeCommandPath(commandPath: string): boolean {
-  const normalized = normalizeCommandPath(commandPath);
-  return (
-    normalized.endsWith("/.opencode/bin/opencode") ||
-    normalized.endsWith("/.opencode/bin/opencode.exe")
-  );
-}
+const UPDATE = makeStaticProviderMaintenanceResolver(
+  makeProviderMaintenanceCapabilities({
+    provider: DRIVER_KIND,
+    packageName: null,
+    updateExecutable: "ghostcode",
+    updateArgs: ["upgrade"],
+    updateLockKey: "ghostcode-native",
+  }),
+);
 
-const UPDATE = makePackageManagedProviderMaintenanceResolver({
-  provider: DRIVER_KIND,
-  npmPackageName: "opencode-ai",
-  homebrewFormula: "anomalyco/tap/opencode",
-  nativeUpdate: {
-    executable: "opencode",
-    args: ["upgrade"],
-    lockKey: "opencode-native",
-    isCommandPath: isOpenCodeNativeCommandPath,
-  },
-});
-
-export type OpenCodeDriverEnv =
+export type GhostCodeDriverEnv =
   | ChildProcessSpawner.ChildProcessSpawner
   | FileSystem.FileSystem
   | HttpClient.HttpClient
@@ -96,14 +83,14 @@ const withInstanceIdentity =
     continuation: { groupKey: input.continuationGroupKey },
   });
 
-export const OpenCodeDriver: ProviderDriver<OpenCodeSettings, OpenCodeDriverEnv> = {
+export const GhostCodeDriver: ProviderDriver<GhostCodeSettings, GhostCodeDriverEnv> = {
   driverKind: DRIVER_KIND,
   metadata: {
-    displayName: "OpenCode",
+    displayName: "GhostCode",
     supportsMultipleInstances: true,
   },
-  configSchema: OpenCodeSettings,
-  defaultConfig: (): OpenCodeSettings => decodeOpenCodeSettings({}),
+  configSchema: GhostCodeSettings,
+  defaultConfig: (): GhostCodeSettings => decodeGhostCodeSettings({}),
   create: ({ instanceId, displayName, accentColor, environment, enabled, config }) =>
     Effect.gen(function* () {
       const openCodeRuntime = yield* OpenCodeRuntime;
@@ -121,7 +108,7 @@ export const OpenCodeDriver: ProviderDriver<OpenCodeSettings, OpenCodeDriverEnv>
         accentColor,
         continuationGroupKey: continuationIdentity.continuationKey,
       });
-      const effectiveConfig = { ...config, enabled } satisfies OpenCodeSettings;
+      const effectiveConfig = { ...config, enabled } satisfies GhostCodeSettings;
       const maintenanceCapabilities = yield* resolveProviderMaintenanceCapabilitiesEffect(UPDATE, {
         binaryPath: effectiveConfig.binaryPath,
         env: processEnv,
@@ -129,24 +116,32 @@ export const OpenCodeDriver: ProviderDriver<OpenCodeSettings, OpenCodeDriverEnv>
 
       const adapter = yield* makeOpenCodeAdapter(effectiveConfig, {
         instanceId,
+        driverKind: DRIVER_KIND,
         environment: processEnv,
         ...(eventLoggers.native ? { nativeEventLogger: eventLoggers.native } : {}),
       });
-      const textGeneration = yield* makeOpenCodeTextGeneration(effectiveConfig, processEnv);
+      const textGeneration = yield* makeOpenCodeTextGeneration(
+        effectiveConfig,
+        processEnv,
+        "ghostcode",
+      );
 
       const checkProvider = checkOpenCodeProviderStatus(
         effectiveConfig,
         serverConfig.cwd,
         processEnv,
+        { skipVersionCheck: true, label: "GhostCode", commandName: "ghostcode" },
       ).pipe(Effect.map(stampIdentity), Effect.provideService(OpenCodeRuntime, openCodeRuntime));
 
-      const snapshot = yield* makeManagedServerProvider<OpenCodeSettings>({
+      const snapshot = yield* makeManagedServerProvider<GhostCodeSettings>({
         maintenanceCapabilities,
         getSettings: Effect.succeed(effectiveConfig),
         streamSettings: Stream.never,
         haveSettingsChanged: () => false,
         initialSnapshot: (settings) =>
-          makePendingOpenCodeProvider(settings).pipe(Effect.map(stampIdentity)),
+          makePendingOpenCodeProvider(settings, { label: "GhostCode" }).pipe(
+            Effect.map(stampIdentity),
+          ),
         checkProvider,
         enrichSnapshot: ({ snapshot, publishSnapshot }) =>
           enrichProviderSnapshotWithVersionAdvisory(snapshot, maintenanceCapabilities).pipe(
@@ -160,7 +155,7 @@ export const OpenCodeDriver: ProviderDriver<OpenCodeSettings, OpenCodeDriverEnv>
             new ProviderDriverError({
               driver: DRIVER_KIND,
               instanceId,
-              detail: `Failed to build OpenCode snapshot: ${cause.message ?? String(cause)}`,
+              detail: `Failed to build GhostCode snapshot: ${cause.message ?? String(cause)}`,
               cause,
             }),
         ),

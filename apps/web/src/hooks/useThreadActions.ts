@@ -1,5 +1,5 @@
-import { parseScopedThreadKey, scopeProjectRef, scopeThreadRef } from "@t3tools/client-runtime";
-import { type ScopedThreadRef, ThreadId } from "@t3tools/contracts";
+﻿import { parseScopedThreadKey, scopeProjectRef, scopeThreadRef } from "@ghostforge/client-runtime";
+import { type ScopedThreadRef, ThreadId } from "@ghostforge/contracts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
@@ -35,9 +35,9 @@ export function useThreadActions() {
   const router = useRouter();
   const { handleNewThread } = useNewThreadHandler();
   // Keep a ref so archiveThread can call handleNewThread without appearing in
-  // its dependency array — handleNewThread is inherently unstable (depends on
+  // its dependency array â€” handleNewThread is inherently unstable (depends on
   // the projects list) and would otherwise cascade new references into every
-  // sidebar row via archiveThread → attemptArchiveThread.
+  // sidebar row via archiveThread â†’ attemptArchiveThread.
   const handleNewThreadRef = useRef(handleNewThread);
   handleNewThreadRef.current = handleNewThread;
   const queryClient = useQueryClient();
@@ -106,7 +106,7 @@ export function useThreadActions() {
       if (!api) return;
       const resolved = resolveThreadTarget(target);
       if (!resolved) {
-        // Thread not in main store (e.g. archived thread) — dispatch delete directly.
+        // Thread not in main store (e.g. archived thread) â€” dispatch delete directly.
         await api.orchestration.dispatchCommand({
           type: "thread.delete",
           commandId: newCommandId(),

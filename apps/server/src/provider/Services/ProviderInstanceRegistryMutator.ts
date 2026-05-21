@@ -1,12 +1,12 @@
-/**
- * ProviderInstanceRegistryMutator — internal handle used by the hydration
+﻿/**
+ * ProviderInstanceRegistryMutator â€” internal handle used by the hydration
  * layer to reconcile the live registry with a fresh
  * `ProviderInstanceConfigMap`.
  *
  * Kept separate from the public `ProviderInstanceRegistry` service tag so
  * downstream consumers (drivers, reactors, `ProviderService`) can only read
- * from the registry. Only the hydration layer — which watches
- * `ServerSettingsService.streamChanges` and applies diffs — imports this
+ * from the registry. Only the hydration layer â€” which watches
+ * `ServerSettingsService.streamChanges` and applies diffs â€” imports this
  * tag.
  *
  * The mutator exposes a single entry point, `reconcile(configMap)`, which:
@@ -14,13 +14,13 @@
  *   1. Diffs the incoming map against the live one keyed by instance id.
  *   2. Closes the per-instance `Scope` of every removed or replaced entry
  *      (tearing down adapter processes, refresh fibres, temp files) BEFORE
- *      creating the replacement — `reconcile` guarantees "at most one live
+ *      creating the replacement â€” `reconcile` guarantees "at most one live
  *      instance per id" at all times.
  *   3. Opens a fresh child `Scope` for every added or replaced entry, runs
  *      the driver's `create`, and stores the resulting `ProviderInstance`
  *      plus its scope.
  *   4. Publishes one `void` tick on the registry's `streamChanges` PubSub at
- *      the end of the batch — consumers re-pull `listInstances` /
+ *      the end of the batch â€” consumers re-pull `listInstances` /
  *      `listUnavailable`.
  *
  * `reconcile` is idempotent: calling it with an unchanged config map is a
@@ -28,7 +28,7 @@
  *
  * @module provider/Services/ProviderInstanceRegistryMutator
  */
-import type { ProviderInstanceConfigMap } from "@t3tools/contracts";
+import type { ProviderInstanceConfigMap } from "@ghostforge/contracts";
 import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 
@@ -49,4 +49,4 @@ export interface ProviderInstanceRegistryMutatorShape {
 export class ProviderInstanceRegistryMutator extends Context.Service<
   ProviderInstanceRegistryMutator,
   ProviderInstanceRegistryMutatorShape
->()("t3/provider/Services/ProviderInstanceRegistryMutator") {}
+>()("ghostforge/provider/Services/ProviderInstanceRegistryMutator") {}

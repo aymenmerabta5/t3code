@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import type {
   ChangeRequest,
@@ -8,7 +8,7 @@ import type {
   SourceControlProviderKind,
   SourceControlRepositoryCloneUrls,
   SourceControlRepositoryVisibility,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 export interface SourceControlProviderContext {
   readonly provider: SourceControlProviderInfo;
@@ -99,4 +99,4 @@ export interface SourceControlProviderShape {
 export class SourceControlProvider extends Context.Service<
   SourceControlProvider,
   SourceControlProviderShape
->()("t3/source-control/SourceControlProvider") {}
+>()("ghostforge/source-control/SourceControlProvider") {}

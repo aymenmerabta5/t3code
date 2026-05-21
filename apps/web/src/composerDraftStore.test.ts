@@ -1,9 +1,9 @@
-import {
+﻿import {
   scopedProjectKey,
   scopedThreadKey,
   scopeProjectRef,
   scopeThreadRef,
-} from "@t3tools/client-runtime";
+} from "@ghostforge/client-runtime";
 import * as Schema from "effect/Schema";
 import {
   defaultInstanceIdForDriver,
@@ -14,8 +14,8 @@ import {
   ThreadId,
   type ModelSelection,
   type ProviderOptionSelection,
-} from "@t3tools/contracts";
-import { createModelSelection } from "@t3tools/shared/model";
+} from "@ghostforge/contracts";
+import { createModelSelection } from "@ghostforge/shared/model";
 
 // The composer draft's `modelSelectionByProvider` and
 // `stickyModelSelectionByProvider` maps are keyed by `ProviderInstanceId`
@@ -1145,7 +1145,7 @@ describe("composerDraftStore modelSelection", () => {
       }),
     );
 
-    // Now set options for only codex — claudeAgent should be untouched
+    // Now set options for only codex â€” claudeAgent should be untouched
     store.setModelOptions(threadRef, providerModelOptions({ codex: { reasoningEffort: "xhigh" } }));
 
     const draft = draftFor(threadId, TEST_ENVIRONMENT_ID);

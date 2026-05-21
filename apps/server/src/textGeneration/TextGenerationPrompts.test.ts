@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 
 import {
   buildBranchNamePrompt,
@@ -7,7 +7,7 @@ import {
   buildThreadTitlePrompt,
 } from "./TextGenerationPrompts.ts";
 import { normalizeCliError, sanitizeThreadTitle } from "./TextGenerationUtils.ts";
-import { TextGenerationError } from "@t3tools/contracts";
+import { TextGenerationError } from "@ghostforge/contracts";
 
 describe("buildCommitMessagePrompt", () => {
   it("includes staged patch and summary in the prompt", () => {

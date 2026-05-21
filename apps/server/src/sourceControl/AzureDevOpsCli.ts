@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Result from "effect/Result";
@@ -8,7 +8,7 @@ import {
   TrimmedNonEmptyString,
   type SourceControlRepositoryVisibility,
   type VcsError,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 
 import * as VcsProcess from "../vcs/VcsProcess.ts";
 import * as AzureDevOpsPullRequests from "./azureDevOpsPullRequests.ts";
@@ -94,7 +94,7 @@ export interface AzureDevOpsCliShape {
 }
 
 export class AzureDevOpsCli extends Context.Service<AzureDevOpsCli, AzureDevOpsCliShape>()(
-  "t3/source-control/AzureDevOpsCli",
+  "ghostforge/source-control/AzureDevOpsCli",
 ) {}
 
 function errorText(error: VcsError | unknown): string {

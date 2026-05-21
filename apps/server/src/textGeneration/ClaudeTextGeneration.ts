@@ -1,5 +1,5 @@
-/**
- * ClaudeTextGeneration – Text generation layer using the Claude CLI.
+﻿/**
+ * ClaudeTextGeneration â€“ Text generation layer using the Claude CLI.
  *
  * Implements the same TextGenerationShape contract as CodexTextGeneration but
  * delegates to the `claude` CLI (`claude -p`) with structured JSON output
@@ -13,10 +13,10 @@ import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process";
 
-import { type ClaudeSettings, type ModelSelection } from "@t3tools/contracts";
-import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@t3tools/shared/git";
+import { type ClaudeSettings, type ModelSelection } from "@ghostforge/contracts";
+import { sanitizeBranchFragment, sanitizeFeatureBranchName } from "@ghostforge/shared/git";
 
-import { TextGenerationError } from "@t3tools/contracts";
+import { TextGenerationError } from "@ghostforge/contracts";
 import { type TextGenerationShape } from "./TextGeneration.ts";
 import {
   buildBranchNamePrompt,
@@ -34,7 +34,7 @@ import {
 import {
   getModelSelectionStringOptionValue,
   getProviderOptionDescriptors,
-} from "@t3tools/shared/model";
+} from "@ghostforge/shared/model";
 import {
   getClaudeModelCapabilities,
   normalizeClaudeCliEffort,

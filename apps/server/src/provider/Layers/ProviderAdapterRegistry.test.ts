@@ -1,8 +1,8 @@
-import {
+﻿import {
   defaultInstanceIdForDriver,
   ProviderDriverKind,
   type ServerProvider,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import { it, assert, vi } from "@effect/vitest";
 
 import * as Effect from "effect/Effect";
@@ -95,7 +95,7 @@ const fakeCursorAdapter: CursorAdapterShape = {
   streamEvents: Stream.empty,
 };
 
-// ProviderAdapterRegistryLive is now a facade over ProviderInstanceRegistry —
+// ProviderAdapterRegistryLive is now a facade over ProviderInstanceRegistry â€”
 // it walks `listInstances` once at boot and surfaces the default-instance
 // adapter keyed by its driver kind. To test the facade we supply four fake
 // instances whose `instanceId === defaultInstanceIdForDriver(driverKind)` so

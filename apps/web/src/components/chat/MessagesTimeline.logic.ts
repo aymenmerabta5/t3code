@@ -1,7 +1,7 @@
-import * as Equal from "effect/Equal";
+﻿import * as Equal from "effect/Equal";
 import { type TimelineEntry, type WorkLogEntry } from "../../session-logic";
 import { type ChatMessage, type ProposedPlan, type TurnDiffSummary } from "../../types";
-import { type MessageId, type TurnId } from "@t3tools/contracts";
+import { type MessageId, type TurnId } from "@ghostforge/contracts";
 
 export const MAX_VISIBLE_WORK_LOG_ENTRIES = 6;
 
@@ -227,7 +227,7 @@ export function computeStableMessagesTimelineRows(
   return anyChanged ? { byId: next, result } : previous;
 }
 
-/** Shallow field comparison per row variant — avoids deep equality cost. */
+/** Shallow field comparison per row variant â€” avoids deep equality cost. */
 function isRowUnchanged(a: MessagesTimelineRow, b: MessagesTimelineRow): boolean {
   if (a.kind !== b.kind || a.id !== b.id) return false;
 

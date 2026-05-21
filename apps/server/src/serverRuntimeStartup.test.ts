@@ -1,5 +1,5 @@
-import * as NodeServices from "@effect/platform-node/NodeServices";
-import { DEFAULT_MODEL, ProjectId, ProviderInstanceId, ThreadId } from "@t3tools/contracts";
+﻿import * as NodeServices from "@effect/platform-node/NodeServices";
+import { DEFAULT_MODEL, ProjectId, ProviderInstanceId, ThreadId } from "@ghostforge/contracts";
 import { assert, it } from "@effect/vitest";
 import * as Deferred from "effect/Deferred";
 import * as Effect from "effect/Effect";

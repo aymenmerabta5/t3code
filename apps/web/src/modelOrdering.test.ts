@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { ProviderInstanceId } from "@t3tools/contracts";
+﻿import { describe, expect, it } from "vitest";
+import { ProviderInstanceId } from "@ghostforge/contracts";
 
 import {
   providerModelKey,

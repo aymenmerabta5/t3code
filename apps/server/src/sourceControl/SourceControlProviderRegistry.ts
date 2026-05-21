@@ -1,4 +1,4 @@
-import * as Cache from "effect/Cache";
+﻿import * as Cache from "effect/Cache";
 import * as Context from "effect/Context";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
@@ -7,9 +7,9 @@ import * as Layer from "effect/Layer";
 import {
   SourceControlProviderError,
   type SourceControlProviderDiscoveryItem,
-} from "@t3tools/contracts";
-import type { SourceControlProviderKind } from "@t3tools/contracts";
-import { detectSourceControlProviderFromRemoteUrl } from "@t3tools/shared/sourceControl";
+} from "@ghostforge/contracts";
+import type { SourceControlProviderKind } from "@ghostforge/contracts";
+import { detectSourceControlProviderFromRemoteUrl } from "@ghostforge/shared/sourceControl";
 
 import * as AzureDevOpsSourceControlProvider from "./AzureDevOpsSourceControlProvider.ts";
 import * as BitbucketSourceControlProvider from "./BitbucketSourceControlProvider.ts";
@@ -51,7 +51,7 @@ export interface SourceControlProviderRegistryShape {
 export class SourceControlProviderRegistry extends Context.Service<
   SourceControlProviderRegistry,
   SourceControlProviderRegistryShape
->()("t3/source-control/SourceControlProviderRegistry") {}
+>()("ghostforge/source-control/SourceControlProviderRegistry") {}
 
 function unsupportedProvider(
   kind: SourceControlProviderKind,

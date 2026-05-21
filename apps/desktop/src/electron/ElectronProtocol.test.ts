@@ -87,8 +87,9 @@ describe("ElectronProtocol", () => {
 
           assert.isDefined(capturedHandler);
           return yield* Effect.callback<Electron.ProtocolResponse>((resume) => {
-            capturedHandler?.({ url: "t3://app/" } as Electron.ProtocolRequest, (response) =>
-              resume(Effect.succeed(response)),
+            capturedHandler?.(
+              { url: "ghostforge://app/" } as Electron.ProtocolRequest,
+              (response) => resume(Effect.succeed(response)),
             );
           });
         }),

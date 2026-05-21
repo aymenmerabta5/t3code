@@ -1,4 +1,4 @@
-import * as Context from "effect/Context";
+﻿import * as Context from "effect/Context";
 import type * as Effect from "effect/Effect";
 
 import type {
@@ -8,8 +8,8 @@ import type {
   VcsListRemotesResult,
   VcsListWorkspaceFilesResult,
   VcsRepositoryIdentity,
-} from "@t3tools/contracts";
-import { CheckpointRef } from "@t3tools/contracts";
+} from "@ghostforge/contracts";
+import { CheckpointRef } from "@ghostforge/contracts";
 import * as VcsProcess from "./VcsProcess.ts";
 
 export interface VcsCaptureCheckpointInput {
@@ -69,4 +69,6 @@ export interface VcsDriverShape {
   readonly initRepository: (input: VcsInitInput) => Effect.Effect<void, VcsError>;
 }
 
-export class VcsDriver extends Context.Service<VcsDriver, VcsDriverShape>()("t3/vcs/VcsDriver") {}
+export class VcsDriver extends Context.Service<VcsDriver, VcsDriverShape>()(
+  "ghostforge/vcs/VcsDriver",
+) {}

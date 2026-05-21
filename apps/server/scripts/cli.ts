@@ -16,7 +16,7 @@ import {
   PUBLISH_ICON_OVERRIDES,
 } from "../../../scripts/lib/brand-assets.ts";
 import { resolveCatalogDependencies } from "../../../scripts/lib/resolve-catalog.ts";
-import { fromJsonStringPretty } from "@t3tools/shared/schemaJson";
+import { fromJsonStringPretty } from "@ghostforge/shared/schemaJson";
 import rootPackageJson from "../../../package.json" with { type: "json" };
 import serverPackageJson from "../package.json" with { type: "json" };
 
@@ -156,7 +156,7 @@ const buildCmd = Command.make(
 
       yield* Effect.log("[cli] Running tsdown...");
       yield* runCommand(
-        ChildProcess.make(process.execPath, ["--run", "build:bundle"], {
+        ChildProcess.make("node", ["--run", "build:bundle"], {
           cwd: serverDir,
           stdout: config.verbose ? "inherit" : "ignore",
           stderr: "inherit",
@@ -173,7 +173,7 @@ const buildCmd = Command.make(
         yield* applyDevelopmentIconOverrides(repoRoot, serverDir);
         yield* Effect.log("[cli] Bundled web app into dist/client");
       } else {
-        yield* Effect.logWarning("[cli] Web dist not found — skipping client bundle.");
+        yield* Effect.logWarning("[cli] Web dist not found â€” skipping client bundle.");
       }
     }),
 ).pipe(Command.withDescription("Build the server package (tsdown + bundle web client)."));

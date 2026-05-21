@@ -1,8 +1,8 @@
-import type {
+﻿import type {
   ProjectScript,
   ProjectScriptIcon,
   ResolvedKeybindingsConfig,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   BugIcon,
   ChevronDownIcon,

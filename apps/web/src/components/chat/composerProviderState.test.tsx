@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   ProviderDriverKind,
   type ProviderOptionDescriptor,
   type ProviderOptionSelection,
   type ServerProviderModel,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import {
   getComposerProviderState,
   renderProviderTraitsMenuContent,

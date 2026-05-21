@@ -1,5 +1,5 @@
-import { scopeProjectRef, scopeThreadRef } from "@t3tools/client-runtime";
-import type { EnvironmentId, ThreadId } from "@t3tools/contracts";
+﻿import { scopeProjectRef, scopeThreadRef } from "@ghostforge/client-runtime";
+import type { EnvironmentId, ThreadId } from "@ghostforge/contracts";
 import {
   ChevronDownIcon,
   CloudIcon,

@@ -1,9 +1,9 @@
-/**
+﻿/**
  * Helpers for synthesizing "unavailable" `ServerProvider` snapshots.
  *
  * When `ServerSettings.providerInstances` (or persisted thread/session
- * state) references a driver this build does not ship — typical after a
- * downgrade from a fork or a feature-branch test session — the runtime
+ * state) references a driver this build does not ship â€” typical after a
+ * downgrade from a fork or a feature-branch test session â€” the runtime
  * needs to surface the entry to the UI without crashing. This module
  * produces shadow snapshots that satisfy `ServerProvider`'s wire shape
  * while signalling unavailability.
@@ -14,7 +14,7 @@ import {
   ProviderDriverKind,
   type ProviderInstanceId,
   type ServerProvider,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
 

@@ -1,4 +1,4 @@
-import {
+﻿import {
   CommandId,
   DEFAULT_PROVIDER_INTERACTION_MODE,
   EventId,
@@ -8,7 +8,7 @@ import {
   type OrchestrationEvent,
   type OrchestrationReadModel,
   ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@ghostforge/contracts";
 import * as Effect from "effect/Effect";
 import { describe, expect, it } from "vitest";
 

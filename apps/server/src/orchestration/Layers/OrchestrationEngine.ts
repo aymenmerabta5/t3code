@@ -1,10 +1,10 @@
-import type {
+﻿import type {
   OrchestrationEvent,
   OrchestrationReadModel,
   ProjectId,
   ThreadId,
-} from "@t3tools/contracts";
-import { OrchestrationCommand } from "@t3tools/contracts";
+} from "@ghostforge/contracts";
+import { OrchestrationCommand } from "@ghostforge/contracts";
 import * as Cause from "effect/Cause";
 import * as Clock from "effect/Clock";
 import * as DateTime from "effect/DateTime";
