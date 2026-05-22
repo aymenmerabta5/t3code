@@ -996,7 +996,7 @@ function formatMessageMeta(
   timestampFormat: TimestampFormat,
 ): string {
   if (!duration) return formatTimestamp(createdAt, timestampFormat);
-  return `${formatTimestamp(createdAt, timestampFormat)} â€¢ ${duration}`;
+  return `${formatTimestamp(createdAt, timestampFormat)} \u2022 ${duration}`;
 }
 
 function workToneIcon(tone: TimelineWorkEntry["tone"]): {

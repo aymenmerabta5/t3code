@@ -572,7 +572,7 @@ const createBuildConfig = Effect.fn("createBuildConfig")(function* (
   const buildConfig: Record<string, unknown> = {
     appId: "com.ghostforge.app",
     productName: resolveDesktopProductName(version),
-    artifactName: "T3-Code-${version}-${arch}.${ext}",
+    artifactName: "GhostForge-${version}-${arch}.${ext}",
     directories: {
       buildResources: "apps/desktop/resources",
     },

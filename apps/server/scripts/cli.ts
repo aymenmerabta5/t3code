@@ -83,15 +83,12 @@ const applyPublishIconOverrides = Effect.fn("applyPublishIconOverrides")(functio
         message: `Missing publish icon source: ${sourcePath}`,
       });
     }
-    if (!(yield* fs.exists(targetPath))) {
-      return yield* new CliError({
-        message: `Missing publish icon target: ${targetPath}. Run the build subcommand first.`,
-      });
-    }
 
-    yield* fs.copyFile(targetPath, backupPath);
+    if (yield* fs.exists(targetPath)) {
+      yield* fs.copyFile(targetPath, backupPath);
+      backups.push({ targetPath, backupPath });
+    }
     yield* fs.copyFile(sourcePath, targetPath);
-    backups.push({ targetPath, backupPath });
   }
 
   yield* Effect.log("[cli] Applied publish icon overrides to dist/client");
@@ -124,11 +121,6 @@ const applyDevelopmentIconOverrides = Effect.fn("applyDevelopmentIconOverrides")
     if (!(yield* fs.exists(sourcePath))) {
       return yield* new CliError({
         message: `Missing development icon source: ${sourcePath}`,
-      });
-    }
-    if (!(yield* fs.exists(targetPath))) {
-      return yield* new CliError({
-        message: `Missing development icon target: ${targetPath}. Build web first.`,
       });
     }
 
