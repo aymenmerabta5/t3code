@@ -238,10 +238,10 @@ const makeDesktopEnvironment = Effect.fn("desktop.environment.make")(function* (
       return Option.some(path.resolve(trimmedPath));
     },
     resolveResourcePathCandidates: (fileName) => [
+      path.join(resourcesPath, fileName),
+      path.join(resourcesPath, "resources", fileName),
       path.join(input.dirname, "../resources", fileName),
       path.join(input.dirname, "../prod-resources", fileName),
-      path.join(resourcesPath, "resources", fileName),
-      path.join(resourcesPath, fileName),
     ],
     developmentDockIconPath: path.join(rootDir, "assets", "dev", "blueprint-macos-1024.png"),
   });

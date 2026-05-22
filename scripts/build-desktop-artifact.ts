@@ -576,6 +576,13 @@ const createBuildConfig = Effect.fn("createBuildConfig")(function* (
     directories: {
       buildResources: "apps/desktop/resources",
     },
+    extraResources: [
+      {
+        from: "apps/desktop/prod-resources",
+        to: ".",
+        filter: ["icon.ico", "icon.png", "icon.icns"],
+      },
+    ],
   };
   const updateChannel = resolveDesktopUpdateChannel(version);
   const publishConfig = resolveGitHubPublishConfig(updateChannel);
