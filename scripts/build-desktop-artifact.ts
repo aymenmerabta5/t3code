@@ -627,8 +627,6 @@ const createBuildConfig = Effect.fn("createBuildConfig")(function* (
     };
     if (signed) {
       winConfig.azureSignOptions = yield* AzureTrustedSigningOptionsConfig;
-    } else {
-      winConfig.signAndEditExecutable = false;
     }
     buildConfig.win = winConfig;
   }
@@ -794,7 +792,7 @@ const buildDesktopArtifact = Effect.fn("buildDesktopArtifact")(function* (
     ghostforgeCommitHash: commitHash,
     private: true,
     description: "GhostForge desktop build",
-    author: "T3 Tools",
+    author: "Ghost Tools",
     main: "apps/desktop/dist-electron/main.cjs",
     build: yield* createBuildConfig(
       options.platform,

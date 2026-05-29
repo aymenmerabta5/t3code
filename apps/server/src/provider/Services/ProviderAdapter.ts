@@ -24,12 +24,20 @@ import type * as Effect from "effect/Effect";
 import type * as Stream from "effect/Stream";
 
 export type ProviderSessionModelSwitchMode = "in-session" | "unsupported";
+export type ProviderSessionResumeMode = "supported" | "unsupported";
 
 export interface ProviderAdapterCapabilities {
   /**
    * Declares whether changing the model on an existing session is supported.
    */
   readonly sessionModelSwitch: ProviderSessionModelSwitchMode;
+  /**
+   * Declares whether the provider can recover conversation state after a
+   * session is stopped and later restarted. When "unsupported", consumers
+   * should avoid eagerly reaping idle sessions because doing so would wipe
+   * conversation context permanently.
+   */
+  readonly sessionResume: ProviderSessionResumeMode;
 }
 
 export interface ProviderThreadTurnSnapshot {

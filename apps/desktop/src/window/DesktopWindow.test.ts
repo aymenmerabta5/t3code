@@ -53,6 +53,7 @@ function makeFakeBrowserWindow() {
     once: vi.fn(),
     restore: vi.fn(),
     setBackgroundColor: vi.fn(),
+    setIcon: vi.fn(),
     setTitle: vi.fn(),
     setTitleBarOverlay: vi.fn(),
     show: vi.fn(),

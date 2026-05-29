@@ -58,6 +58,20 @@ const makeProviderSessionReaper = (options?: ProviderSessionReaperLiveOptions) =
           continue;
         }
 
+        if (binding.providerInstanceId) {
+          const capabilities = yield* providerService
+            .getCapabilities(binding.providerInstanceId)
+            .pipe(Effect.option);
+          if (Option.isSome(capabilities) && capabilities.value.sessionResume === "unsupported") {
+            yield* Effect.logDebug("provider.session.reaper.skipped-non-resumable", {
+              threadId: binding.threadId,
+              provider: binding.provider,
+              idleDurationMs,
+            });
+            continue;
+          }
+        }
+
         const thread = yield* projectionSnapshotQuery
           .getThreadShellById(binding.threadId)
           .pipe(Effect.map(Option.getOrUndefined));

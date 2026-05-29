@@ -698,7 +698,7 @@ function AssistantChangedFilesSectionInner({
           <span>Changed files ({changedFileCountLabel})</span>
           {hasNonZeroStat(summaryStat) && (
             <>
-              <span className="mx-1">â€¢</span>
+              <span className="mx-1">•</span>
               <DiffStatLabel additions={summaryStat.additions} deletions={summaryStat.deletions} />
             </>
           )}

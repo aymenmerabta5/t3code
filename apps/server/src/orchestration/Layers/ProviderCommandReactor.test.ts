@@ -142,6 +142,7 @@ describe("ProviderCommandReactor", () => {
     readonly baseDir?: string;
     readonly threadModelSelection?: ModelSelection;
     readonly sessionModelSwitch?: "unsupported" | "in-session";
+    readonly sessionResume?: "supported" | "unsupported";
   }) {
     const now = "2026-01-01T00:00:00.000Z";
     const baseDir = input?.baseDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "ghostforge-reactor-"));
@@ -293,6 +294,7 @@ describe("ProviderCommandReactor", () => {
       getCapabilities: (_provider) =>
         Effect.succeed({
           sessionModelSwitch: input?.sessionModelSwitch ?? "in-session",
+          sessionResume: input?.sessionResume ?? "supported",
         }),
       getInstanceInfo: (instanceId) => {
         const raw = String(instanceId);

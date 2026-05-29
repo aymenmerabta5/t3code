@@ -77,15 +77,10 @@ function resolveDesktopDevServerUrl(
   });
 }
 
-function getIconOption(
-  iconPaths: DesktopAssets.DesktopIconPaths,
-): { icon: string } | Record<string, never> {
-  if (process.platform === "darwin") return {}; // macOS uses .icns from app bundle
+function resolveWindowIcon(iconPaths: DesktopAssets.DesktopIconPaths): Option.Option<string> {
+  if (process.platform === "darwin") return Option.none(); // macOS uses .icns from app bundle
   const ext = process.platform === "win32" ? "ico" : "png";
-  return Option.match(iconPaths[ext], {
-    onNone: () => ({}),
-    onSome: (icon) => ({ icon }),
-  });
+  return iconPaths[ext];
 }
 
 function getInitialWindowBackgroundColor(shouldUseDarkColors: boolean): string {
@@ -160,7 +155,15 @@ const make = Effect.gen(function* () {
     backendHttpUrl: URL,
   ): Effect.fn.Return<Electron.BrowserWindow, DesktopWindowError> {
     const iconPaths = yield* assets.iconPaths;
-    const iconOption = getIconOption(iconPaths);
+    const resolvedIcon = resolveWindowIcon(iconPaths);
+
+    if (process.platform === "win32" && Option.isNone(resolvedIcon)) {
+      yield* logWindowWarning("windows icon path not resolved", {
+        ico: Option.getOrUndefined(iconPaths.ico),
+        png: Option.getOrUndefined(iconPaths.png),
+      });
+    }
+
     const shouldUseDarkColors = yield* electronTheme.shouldUseDarkColors;
     const window = yield* electronWindow.create({
       width: 1100,
@@ -170,7 +173,10 @@ const make = Effect.gen(function* () {
       show: false,
       autoHideMenuBar: true,
       backgroundColor: getInitialWindowBackgroundColor(shouldUseDarkColors),
-      ...iconOption,
+      ...Option.match(resolvedIcon, {
+        onNone: () => ({}),
+        onSome: (icon) => ({ icon }),
+      }),
       title: environment.displayName,
       ...getWindowTitleBarOptions(shouldUseDarkColors),
       webPreferences: {
@@ -180,6 +186,10 @@ const make = Effect.gen(function* () {
         sandbox: true,
       },
     });
+
+    if (process.platform === "win32" && Option.isSome(resolvedIcon)) {
+      window.setIcon(resolvedIcon.value);
+    }
 
     window.webContents.on("context-menu", (event, params) => {
       event.preventDefault();
